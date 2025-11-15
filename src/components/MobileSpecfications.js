@@ -1,0 +1,66 @@
+import { useState, useMemo } from "react";
+import { Search, Plus } from "lucide-react";
+import SpecGroup from "./SpecGroup";
+import UseFilteredSpecs from "./UseFilteredSpecs";
+export default function MobileSpeficaion({ phoneDetails }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  // 🔍 Filter across *all* sections and fields
+  const filteredSpecs = UseFilteredSpecs(phoneDetails, searchQuery);
+  return (
+    <div className="space-y-2">
+      {/* Search Bar */}
+      <div className="border-t border-gray-200 bg-white py-2.5 px-1">
+        <div className="flex items-center gap-2">
+          {/* Search Box */}
+          <div className="flex items-center flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-blue-500 focus-within:bg-white transition-all">
+            <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search specifications..."
+              className="ml-2 w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"
+            />
+          </div>
+
+          {/* Compare Button */}
+          <button className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-all flex-shrink-0">
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Compare</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Render filtered groups */}
+      <div>
+        {filteredSpecs.map((section, index) => {
+          const [title, specs] = Object.entries(section).find(
+            ([key]) =>
+              key !== "is_expandable" &&
+              key !== "max_visible" &&
+              key !== "security"
+          ) || [];
+          const isExpandable = section.is_expandable;
+          const max_visible = section.max_visible;
+          if (!specs || Object.keys(specs).length === 0) return null;
+          return (
+            <SpecGroup
+              key={index}
+              title={title}
+              specs={specs}
+              isExpandable={isExpandable}
+              max_visible={max_visible}
+              searchQuery={searchQuery}
+            />
+          );
+        })}
+        {filteredSpecs.length === 0 && (
+          <div className="text-center text-gray-500 text-sm py-4">
+            No results found 😕
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
