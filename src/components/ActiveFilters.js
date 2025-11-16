@@ -3,16 +3,18 @@
 import { X } from 'lucide-react';
 import { useRouter } from "next/navigation";
 function getActiveTags(parsed, availableFilters) {
-  console.log(parsed)
   const tags = [];
   const capitalize = str => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
   // Brands
   if (Array.isArray(parsed.brands)) {
+   
     parsed.brands.forEach(b => {
       const cleaned = b.replace(/-mobile$/, "").split("-").filter(Boolean);
       cleaned.forEach(name => {
-        if (availableFilters.brands?.includes(name.toLowerCase())) {
+        if (availableFilters.brands.some(
+          (brand) => brand.name.toLowerCase() === name.toLowerCase()
+        )) {
           tags.push(capitalize(name));
         }
       });
@@ -95,8 +97,8 @@ function removeBrandFromFilter(filterString, brand) {
 
 
 
-export default function ActiveFilters({ filters, parsed}) {
-  const activeTags = getActiveTags(parsed);
+export default function ActiveFilters({ filters, parsed,availableFilters}) {
+  const activeTags = getActiveTags(parsed,availableFilters);
   const router = useRouter(activeTags, parsed);
   const removeFilter = (tag) => {
   const filterValue = tagToFilter(tag, filters);

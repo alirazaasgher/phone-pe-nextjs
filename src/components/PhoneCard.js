@@ -54,7 +54,6 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
       >
 
         {/* Product Image */}
-        {/* Product Image */}
         <Link
           href={`/${phone.slug}`}
           className="relative group w-full aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
@@ -76,7 +75,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
               {/* Storage Tag */}
               <div className="bg-gray-800  text-white text-[9px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
-                {Math.max(...JSON.parse(phone.searchIndex.ram))}GB | {Math.max(...JSON.parse(phone.searchIndex.storage))}GB
+                {phone?.searchIndex?.ram}GB | {phone?.searchIndex?.storage}GB
               </div>
 
               {/* Main Price Box */}
@@ -84,7 +83,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                 <div className="flex items-baseline gap-0.5 w-full">
                   <span className="text-[8px] lg:text-[10px] font-medium opacity-70">Rs.</span>
                   <span className="text-[11px] lg:text-[15px] font-bold text-gray-900">
-                    {phone.price ? phone.price.toLocaleString() : '67,999'}
+                    {phone?.searchIndex?.min_price ? phone?.searchIndex?.min_price : '67,999'}
                   </span>
                 </div>
               </div>
@@ -133,22 +132,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               <h3 className="font-bold text-[11.5px] lg:text-sm sm:text-base text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-snug mb-1">
                 {phone.name}
               </h3>
-
-              {/* {(phone.release_date || phone.expected_release_date) && (
-    <div className="inline-flex items-center gap-1 w-fit">
-      <span className={`inline-flex items-center gap-0.5 text-[9px] lg:text-[9px] font-medium px-1.5 py-0.5 rounded ${
-        phone.release_date 
-          ? 'bg-green-50 text-green-700 border border-green-200' 
-          : 'bg-amber-50 text-amber-700 border border-amber-200'
-      }`}>
-        <Calendar className="w-2.5 h-2.5 lg:w-3 lg:h-3" />
-        <span>{phone.release_date || phone.expected_release_date}</span>
-      </span>
-    </div>
-  )} */}
             </div>
-
-
             {phone.rating && (
               <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100 flex-shrink-0">
                 <Star className="text-amber-500 fill-amber-500" size={12} />

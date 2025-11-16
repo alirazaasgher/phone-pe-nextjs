@@ -1,9 +1,10 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { RotateCcw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams  } from "next/navigation";
+import { Star, ArrowUp, ArrowDown, Clock } from 'lucide-react';
+
 function getActiveTags(parsed) {
   const tags = [];
   
@@ -57,9 +58,16 @@ function getActiveTags(parsed) {
 
 export default function ResultsHeader({ totalResults = 0, filteredResults = 0, trending = {}, parsed }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isFiltered, setIsFiltered] = useState(false);
   const selectedBrand = filteredResults?.brands?.[0] || null;
   const [imageErrors, setImageErrors] = useState({});
+  const sortOptions = [
+  { value: 'newest', label: 'Newest', icon: <Clock size={16} /> },
+  { value: 'price_low_high', label: 'Price: Low to High', icon: <ArrowDown size={16} /> },
+  { value: 'price_high_low', label: 'Price: High to Low', icon: <ArrowUp size={16} /> },
+  { value: 'popular', label: 'Most Popular', icon: <Star size={16} /> },
+];
   useEffect(() => {
     setIsFiltered(filteredResults > 0 && filteredResults < totalResults);
   }, [filteredResults, totalResults]);
@@ -72,6 +80,14 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
  router.push("/mobiles");
 
 }
+
+  const handleSortChange = (e) => {
+   const params = new URLSearchParams(searchParams.toString());
+   const value = e.target.value; 
+  params.set("sort", value);
+
+  router.push(`?${params.toString()}`, { scroll: false });
+  };
   return (
     <div className="mb-6">
       {/* Results Summary */}
@@ -81,7 +97,7 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
         <div className="relative w-full sm:w-auto">
           <select
             className="appearance-none w-full sm:w-auto bg-white border border-gray-300 hover:border-gray-400 text-gray-700 py-2 px-4 pr-10 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm cursor-pointer"
-            onChange={(e) => setSortBy(e.target.value)}
+            onChange={handleSortChange}
           >
             <option value="newest">🆕 Newest</option>
             <option value="price_low_high">⬇ Price: Low to High</option>

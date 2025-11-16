@@ -1,10 +1,8 @@
-import DetailsClient from "./DetailsClient";
 import { getPhoneBySlug, getAllPhoneSlugs } from "../services/phones";
 import { buildPhoneMetadata } from "../utils/metadata";
 import Head from 'next/head';
 import { notFound } from 'next/navigation';
 import Details from "./Details";
-import OverviewSection from "./OverviewSection";
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
   
@@ -41,13 +39,13 @@ export default async function DetailsPage({ params }) {
 }
 
 // Generate static paths for better performance
-// export async function generateStaticParams() {
-//   const slugs = await getAllPhoneSlugs();
+export async function generateStaticParams() {
+  const slugs = await getAllPhoneSlugs();
   
-//   return slugs.map((slug) => ({
-//     slug: slug,
-//   }));
-// }
+  return slugs.map((slug) => ({
+    slug: slug,
+  }));
+}
 
 // Add metadata generation for better SEO
 export async function generateMetadata({ params }) {

@@ -17,7 +17,7 @@ const EmptyState = ({ message }) => (
   </div>
 );
 
-export default function ClientPhoneGrid({ phones, filters, parsed }) {
+export default function ClientPhoneGrid({ phones, filters, parsed, availableFilters }) {
   return (
     <div className='p-4'>
     <div className="bg-white/95 backdrop-blur-xl shadow-sm border-b border-gray-200/50 sticky top-0 z-40">
@@ -35,7 +35,7 @@ export default function ClientPhoneGrid({ phones, filters, parsed }) {
         </div>
       </div>
       <ResultsHeader filters={filters} filteredResults="0" trending={[]} parsed={parsed} />
-      <ActiveFilters filters={filters} parsed={parsed} />
+      <ActiveFilters filters={filters} parsed={parsed} availableFilters = {availableFilters}/>
 
       {phones.length ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">

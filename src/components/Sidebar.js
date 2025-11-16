@@ -7,8 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
-  console.log("Sidebar isOpen:", isOpen);
-  const [expandedSections, setExpandedSections] = useState([]);
+  const [expandedSections, setExpandedSections] = useState(["ram","storage"]);
   const [selected, setSelected] = useState({});
   const toggleSection = (key) => {
     setExpandedSections(prev =>
@@ -249,12 +248,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-    fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-xl
-    transform transition-transform duration-300
-    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-    overflow-y-auto
-    md:translate-x-0 md:static md:shadow-none
-  `}
+                    fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-xl
+                    transform transition-transform duration-300
+                    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+                    overflow-y-auto
+                    md:translate-x-0 md:static md:shadow-none
+                  `}
       >
 
         {/* 🔍 Search bar section */}

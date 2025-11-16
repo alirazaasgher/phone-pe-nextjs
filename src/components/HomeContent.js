@@ -1,17 +1,14 @@
-"use client";
-import { useState, useEffect } from "react";
 
+"use client";
+// import { useState } from "react";
 import { Smartphone, Apple, Square, Circle, Star as StarIcon, ChevronLeft, ChevronRight, Diamond, Scale, Flame, Lightbulb, Phone } from "lucide-react";
-// import FilterSidebar from "../components/Sidebar";
-import { useRouter, useSearchParams } from "next/navigation";
 import PhoneCard from "./PhoneCard";
 import { Inter, Poppins } from 'next/font/google';
-import Container from "./Container";
 // Module-scope declaration
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
-export default function Home({ homePageData }) {
+export default function HomeContent({homePageResponse}) {
   // ✅ Brands with icons
   const brands = [
     { name: "Samsung", url: "/mobiles/samsung-mobile-phones", logo: "/images/Brands/Samsung/Samsung_Orig_Wordmark_BLUE_RGB.png", color: "bg-blue-50", icon: Smartphone, count: 520 },
@@ -104,32 +101,32 @@ export default function Home({ homePageData }) {
     }
   ];
 
-  const phones = homePageData?.latest_mobiles || [];
-  const upComingMobiles = homePageData?.upcoming_mobiles || [];
-  const popularMobiles = homePageData?.popular_mobiles || [];
+  const phones = homePageResponse?.latest_mobiles || [];
+  const upComingMobiles = homePageResponse?.upcoming_mobiles || [];
+  const popularMobiles = homePageResponse?.popular_mobiles || [];
   const itemsPerPage = 3;
   const totalPages = Math.ceil(phones.length / itemsPerPage);
   // ✅ Phone Card
-  const [startIndex, setStartIndex] = useState(0);
+  // const [startIndex, setStartIndex] = useState(0);
 
-  const nextSlide = () => {
-    if (startIndex + itemsPerPage < phones.length) {
-      setStartIndex((prev) => prev + 1);
-    }
-  };
+  // const nextSlide = () => {
+  //   if (startIndex + itemsPerPage < phones.length) {
+  //     setStartIndex((prev) => prev + 1);
+  //   }
+  // };
 
-  const prevSlide = () => {
-    if (startIndex > 0) {
-      setStartIndex((prev) => prev - 1);
-    }
-  };
+  // const prevSlide = () => {
+  //   if (startIndex > 0) {
+  //     setStartIndex((prev) => prev - 1);
+  //   }
+  // };
 
-  const isPrevDisabled = startIndex === 0;
-  const isNextDisabled = startIndex + itemsPerPage >= phones.length;
+  // const isPrevDisabled = startIndex === 0;
+  // const isNextDisabled = startIndex + itemsPerPage >= phones.length;
 
-  const getCurrentItems = () => {
-    return phones.slice(startIndex, startIndex + itemsPerPage);
-  };
+  // const getCurrentItems = () => {
+  //   return phones.slice(startIndex, startIndex + itemsPerPage);
+  // };
   if (phones.length === 0) {
     return (
       <p className="text-center text-gray-500 py-8">
@@ -150,7 +147,7 @@ export default function Home({ homePageData }) {
               href={`/mobiles/brand/${brand.name.toLowerCase()}`}
               className={`flex flex-col items-center border border-gray-200 rounded-xl p-4 group min-w-[50px] min-h-[20px] sm:min-w-[130px] transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
             >
-              <div className="w-10 h-10 sm:w-14 sm:h-14 mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
+              <div className="w-10 h-10 sm:w-10 sm:h-10 mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
                 <img
                   src={brand.logo}
                   alt={brand.name}
@@ -235,7 +232,7 @@ export default function Home({ homePageData }) {
           {phones.length > itemsPerPage && (
             <>
               {/* Left Arrow */}
-              <button
+              {/* <button
                 onClick={prevSlide}
                 disabled={isPrevDisabled}
                 className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 
@@ -245,10 +242,10 @@ export default function Home({ homePageData }) {
                 aria-label="Previous mobiles"
               >
                 <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
 
               {/* Right Arrow */}
-              <button
+              {/* <button
                 onClick={nextSlide}
                 disabled={isNextDisabled}
                 className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 
@@ -258,14 +255,14 @@ export default function Home({ homePageData }) {
                 aria-label="Next mobiles"
               >
                 <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
             </>
           )}
 
           {/* Mobile Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4
                     transition-all duration-300 ease-in-out" >
-            {getCurrentItems().map((phone) => (
+            {phones.map((phone) => (
               <PhoneCard key={phone.id} phone={phone} />
             ))}
           </div>
@@ -295,7 +292,7 @@ export default function Home({ homePageData }) {
               {upComingMobiles.length > itemsPerPage && (
                 <>
                   {/* Left Arrow */}
-                  <button
+                  {/* <button
                     onClick={prevSlide}
                     disabled={isPrevDisabled}
                     className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 
@@ -305,10 +302,10 @@ export default function Home({ homePageData }) {
                     aria-label="Previous mobiles"
                   >
                     <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-                  </button>
+                  </button> */}
 
                   {/* Right Arrow */}
-                  <button
+                  {/* <button
                     onClick={nextSlide}
                     disabled={isNextDisabled}
                     className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 
@@ -318,14 +315,14 @@ export default function Home({ homePageData }) {
                     aria-label="Next mobiles"
                   >
                     <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-                  </button>
+                  </button> */}
                 </>
               )}
 
               {/* Mobile Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 
                     transition-all duration-300 ease-in-out">
-                {getCurrentItems().map((upComingMobiles) => (
+                {upComingMobiles.map((upComingMobiles) => (
                   <PhoneCard key={upComingMobiles.id} phone={upComingMobiles} />
                 ))}
               </div>
@@ -358,7 +355,7 @@ export default function Home({ homePageData }) {
           {popularMobiles.length > itemsPerPage && (
             <>
               {/* Left Arrow */}
-              <button
+              {/* <button
                 onClick={prevSlide}
                 disabled={isPrevDisabled}
                 className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 
@@ -368,10 +365,10 @@ export default function Home({ homePageData }) {
                 aria-label="Previous mobiles"
               >
                 <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
 
               {/* Right Arrow */}
-              <button
+              {/* <button
                 onClick={nextSlide}
                 disabled={isNextDisabled}
                 className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 
@@ -381,16 +378,16 @@ export default function Home({ homePageData }) {
                 aria-label="Next mobiles"
               >
                 <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
             </>
           )}
 
           {/* Mobile Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
             {getCurrentItems().map((phone) => (
               <PhoneCard key={phone.id} phone={phone} />
             ))}
-          </div>
+          </div> */}
         </div>
          </>
         )}
