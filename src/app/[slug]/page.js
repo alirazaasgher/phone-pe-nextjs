@@ -38,14 +38,6 @@ export default async function DetailsPage({ params }) {
   );
 }
 
-// Generate static paths for better performance
-export async function generateStaticParams() {
-  const slugs = await getAllPhoneSlugs();
-  
-  return slugs.map((slug) => ({
-    slug: slug,
-  }));
-}
 
 // Add metadata generation for better SEO
 export async function generateMetadata({ params }) {
