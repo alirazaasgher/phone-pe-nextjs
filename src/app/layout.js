@@ -20,7 +20,7 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
 });
 export const metadata = {
-  title: 'MobileFinder - Latest & Upcoming Mobile Phones',
+  title: 'Mobile42 - Latest & Upcoming Mobile Phones',
   description: 'Discover the latest and upcoming mobile phones with detailed specs, prices, and reviews',
   keywords: 'mobile phones, smartphones, latest mobiles, upcoming phones, phone specs, mobile reviews',
 }

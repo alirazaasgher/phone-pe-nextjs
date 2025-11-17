@@ -145,20 +145,20 @@ export default function HomeContent({homePageResponse}) {
             <a
               key={brand.name}
               href={`/mobiles/brand/${brand.name.toLowerCase()}`}
-              className={`flex flex-col items-center border border-gray-200 rounded-xl p-4 group min-w-[50px] min-h-[20px] sm:min-w-[130px] transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
+              className={`flex flex-col items-center border border-gray-200 rounded-xl lg:p-4 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
             >
-              <div className="w-10 h-10 sm:w-10 sm:h-10 mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
+              <div className="w-10 h-10 sm:w-10 sm:h-10 mb-1 lg:mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="w-10 h-10 object-contain"
+                  className="w-6 h-6 lg:w-10 lg:h-10 object-contain"
                   loading="lazy"
                 />
               </div>
               <p className="font-sans text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
                 {brand.name}
               </p>
-              <span className="font-mono text-xs text-gray-500 mt-1">
+              <span className="font-mono text-xs text-gray-500 lg:mt-1">
                 {brand.count} models
               </span>
             </a>
@@ -210,7 +210,7 @@ export default function HomeContent({homePageResponse}) {
         </div>
 
         {/* Newly Launched */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-2">
           <h2 className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}>
             Newly Launched
           </h2>
@@ -260,12 +260,27 @@ export default function HomeContent({homePageResponse}) {
           )}
 
           {/* Mobile Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4
-                    transition-all duration-300 ease-in-out" >
-            {phones.map((phone) => (
-              <PhoneCard key={phone.id} phone={phone} />
-            ))}
-          </div>
+         <div className="relative">
+  <div
+    className="
+      flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide
+      sm:grid sm:grid-cols-2 lg:grid-cols-3
+    "
+  >
+    {phones.map((phone) => (
+      <div key={phone.id} className="min-w-[160px] snap-start sm:min-w-0">
+        <PhoneCard phone={phone} />
+      </div>
+    ))}
+  </div>
+
+  {/* Scroll hint */}
+  <div className="absolute right-0 top-1/1 bg-gradient-to-l from-white/90 to-transparent pointer-events-none px-2 py-1 text-sm text-gray-500 font-medium sm:hidden">
+    Swipe →
+  </div>
+
+</div>
+
         </div>
 
         {upComingMobiles.length > 0 && (
@@ -319,13 +334,24 @@ export default function HomeContent({homePageResponse}) {
                 </>
               )}
 
-              {/* Mobile Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 
-                    transition-all duration-300 ease-in-out">
-                {upComingMobiles.map((upComingMobiles) => (
+              <div className="relative">
+  <div
+    className="
+      flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide
+      sm:grid sm:grid-cols-2 lg:grid-cols-3
+    "
+  >
+    {upComingMobiles.map((upComingMobiles) => (
                   <PhoneCard key={upComingMobiles.id} phone={upComingMobiles} />
                 ))}
-              </div>
+  </div>
+
+  {/* Scroll hint */}
+   <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-l from-white/90 to-transparent pointer-events-none px-2 py-1 text-sm text-gray-500 font-medium sm:hidden">
+    Swipe →
+  </div>
+
+</div>
             </div>
           </>
 

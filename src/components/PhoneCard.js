@@ -42,8 +42,9 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
       <div
         className={`
     ${inter.className} 
-    bg-white 
-    rounded-xl 
+    bg-white
+    rounded-md 
+    lg:rounded-xl 
     shadow-md 
     border border-gray-200 
     group 
@@ -56,7 +57,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
         {/* Product Image */}
         <Link
           href={`/${phone.slug}`}
-          className="relative group w-full aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+          className="relative group w-full h:2 lg:aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
         >
           <img
             src={phone.primary_image}
@@ -70,19 +71,19 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Specs and Price */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-start p-1.5 lg:p-2">
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-start lg:p-2">
             <div className="relative inline-flex flex-col items-start group">
 
               {/* Storage Tag */}
-              <div className="bg-gray-800  text-white text-[9px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
+              <div className="bg-gray-800  text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
                 {phone?.searchIndex?.ram}GB | {phone?.searchIndex?.storage}GB
               </div>
 
               {/* Main Price Box */}
-              <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[75px] lg:w-[95px] flex items-center">
+              <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[65px] lg:w-[95px] flex items-center">
                 <div className="flex items-baseline gap-0.5 w-full">
                   <span className="text-[8px] lg:text-[10px] font-medium opacity-70">Rs.</span>
-                  <span className="text-[11px] lg:text-[15px] font-bold text-gray-900">
+                  <span className="text-[9px] lg:text-[15px] font-bold text-gray-900">
                     {phone?.searchIndex?.min_price ? phone?.searchIndex?.min_price : '67,999'}
                   </span>
                 </div>
@@ -125,9 +126,9 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
 
         {/* Product Details */}
-        <div className="px-2 py-2.5 lg:px-3.5 flex flex-col flex-grow">
+        <div className="px-2 py-1.5 lg:px-3.5 flex flex-col flex-grow">
           {/* Name & Rating Row */}
-          <div className="flex items-start justify-between gap-2 mb-0.5">
+          <div className="flex items-start justify-between gap-2">
             <div className="flex flex-col flex-1">
               <h3 className="font-bold text-[11.5px] lg:text-sm sm:text-base text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-snug mb-1">
                 {phone.name}
@@ -165,38 +166,38 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
           )} */}
 
           {/* Key Specs Row */}
-          <div className="w-full text-[12px] text-gray-800 font-bold">
+          <div className="w-full">
             {[
               {
-                icon: <Camera size={15} className="text-sky-500" />,
+                icon: <Camera size={14} className="text-sky-500" />,
                 name: "Camera",
                 value: (
-                  <span className="inline-flex items-center gap-1 text-[11px]">
+                  <span className="inline-flex items-center gap-1 text-[10px]">
                     <span className="font-bold">200MP</span>
-                    <span className="text-gray-500">+</span>
-                    <span className="font-semibold">16MP</span>
+                    <span className="text-gray-500 hidden md:inline">+</span>
+                    <span className="font-semibold hidden md:inline">16MP</span>
                   </span>
                 ),
                 badge: "AI Enhanced",
                 badgeColor: "bg-sky-50 text-sky-700",
-                hideOnSmall: false,
+                hideOnSmall: true,
               },
               {
-                icon: <Camera size={15} className="text-sky-500" />,
+                icon: <Camera size={14} className="text-sky-500" />,
                 name: "Front Camera",
                 value: (
-                  <span className="inline-flex items-center gap-1 text-[11px]">
+                  <span className="inline-flex items-center gap-1 text-[10px]">
                     <span className="font-bold">16MP</span>
                   </span>
                 ),
-                hideOnSmall: false,
+                hideOnSmall: true,
               },
               {
-                icon: <Battery size={15} className="text-green-500" />,
+                icon: <Battery size={14} className="text-green-500" />,
                 name: "Battery",
                 value: (
                   <span className="inline-flex items-center gap-1">
-                    <span className="text-[11px] font-bold">5000mAh</span>
+                    <span className="text-[10px] font-bold">5000mAh</span>
 
                     {/* Charging specs with improved styling */}
                     <span className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-orange-50 to-orange-100 rounded-md text-[10px] border border-orange-200">
@@ -212,14 +213,14 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                 ),
                 badge: "",
                 badgeColor: "bg-green-50 text-green-700",
-                hideOnSmall: false,
+                hideOnSmall: true,
               },
               {
                 icon: <Cpu size={15} className="text-orange-500" />,
                 name: "Chipset",
                 value: (
                   <span className="inline-flex items-center gap-1">
-                    <span className="font-bold">Snapdragon 8 Gen 2</span>
+                    <span className="text-[10px] font-bold">Snapdragon 8 Gen 2</span>
                     <span className="hidden md:inline text-[9px] text-gray-500">(4nm)</span>
                   </span>
                 ),
@@ -228,30 +229,30 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                 hideOnSmall: true,
               },
               {
-                icon: <Monitor size={15} className="text-purple-500" />,
+                icon: <Monitor size={14} className="text-purple-500" />,
                 name: 'Display',
                 value: (
                   <span className="inline-flex items-center gap-0.5">
-                    <span className="font-bold">6.79"</span>
-                    <span className="text-gray-600">AMOLED</span>
-                    <span className="hidden md:inline text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">120Hz</span>
+                    <span className="text-[10px] font-bold">6.79"</span>
+                    <span className="text-[9px] text-gray-600 hidden md:inline">AMOLED</span>
+                    <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">120Hz</span>
                   </span>
                 ),
-                hideOnSmall: false,
+                hideOnSmall: true,
               }
             ].map((spec, i) => (
               <div
                 key={i}
-                className={`group flex items-center justify-between py-2 lg:py-1.5
+                className={`group flex items-center justify-between lg:py-1
                             shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-2 -mx-1 ${spec.hideOnSmall ? "hidden sm:flex" : ""}`}
               >
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1 lg:gap-1.5">
                   <span className="group-hover:scale-110 transition-transform duration-200">
                     {spec.icon}
                   </span>
-                  <span className="text-gray-800 font-bold">{spec.name}</span>
+                  <span className="text-gray-700 text-[10px] font-bold">{spec.name}</span>
                   {spec.badge && (
-                    <span className={`hidden lg:inline-block px-1.5 py-0.5 rounded text-[9px] font-bold ${spec.badgeColor}`}>
+                    <span className={`hidden lg:inline-block px-1 py-0.5 rounded text-[8px] font-bold ${spec.badgeColor}`}>
                       {spec.badge}
                     </span>
                   )}

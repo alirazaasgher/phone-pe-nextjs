@@ -57,9 +57,14 @@ export default function Header({ toggleSidebar }) {
             <Menu className="text-white" size={22} />
           </button>
           <Link href="/" className="flex items-center gap-2">
-            <Smartphone className="text-white" size={26} />
-            <span className="text-lg font-bold tracking-tight">PhoneHub</span>
-          </Link>
+  <Smartphone className="text-white" size={26} />
+  <span className="text-lg font-bold tracking-tight text-white 
+               drop-shadow-[0_0_5px_rgba(0,255,255,0.8)]
+               drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]">
+    Mobile42
+  </span>
+</Link>
+
         </div>
 
         {/* Middle Section - Navigation */}
