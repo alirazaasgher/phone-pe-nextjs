@@ -258,28 +258,24 @@ export default function HomeContent({homePageResponse}) {
               </button> */}
             </>
           )}
-
-          {/* Mobile Grid */}
-         <div className="relative">
-  <div
-    className="
-      flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-      sm:grid sm:grid-cols-2 lg:grid-cols-3
-    "
-  >
+     {/* Mobile horizontal scroll */}
+  <div className="flex sm:hidden gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
     {phones.map((phone) => (
-      <div key={phone.id} className="min-w-[160px] snap-start sm:min-w-0">
+      <div key={phone.id} className="min-w-[50%] snap-start">
         <PhoneCard phone={phone} />
       </div>
     ))}
   </div>
+  <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">Swipe →</p>
 
-  {/* Scroll hint */}
-  <div className="absolute right-0 top-1/1 bg-gradient-to-l from-white/90 to-transparent pointer-events-none px-2 py-1 text-sm text-gray-500 font-medium sm:hidden">
-    Swipe →
+  {/* Tablet / Desktop grid */}
+  <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
+    {phones.map((phone) => (
+      <PhoneCard key={phone.id} phone={phone} />
+    ))}
   </div>
 
-</div>
+
 
         </div>
 
