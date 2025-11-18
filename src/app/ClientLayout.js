@@ -4,6 +4,7 @@ import Header from "@/components/layouts/Header";
 import FilterSidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import Footer from "@/components/layouts/Footer";
+import MobileHeader from "@/components/layouts/MobileHeader";
 
 export default function ClientLayout({ children }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +16,10 @@ export default function ClientLayout({ children }) {
     return (
         <div className="min-h-screen flex flex-col">
             <Header toggleSidebar={toggleSidebar} />
+            <MobileHeader/>
 
           <div
-  className={`w-full pt-6 flex-1 ${
+  className={`w-full lg:pt-6 flex-1 ${
     showSidebar
       ? "max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start sm:px-6 lg:px-4 gap-4 lg:gap-3"
       : "px-4 sm:px-6 lg:px-8"

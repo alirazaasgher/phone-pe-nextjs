@@ -1,7 +1,7 @@
 
 "use client";
 // import { useState } from "react";
-import { Smartphone, Apple, Square, Circle, Star as StarIcon, ChevronLeft, ChevronRight, Diamond, Scale, Flame, Lightbulb, Phone } from "lucide-react";
+import { Smartphone, TrendingUp, DollarSign, Sparkles, Wifi ,Apple, Square, Circle, Star as StarIcon, ChevronLeft, ChevronRight, Diamond, Scale, Flame, Lightbulb, Phone } from "lucide-react";
 import PhoneCard from "./PhoneCard";
 import { Inter, Poppins } from 'next/font/google';
 // Module-scope declaration
@@ -11,12 +11,12 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700
 export default function HomeContent({homePageResponse}) {
   // ✅ Brands with icons
   const brands = [
-    { name: "Samsung", url: "/mobiles/samsung-mobile-phones", logo: "/images/Brands/Samsung/Samsung_Orig_Wordmark_BLUE_RGB.png", color: "bg-blue-50", icon: Smartphone, count: 520 },
-    { name: "Apple", url: "/mobiles/apple-mobile-phones", logo: "/images/Brands/Apple/apple-seeklogo.png", color: "bg-gray-50", icon: Apple, count: 220 },
-    { name: "OnePlus", url: "/mobiles/oneplus-mobile-phones", logo: "/images/Brands/OnePlus/oneplus-seeklogo.png", color: "bg-red-50", icon: StarIcon, count: 120 },
-    { name: "Xiaomi", url: "/mobiles/xiaomi-mobile-phones", logo: "/images/Brands/Xiaomi/xiaomi-seeklogo.png", color: "bg-orange-50", icon: Square, count: 2000 },
-    { name: "Vivo", url: "/mobiles/vivo-mobile-phones", logo: "/images/Brands/Vivo/vivo-seeklogo.png", color: "bg-cyan-50", icon: Circle, count: 200 },
-    { name: "Oppo", url: "/mobiles/oppo-mobile-phones", logo: "/images/Brands/Oppo/oppo-logo.png", color: "bg-green-50", icon: Smartphone, count: 20 },
+    { name: "Samsung", url: "/mobiles/samsung-mobile-phones", logo: "/images/Brands/Samsung/Samsung_Orig_Wordmark_BLUE_RGB.png", color: "bg-blue-100", icon: Smartphone, count: 520 },
+    { name: "Apple", url: "/mobiles/apple-mobile-phones", logo: "/images/Brands/Apple/apple-seeklogo.png", color: "bg-gray-100", icon: Apple, count: 220 },
+    { name: "OnePlus", url: "/mobiles/oneplus-mobile-phones", logo: "/images/Brands/OnePlus/oneplus-seeklogo.png", color: "bg-red-100", icon: StarIcon, count: 120 },
+    { name: "Xiaomi", url: "/mobiles/xiaomi-mobile-phones", logo: "/images/Brands/Xiaomi/xiaomi-seeklogo.png", color: "bg-orange-100", icon: Square, count: 2000 },
+    { name: "Vivo", url: "/mobiles/vivo-mobile-phones", logo: "/images/Brands/Vivo/vivo-seeklogo.png", color: "bg-cyan-100", icon: Circle, count: 200 },
+    { name: "Oppo", url: "/mobiles/oppo-mobile-phones", logo: "/images/Brands/Oppo/oppo-logo.png", color: "bg-green-100", icon: Smartphone, count: 20 },
 
   ];
 
@@ -138,79 +138,138 @@ export default function HomeContent({homePageResponse}) {
   return (
     <>
       <div className="p-4 space-y-3">
+
         {/* 📌 Brands */}
-        <h2 className="text-sm sm:text-2xl font-bold text-gray-800 mb-6">Top Brands</h2>
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          {brands.map((brand) => (
-            <a
-              key={brand.name}
-              href={`/mobiles/brand/${brand.name.toLowerCase()}`}
-              className={`flex flex-col items-center border border-gray-200 rounded-xl lg:p-4 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
-            >
-              <div className="w-10 h-10 sm:w-10 sm:h-10 mb-1 lg:mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
-                <img
-                  src={brand.logo}
-                  alt={brand.name}
-                  className="w-6 h-6 lg:w-10 lg:h-10 object-contain"
-                  loading="lazy"
-                />
-              </div>
-              <p className="font-sans text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                {brand.name}
-              </p>
-              <span className="font-mono text-xs text-gray-500 lg:mt-1">
-                {brand.count} models
-              </span>
-            </a>
-          ))}
+        <div className="">
+        <h2 className="text-sm sm:text-2xl font-bold text-gray-800 mb-2">Top Brands</h2>
+        
+{/* MOBILE HORIZONTAL COMPACT BRANDS */}
+<div className="sm:hidden overflow-x-auto flex gap-2 scrollbar-hide">
+  {brands.map((brand) => (
+    <a
+      key={brand.name}
+      href={`/mobiles/brand/${brand.name.toLowerCase()}`}
+      className={`flex-shrink-0 w-24 p-3 flex flex-col items-center rounded-xl shadow-sm hover:shadow-md transition-transform transform hover:scale-105 ${brand.color}`}
+    >
+      <div className="w-10 h-10 mb-1 flex items-center justify-center rounded-full group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
+        <img
+          src={brand.logo}
+          alt={brand.name}
+          className="w-9 h-9 object-contain"
+          loading="lazy"
+        />
+      </div>
+      <p className="text-xs font-semibold text-gray-800 group-hover:text-blue-600 text-center truncate w-full">
+        {brand.name}
+      </p>
+      <span className="text-[10px] text-gray-500 mt-0.5">{brand.count} models</span>
+    </a>
+  ))}
+</div>
+ <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">Swipe →</p>
+
+{/* DESKTOP VIEW - ORIGINAL GRID */}
+<div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+  {brands.map((brand) => (
+    <a
+      key={brand.name}
+      href={`/mobiles/brand/${brand.name.toLowerCase()}`}
+      className={`flex flex-col items-center border border-gray-200 rounded-xl lg:p-4 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
+    >
+      <div className="w-10 h-10 sm:w-10 sm:h-10 mb-1 lg:mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
+        <img
+          src={brand.logo}
+          alt={brand.name}
+          className="w-6 h-6 lg:w-10 lg:h-10 object-contain"
+          loading="lazy"
+        />
+      </div>
+      <p className="font-sans text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+        {brand.name}
+      </p>
+      <span className="font-mono text-xs text-gray-500 lg:mt-1">
+        {brand.count} models
+      </span>
+    </a>
+  ))}
+</div>
+<div className="flex justify-between items-center mt-2 mb-3">
+          <h3 className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}>
+            Browse by Price Range
+          </h3>
         </div>
-        <h2 className="text-sm sm:text-2xl font-bold text-gray-800 mb-6">
-          Browse by Price Range
-        </h2>
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          {priceCategories.map((priceCategorie) => {
-            // Map icons based on category id
-            const icons = {
-              1: <Diamond className={`w-6 h-6 ${priceCategorie.textColor}`} />,
-              2: <Scale className={`w-6 h-6 ${priceCategorie.textColor}`} />,
-              3: <Smartphone className={`w-6 h-6 ${priceCategorie.textColor}`} />,
-              4: <Flame className={`w-6 h-6 ${priceCategorie.textColor}`} />,
-              5: <Lightbulb className={`w-6 h-6 ${priceCategorie.textColor}`} />,
-              6: <Phone className={`w-6 h-6 ${priceCategorie.textColor}`} />
-            };
+       
+        {/* MOBILE HORIZONTAL SCROLL */}
+<div className="sm:hidden overflow-x-auto flex gap-3 scrollbar-hide">
+  {priceCategories.map((priceCategorie) => {
+    const icons = {
+      1: <Diamond className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      2: <Scale className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      3: <Smartphone className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      4: <Flame className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      5: <Lightbulb className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      6: <Phone className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+    };
 
-            return (
-              <a
-                key={priceCategorie.id}
-                href={priceCategorie.link}
-                className={`${priceCategorie.bgColor} ${priceCategorie.borderColor} flex flex-col items-center border border-gray-200 rounded-xl p-4 group min-w-[50px] min-h-[20px] sm:min-w-[130px] transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg`}
-              >
-                {/* Icon */}
-                <div className="mb-2">{icons[priceCategorie.id]}</div>
+    return (
+      <a
+        key={priceCategorie.id}
+        href={priceCategorie.link}
+        className={`${priceCategorie.bgColor} ${priceCategorie.borderColor} flex-shrink-0 w-28 flex flex-col items-center border rounded-xl p-3 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg`}
+      >
+        <div className="mb-1">{icons[priceCategorie.id]}</div>
 
-                {/* Title */}
-                <p className="font-sans text-xs sm:text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                  {priceCategorie.title}
-                </p>
+        <p className="font-sans text-xs font-semibold text-gray-800 group-hover:text-blue-600 text-center truncate w-full transition-colors">
+          {priceCategorie.title}
+        </p>
 
-                {/* Subtitle */}
-                <p
-                  className={`font-semibold text-xs ${priceCategorie.textColor} mb-2`}
-                >
-                  {priceCategorie.subtitle}
-                </p>
+        <p className={`font-semibold text-[10px] ${priceCategorie.textColor} mb-1 text-center truncate w-full`}>
+          {priceCategorie.subtitle}
+        </p>
 
-                {/* Count */}
-                <span className="font-mono text-xs text-gray-500 mt-1">
-                  {priceCategorie.count} models
-                </span>
-              </a>
-            );
-          })}
-        </div>
+        <span className="font-mono text-[10px] text-gray-500 mt-0.5">{priceCategorie.count} models</span>
+      </a>
+    );
+  })}
+</div>
+<p className="text-center text-xs text-gray-500 mt-2 sm:hidden">Swipe →</p>
+{/* DESKTOP GRID */}
+<div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+  {priceCategories.map((priceCategorie) => {
+    const icons = {
+      1: <Diamond className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      2: <Scale className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      3: <Smartphone className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      4: <Flame className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      5: <Lightbulb className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+      6: <Phone className={`w-6 h-6 ${priceCategorie.textColor}`} />,
+    };
 
+    return (
+      <a
+        key={priceCategorie.id}
+        href={priceCategorie.link}
+        className={`${priceCategorie.bgColor} ${priceCategorie.borderColor} flex flex-col items-center border border-gray-200 rounded-xl p-2 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg`}
+      >
+        <div className="mb-2">{icons[priceCategorie.id]}</div>
+
+        <p className="font-sans text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+          {priceCategorie.title}
+        </p>
+
+        <p className={`font-semibold text-xs ${priceCategorie.textColor} mb-2`}>
+          {priceCategorie.subtitle}
+        </p>
+
+        <span className="font-mono text-xs text-gray-500 mt-1">{priceCategorie.count} models</span>
+      </a>
+    );
+  })}
+</div>
+
+</div>
         {/* Newly Launched */}
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center">
           <h2 className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}>
             Newly Launched
           </h2>
@@ -259,13 +318,18 @@ export default function HomeContent({homePageResponse}) {
             </>
           )}
      {/* Mobile horizontal scroll */}
-  <div className="flex sm:hidden gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-    {phones.map((phone) => (
-      <div key={phone.id} className="min-w-[50%] snap-start">
-        <PhoneCard phone={phone} />
-      </div>
-    ))}
-  </div>
+  {/* MOBILE HORIZONTAL SWIPE CARDS */}
+<div className="sm:hidden flex gap-2 overflow-x-auto snap-x snap-mandatory px-2 py-1 scrollbar-hide">
+  {phones.map((phone) => (
+    <div
+      key={phone.id}
+      className="flex-shrink-0 w-1/2 snap-start"
+    >
+      <PhoneCard phone={phone} />
+    </div>
+  ))}
+</div>
+
   <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">Swipe →</p>
 
   {/* Tablet / Desktop grid */}
