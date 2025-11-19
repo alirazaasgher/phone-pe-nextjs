@@ -18,6 +18,7 @@ export async function getPhoneBySlug(slug) {
 export async function homePageData() {
   // call your DB or external API directly
   const res = await fetch(`https://api.mobile42.com/api/homepage`);
+  console.log(res)
   const json = await res.json();
   return json.data; // return phone object
 }

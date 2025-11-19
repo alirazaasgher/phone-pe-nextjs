@@ -23,11 +23,6 @@ export default function Header({ toggleSidebar }) {
     setShowSuggestions(false);
     router.push(`/search?q=${encodeURIComponent(name)}`);
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    router.push(`/search?q=${encodeURIComponent(query)}`);
-  };
   useEffect(() => {
      if (typeof window !== "undefined") {
     window.onscroll = () => {
@@ -41,6 +36,8 @@ export default function Header({ toggleSidebar }) {
  
 
   return (
+
+    
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
           ? "bg-slate-900/95 backdrop-blur-xl shadow-lg text-white"
@@ -86,18 +83,18 @@ export default function Header({ toggleSidebar }) {
           ))}
         </nav>
         {/* Right Section - Mobile Search Icon */}
-        <div className="flex items-center space-x-2 md:space-x-4">
+        {/* <div className="flex items-center space-x-2 md:space-x-4">
           <button
             onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
             className="cursor-pointer p-2 rounded-xl hover:bg-white/10 md:hidden transition"
           >
             <Search className="text-white" size={20} />
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Mobile Search Overlay */}
-      {isMobileSearchOpen && (
+      {/* {isMobileSearchOpen && (
         <div className="absolute top-full left-0 w-full px-4 py-3 z-50 bg-white md:hidden">
           <div className="relative">
             <input
@@ -125,7 +122,7 @@ export default function Header({ toggleSidebar }) {
               </button>
             )}
 
-            {/* Mobile Suggestions */}
+            
             {showSuggestions && suggestions.length > 0 && (
               <ul className="absolute z-20 mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-200 divide-y divide-gray-100 max-h-80 overflow-y-auto">
                 {suggestions.map((s) => (
@@ -151,15 +148,15 @@ export default function Header({ toggleSidebar }) {
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Mobile Search Background Overlay */}
-      {isMobileSearchOpen && (
+      {/* {isMobileSearchOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setIsMobileSearchOpen(false)}
         />
-      )}
+      )} */}
     </header>
 
   );

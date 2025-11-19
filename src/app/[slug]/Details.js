@@ -186,7 +186,6 @@ export default function Details({ phoneDetails }) {
       color: "green"
     },
 
-    // 5. Build & Durability (Premium feel & protection)
     {
       icon: <Layers className="w-3.5 h-3.5 text-slate-500" />,
       label: "Gorilla Glass Victus 2",
@@ -194,29 +193,12 @@ export default function Details({ phoneDetails }) {
       color: "slate"
     },
 
-    // 6. Audio Experience (Enhanced multimedia)
-    {
-      icon: <Volume2 className="w-3.5 h-3.5 text-pink-500" />,
-      label: "Dual Stereo Speakers",
-      sub: "Dolby Atmos • Hi-Res Audio • 3.5mm Jack",
-      color: "pink"
-    },
-
-    // 7. Operating System & Support (Longevity & security)
     {
       icon: <Shield className="w-3.5 h-3.5 text-indigo-500" />,
       label: "Android 15 + HyperOS",
       sub: "4 Years OS Updates • 5 Years Security",
       color: "indigo"
     },
-
-    // 8. Connectivity & Network (Modern standards)
-    {
-      icon: <Zap className="w-3.5 h-3.5 text-cyan-500" />,
-      label: "5G SA/NSA • WiFi 7",
-      sub: "NFC • Bluetooth 5.4 • UWB",
-      color: "cyan"
-    }
   ];
 
 
@@ -227,28 +209,13 @@ export default function Details({ phoneDetails }) {
   ];
 
   const colorMap = {
-    blue: "bg-white border-gray-200 hover:border-blue-300 hover:shadow-md hover:shadow-blue-100",
-    orange: "bg-white border-gray-200 hover:border-orange-300 hover:shadow-md hover:shadow-orange-100",
-    sky: "bg-white border-gray-200 hover:border-sky-300 hover:shadow-md hover:shadow-sky-100",
-    purple: "bg-white border-gray-200 hover:border-purple-300 hover:shadow-md hover:shadow-purple-100",
-    pink: "bg-white border-gray-200 hover:border-pink-300 hover:shadow-md hover:shadow-pink-100",
-    green: "bg-white border-gray-200 hover:border-green-300 hover:shadow-md hover:shadow-green-100",
-    cyan: "bg-white border-gray-200 hover:border-cyan-300 hover:shadow-md hover:shadow-cyan-100",
-    indigo: "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-100",
-    slate: "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-100",
-    red: "bg-white border-gray-200 hover:border-red-300 hover:shadow-md hover:shadow-red-100",
-  };
-
-  const iconColorMap = {
-    blue: "text-blue-500",
-    orange: "text-orange-500",
-    sky: "text-sky-500",
-    purple: "text-purple-500",
-    pink: "text-pink-500",
-    green: "text-green-500",
-    cyan: "text-cyan-500",
-    indigo: "text-indigo-500",
-  };
+  red: "bg-red-100",
+  purple: "bg-blue-50 border-blue-200",
+  sky: "bg-sky-100",
+  green: "bg-green-100",
+  slate: "bg-slate-100",
+  indigo: "bg-indigo-100",
+};
 
   return (
     <>
@@ -327,7 +294,7 @@ export default function Details({ phoneDetails }) {
         </div>
       </div>
       <div className="w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-4 p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Image Gallery */}
           <div className="lg:col-span-3 flex justify-center w-full">
             <div className="w-full flex justify-center">
@@ -336,29 +303,37 @@ export default function Details({ phoneDetails }) {
           </div>
 
           {/* Specifications */}
-          <div className="lg:col-span-9 space-y-1">
+          <div className="lg:col-span-9 p-2">
             {/* Specs Card */}
             <div className="">
-              <div className="grid grid-cols-2 gap-2" role="list">
-                {specs.map(({ icon: Icon, label, sub, color }) => (
-                  <div
-                    key={label.replace(/\s+/g, '-').toLowerCase()}
-                    role="listitem"
-                    aria-label={label}
-                    className={`flex items-start gap-2 p-2.5 rounded-lg border transition-all duration-300 bg-white ${colorMap[color]}`}
-                  >
-                    <div className={`flex-shrink-0 mt-0.5 ${iconColorMap[color]}`}>
-                      {Icon}
-                    </div>
-                    <div className="leading-tight">
-                      <div className="text-xs font-semibold text-gray-900">{label}</div>
-                      <div className="text-[11px] text-gray-600 font-medium">
-                        {sub}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+  {specs.map(({ icon: Icon, label, sub, color }, index) => (
+    <div
+      key={label}
+      className={`
+        flex items-center gap-1 p-1 rounded-md
+        ${colorMap[color]}
+      `}
+    >
+      {/* ICON */}
+      <div
+        className={`w-10 h-10 flex items-center justify-center rounded-xl shadow-inner flex-shrink-0`}
+      >
+        {Icon}
+      </div>
+
+      {/* TEXT */}
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold text-gray-700 truncate">{label}</p>
+        <p className="text-xs text-gray-600 truncate">{sub}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+
 
 
               <div className="pt-2 border-t border-gray-200">
@@ -370,31 +345,40 @@ export default function Details({ phoneDetails }) {
                       </span>
                     </div> */}
                   <div className="bg-white border border-gray-200 rounded-md shadow-sm p-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      {variants.map((v, i) => (
-                        <div
-                          key={i}
-                          className="relative border border-gray-300 rounded-lg p-2.5 bg-white hover:border-blue-500 hover:shadow-md transition-all duration-200 cursor-pointer"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            {/* RAM + Storage with badge */}
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
-                                {v.ram} + {v.storage}
-                              </span>
-                              <span className="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                                UFS 3.1
-                              </span>
-                            </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-2">
+  {/* Header */}
+  <div className="col-span-2 flex items-center">
+    <div className="bg-orange-100 p-2 rounded-xl flex items-center justify-center">
+      <Package className="w-5 h-5 text-orange-500" />
+    </div>
+    <h3 className="text-gray-900 text-sm font-semibold tracking-tight">
+      Available Variants
+    </h3>
+  </div>
 
-                            {/* Price */}
-                            <span className="font-bold text-blue-600 text-base whitespace-nowrap">
-                              {v.price}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+  {/* Variants */}
+  {[
+    { ram: "8GB + 128GB", price: "₹27,999", storage: "UFS 3.1", color: "blue" },
+    { ram: "12GB + 256GB", price: "₹31,499", storage: "UFS 4.0", color: "purple" },
+  ].map((v, i) => (
+    <div
+      key={i}
+      className={`
+        flex flex-col justify-between p-2 rounded-md cursor-pointer
+        bg-purple-50
+      `}
+    >
+      <span className="text-gray-900 font-semibold text-sm">{v.ram}</span>
+      <div className="flex items-center justify-between">
+        <span className="text-gray-700 text-xs">{v.price}</span>
+        <span className="bg-white/30 text-gray-800 px-1 py-1 rounded-md text-[10px] font-medium backdrop-blur-sm">
+          {v.storage}
+        </span>
+      </div>
+    </div>
+  ))}
+</div>
+
 
 
                     <div className="mt-1 flex items-center justify-between bg-amber-50 border border-amber-100 rounded-sm p-2">
@@ -531,9 +515,10 @@ export default function Details({ phoneDetails }) {
               </h3>
 
               {/* Competitors List */}
-              <div className="max-h-[600px] overflow-y-auto">
+              <div className="max-h-[600px] overflow-y-auto ">
 
                 {/* Competitor Card */}
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
                 <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
 
                   {/* Row 1 — Image & Name */}
@@ -611,6 +596,86 @@ export default function Details({ phoneDetails }) {
                       </a>
                     </div>
                   </div>
+                </div>
+
+                <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
+
+                  {/* Row 1 — Image & Name */}
+                  <div className="flex items-center gap-3 mb-1">
+                    <img
+                      src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
+                      alt="OPPO Find X9 Pro"
+                      className="w-16 h-20 object-contain rounded-md bg-gray-50 flex-shrink-0"
+                    />
+                    <div>
+                      <a
+                        href="/oppo-find-x9-pro-price-in-india"
+                        className="block text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                      >
+                        OPPO Find X9 Pro
+                      </a>
+                      <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-700 rounded-full">
+                        Upcoming
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Row 2 — Specs + Compare Button */}
+                  <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
+                    {/* Header */}
+                    <div className="text-[11px] font-medium text-gray-600 mt-2">Phone Comparison</div>
+
+                    {/* Comparison List */}
+                    <div className="w-full text-[11px] text-gray-700">
+                      {/* Camera */}
+                      {specs1.map((spec, i) => (
+                        <div
+                          key={i}
+                          className={`group flex items-center justify-between py-1.5
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall ? "hidden sm:flex" : ""}`}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span className="flex items-center text-gray-500 truncate">
+                              {spec.icon}
+                            </span>
+                            <span className="text-gray-800 font-bold">{spec.name}</span>
+                          </div>
+                          <span className="font-bold text-gray-900">{spec.value}</span>
+                        </div>
+                      ))}
+
+                      {/* Divider */}
+                      <div className="border-t border-gray-100 mt-2 pt-1"></div>
+
+                      {/* Common Features */}
+                      <div className="text-[12px] font-semibold text-gray-800 mb-1">Common Features</div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <MemoryStick className="text-blue-500 mr-1 w-4 h-4" /> RAM
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">12 GB</span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <HardDrive className="text-green-500  mr-1 w-4 h-4" /> Internal Memory
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">256 GB</span>
+                      </div>
+                    </div>
+
+                    {/* Compare Button */}
+                    <div className="flex justify-end mt-4">
+                      <a
+                        href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
+                        className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
+                      >
+                        Compare Now →
+                      </a>
+                    </div>
+                  </div>
+                </div>
                 </div>
               </div>
             </div>

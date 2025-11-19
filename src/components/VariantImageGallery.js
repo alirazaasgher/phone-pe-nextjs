@@ -121,16 +121,16 @@ export default function VariantImageGallery({ phone }) {
 
 
              <div className="w-full">
-      <div className="flex flex-col items-center w-full max-w-md mx-auto group">
+      <div className="flex flex-col items-center max-w-md mx-auto group">
        
-        <div className="relative w-[250px] h-[250px] lg:w-[200px] lg:h-[200px] overflow-hidden aspect-square overflow-hidden">
+        <div className="relative aspect-[4/3">
 
       <AnimatePresence mode="wait">
         <motion.img
           key={`${selectedColor}-${currentImageIndex}`}
           src={activeSrc}
           alt={`${selectedColor} phone - Image ${currentImageIndex + 1}`}
-          className="w-full h-full object-contain cursor-pointer"
+          className="w-full h-full object-contain cursor-pointer mix-blend-multiply mix-blend-multiply "
           initial={isFirstRender.current ? false : { opacity: 0, x: direction > 0 ? 80 : -80 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}

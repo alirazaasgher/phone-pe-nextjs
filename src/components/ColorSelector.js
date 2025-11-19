@@ -3,9 +3,9 @@ export default function ColorSelector({ colors, selectedColor, onSelect }) {
     return (
          <div className="text-center">
       <div className="flex items-center justify-center">
-        <span className="text-sm font-semibold text-gray-800 mt-3">{selectedColor}</span>
+        <span className="text-sm font-semibold text-gray-800 mt-2 sm:mt-3">{selectedColor}</span>
       </div>
-      <div className="flex justify-center gap-3 mt-3">
+      <div className="flex justify-center gap-3 mt-2 sm:mt-3">
         {colors.map((color) => {
           const isActive = selectedColor === color.name;
           return (

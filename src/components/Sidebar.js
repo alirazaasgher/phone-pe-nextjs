@@ -376,10 +376,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
             <div className="grid grid-cols-2 gap-6">
               {[
-                { id: 1, name: "Galaxy S24 Ultra", image: "/images/3.webp" },
-                { id: 2, name: "Galaxy Z Fold 6", image: "/images/2.webp" },
-                { id: 3, name: "Galaxy A55", image: "/images/4.webp" },
-                { id: 4, name: "Galaxy A35", image: "/images/1.webp" },
+                { id: 1, name: "Galaxy S24 Ultra", image: "" },
+                { id: 2, name: "Galaxy Z Fold 6", image: "" },
+                { id: 3, name: "Galaxy A55", image: "" },
+                { id: 4, name: "Galaxy A35", image: "" },
               ].map((p) => (
                 <div key={p.id} className="group flex flex-col items-center text-center cursor-pointer">
                   <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-2 flex items-center justify-center">
@@ -406,9 +406,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
             <div className="divide-y divide-gray-100 border-t border-gray-100">
               {[
-                { id: 1, title: "Apple Unveils iPhone 17 with Holographic Display", image: "/images/images (1).jpg", category: "Mobile" },
-                { id: 2, title: "Elon Musk’s Neuralink Uploads Human Memory", image: "/images/imagesai.jpg", category: "AI" },
-                { id: 3, title: "Samsung Galaxy S25 to Feature Transparent Display", image: "/images/imagesai.jpg", category: "Tech" },
+                { id: 1, title: "Apple Unveils iPhone 17 with Holographic Display", image: "", category: "Mobile" },
+                { id: 2, title: "Elon Musk’s Neuralink Uploads Human Memory", image: "", category: "AI" },
+                { id: 3, title: "Samsung Galaxy S25 to Feature Transparent Display", image: "", category: "Tech" },
               ].map((p) => (
                 <div key={p.id} className="group flex items-center gap-4 py-4 cursor-pointer hover:bg-gray-50 px-2 rounded-lg transition-all duration-200">
                   <div className="relative w-24 h-16 flex-shrink-0 overflow-hidden rounded-md">
@@ -454,10 +454,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             </h4>
             <div className="grid grid-cols-2 gap-6">
               {[
-                { id: 1, name: "Galaxy S25 Ultra", image: "/images/3.webp" },
-                { id: 2, name: "Galaxy Z Fold 7", image: "/images/2.webp" },
-                { id: 3, name: "Galaxy S25 Ultra", image: "/images/4.webp" },
-                { id: 4, name: "Galaxy Z Fold 7", image: "/images/1.webp" },
+                { id: 1, name: "Galaxy S25 Ultra", image: "" },
+                { id: 2, name: "Galaxy Z Fold 7", image: "" },
+                { id: 3, name: "Galaxy S25 Ultra", image: "" },
+                { id: 4, name: "Galaxy Z Fold 7", image: "" },
               ].map((p) => (
                 <div key={p.id} className="group flex flex-col items-center text-center cursor-pointer">
                   <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-2 flex items-center justify-center">
@@ -528,9 +528,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
             <div className="space-y-4">
               {[
-                { id: 1, name: "Samsung Galaxy S24 Ultra", oldPrice: "Rs. 539,999", newPrice: "Rs. 499,999", image: "/images/3.webp" },
-                { id: 2, name: "iPhone 15 Pro Max", oldPrice: "Rs. 589,999", newPrice: "Rs. 559,999", image: "/images/2.webp" },
-                { id: 3, name: "OnePlus 12", oldPrice: "Rs. 239,999", newPrice: "Rs. 214,999", image: "/images/4.webp" },
+                { id: 1, name: "Samsung Galaxy S24 Ultra", oldPrice: "Rs. 539,999", newPrice: "Rs. 499,999", image: "" },
+                { id: 2, name: "iPhone 15 Pro Max", oldPrice: "Rs. 589,999", newPrice: "Rs. 559,999", image: "" },
+                { id: 3, name: "OnePlus 12", oldPrice: "Rs. 239,999", newPrice: "Rs. 214,999", image: "" },
               ].map((p) => (
                 <div key={p.id} className="flex items-center gap-4 p-2 border border-gray-100 rounded-lg hover:border-red-400 hover:shadow-sm transition-all duration-200 cursor-pointer">
                   <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-md">

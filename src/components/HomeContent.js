@@ -7,7 +7,7 @@ import { Inter, Poppins } from 'next/font/google';
 // Module-scope declaration
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
-
+import { useRef,useState,useEffect } from "react";
 export default function HomeContent({homePageResponse}) {
   // ✅ Brands with icons
   const brands = [
@@ -106,6 +106,57 @@ export default function HomeContent({homePageResponse}) {
   const popularMobiles = homePageResponse?.popular_mobiles || [];
   const itemsPerPage = 3;
   const totalPages = Math.ceil(phones.length / itemsPerPage);
+  const scrollRef = useRef(null);
+  const itemsRef = useRef([]);
+  const [pageIndex, setPageIndex] = useState(0);
+
+  // Split phones into pages (2 cards per page)
+  const pages = [];
+  for (let i = 0; i < phones.length; i += 2) {
+    pages.push(phones.slice(i, i + 2));
+  }
+
+  // IntersectionObserver to detect current page
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           const index = Number(entry.target.dataset.index);
+  //           setPageIndex(index);
+  //         }
+  //       });
+  //     },
+  //     { threshold: 0.6 }
+  //   );
+
+  //   itemsRef.current.forEach((item) => item && observer.observe(item));
+
+  //   return () => {
+  //     itemsRef.current.forEach((item) => item && observer.unobserve(item));
+  //   };
+  // }, [pages.length]);
+
+
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.dataset.index);
+          setPageIndex(index); // update indicator in real-time while swiping
+        }
+      });
+    },
+    { threshold: 0.5 } // triggers when 50% of the page is visible
+  );
+
+  itemsRef.current.forEach((item) => item && observer.observe(item));
+
+  return () => {
+    itemsRef.current.forEach((item) => item && observer.unobserve(item));
+  };
+}, [pages.length]);
   // ✅ Phone Card
   // const [startIndex, setStartIndex] = useState(0);
 
@@ -319,18 +370,40 @@ export default function HomeContent({homePageResponse}) {
           )}
      {/* Mobile horizontal scroll */}
   {/* MOBILE HORIZONTAL SWIPE CARDS */}
-<div className="sm:hidden flex gap-2 overflow-x-auto snap-x snap-mandatory px-2 py-1 scrollbar-hide">
-  {phones.map((phone) => (
+<div
+  ref={scrollRef}
+  className="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-1 scrollbar-hide scroll-smooth -webkit-overflow-scrolling-touch"
+>
+  {pages.map((pageCards, page) => (
     <div
-      key={phone.id}
-      className="flex-shrink-0 w-1/2 snap-start"
+      key={page}
+      data-index={page}
+      ref={(el) => (itemsRef.current[page] = el)}
+      className="snap-center w-full flex-shrink-0 flex gap-2"
     >
-      <PhoneCard phone={phone} />
+      {pageCards.map((phone) => (
+        <div key={phone.id} className="w-1/2">
+          <PhoneCard phone={phone} />
+        </div>
+      ))}
     </div>
   ))}
 </div>
 
-  <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">Swipe →</p>
+      {/* Modern Indicator */}
+    <div className="flex justify-center gap-1 mt-2 sm:hidden">
+  {pages.map((_, index) => (
+    <div
+      key={index}
+      className={`h-1 rounded-full transition-all duration-150 ${
+        pageIndex === index ? "w-6 bg-blue-600" : "w-2 bg-gray-300"
+      }`}
+    />
+  ))}
+</div>
+
+
+
 
   {/* Tablet / Desktop grid */}
   <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
