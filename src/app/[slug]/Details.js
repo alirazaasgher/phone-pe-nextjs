@@ -42,7 +42,9 @@ import {
   Layers,
   Type,
   Weight,
-  DollarSign
+  DollarSign,
+  SdCard,
+  MonitorSmartphone
 } from "lucide-react";
 import VariantImageGallery from "@/components/VariantImageGallery";
 import PhoneCard from "@/components/PhoneCard";
@@ -294,110 +296,80 @@ export default function Details({ phoneDetails }) {
         </div>
       </div>
       <div className="w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12">
+     <div className="flex flex-col lg:flex-row items-start py-3">
           {/* Image Gallery */}
-          <div className="lg:col-span-3 flex justify-center w-full">
-            <div className="w-full flex justify-center">
-              <VariantImageGallery phone={phoneDetails} />
-            </div>
-          </div>
-
-          {/* Specifications */}
-          <div className="lg:col-span-9 p-2">
-            {/* Specs Card */}
-            <div className="">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-  {specs.map(({ icon: Icon, label, sub, color }, index) => (
-    <div
-      key={label}
-      className={`
-        flex items-center gap-1 p-1 rounded-md
-        ${colorMap[color]}
-      `}
-    >
-      {/* ICON */}
-      <div
-        className={`w-10 h-10 flex items-center justify-center rounded-xl shadow-inner flex-shrink-0`}
-      >
-        {Icon}
-      </div>
-
-      {/* TEXT */}
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-gray-700 truncate">{label}</p>
-        <p className="text-xs text-gray-600 truncate">{sub}</p>
-      </div>
-    </div>
-  ))}
-</div>
+    <VariantImageGallery phone={phoneDetails} />
 
 
+ {/* Right Specs */}
+<div className="flex-1 flex flex-col gap-4">
+  {/* Top Specs & Variants Section */}
+  <div className="flex flex-col lg:flex-row gap-1">
+    {/* Left: Top Specs List */}
+    <ul className="w-full lg:w-[280px] text-[14px] leading-tight border-b lg:border-b-0 lg:border-r border-gray-200 pb-3 lg:pb-0">
+      {[{ icon: <Calendar className="w-3 h-3 text-green-700"/>, text: "Released 2025, October 23" },
+        { icon: <Smartphone className="w-3 h-3 text-teal-600" />, text: "206g, 8mm thickness" },
+        { icon: <Shield className="w-3.5 h-3.5 text-indigo-500" />, text: "Android 16, HyperOS 3" },
+        { icon: <Cpu className="w-3.5 h-3.5 text-orange-600" />, text: "Snapdragon 8 Gen 3 (4nm)" },
+      ].map((item, i) => (
+        <li key={i} className="flex items-center gap-2 py-1">
+          {item.icon}
+          <span className="text-gray-700">{item.text}</span>
+        </li>
+      ))}
+    </ul>
 
-
-
-
-              <div className="pt-2 border-t border-gray-200">
-                <div className="mb-2">
-                  {/* <div className="flex items-center mb-1">
-                      <span className="text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <HardDrive className="w-3 h-3" />
-                        Storage Variants
-                      </span>
-                    </div> */}
-                  <div className="bg-white border border-gray-200 rounded-md shadow-sm p-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 p-2">
-  {/* Header */}
-  <div className="col-span-2 flex items-center">
-    <div className="bg-orange-100 p-2 rounded-xl flex items-center justify-center">
-      <Package className="w-5 h-5 text-orange-500" />
-    </div>
-    <h3 className="text-gray-900 text-sm font-semibold tracking-tight">
-      Available Variants
-    </h3>
-  </div>
-
-  {/* Variants */}
+    {/* Right: Variants */}
+    
+     <ul className="w-full lg:flex-1 grid grid-cols-2 gap-2 pl-2 pr-2">
   {[
-    { ram: "8GB + 128GB", price: "₹27,999", storage: "UFS 3.1", color: "blue" },
-    { ram: "12GB + 256GB", price: "₹31,499", storage: "UFS 4.0", color: "purple" },
-  ].map((v, i) => (
-    <div
+    { storage: "256GB", type: "SSD", priceUSD: 799, pricePKR: 350000 },
+    { storage: "512GB", type: "SSD", priceUSD: 899, pricePKR: 400000 },
+    { storage: "1TB", type: "SSD", priceUSD: 1099, pricePKR: 490000 },
+    { storage: "1TB", type: "Pro SSD", priceUSD: 1299, pricePKR: 580000 },
+  ].map((variant, i) => (
+    <li
       key={i}
-      className={`
-        flex flex-col justify-between p-2 rounded-md cursor-pointer
-        bg-purple-50
-      `}
+      className="flex flex-col gap-2 p-2 border border-gray-100 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
     >
-      <span className="text-gray-900 font-semibold text-sm">{v.ram}</span>
-      <div className="flex items-center justify-between">
-        <span className="text-gray-700 text-xs">{v.price}</span>
-        <span className="bg-white/30 text-gray-800 px-1 py-1 rounded-md text-[10px] font-medium backdrop-blur-sm">
-          {v.storage}
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 text-sm font-medium">{variant.storage}</span>
+        <span className="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
+          {variant.type}
         </span>
       </div>
-    </div>
+      <span className="font-semibold text-gray-800">
+        ${variant.priceUSD} / PKR {variant.pricePKR.toLocaleString()}
+      </span>
+    </li>
   ))}
+</ul>
+
+
+    
+  </div>
+
+  {/* Specs Grid Below */}
+  <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+  {[
+    { icon: <MonitorSmartphone className="w-6 h-6 text-green-700" />, value: "6.59\"", subvalue: "1156x2510 pixels" },
+    { icon: <Camera className="w-6 h-6 text-green-700" />, value: "50MP", subvalue: "4320p" },
+    { icon: <Battery className="w-6 h-6 text-green-700" />, value: "7100mAh", subvalue: "100W" },
+  ].map((item, i) => (
+    <li
+      key={i}
+      className="flex flex-col items-start gap-1 p-3 border border-gray-100 rounded-lg bg-white shadow-sm"
+    >
+      <div className="text-center">{item.icon}</div>
+      <span className="text-base font-semibold text-gray-800">{item.value}</span>
+      <span className="text-xs text-gray-500">{item.subvalue}</span>
+    </li>
+  ))}
+</ul>
+
 </div>
 
 
-
-                    <div className="mt-1 flex items-center justify-between bg-amber-50 border border-amber-100 rounded-sm p-2">
-                      {/* Left side: Info icon + Dual SIM text */}
-                      <div className="flex items-center gap-1">
-                        <Info className="w-3 h-3 text-amber-600" />
-                        <p className="text-amber-800 text-[9.5px] font-medium">Dual SIM • No SD card slot</p>
-                      </div>
-
-                      {/* Right side: USB-C • IP53 • GG5 */}
-                      {/* <div className="text-[10px] text-gray-500">
-                          USB-C • IP53 • GG5
-                        </div> */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
         <div className="md:hidden p-3 flex items-start justify-between">
           {/* Left Section — Phone Name + Release Date */}
