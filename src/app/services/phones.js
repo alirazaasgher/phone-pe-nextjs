@@ -16,11 +16,34 @@ export async function getPhoneBySlug(slug) {
 }
 
 export async function homePageData() {
+  return {
+  latest_mobiles: [
+    {
+      id:1,
+      name: "Xiaomi 15t",
+      slug: "xiaomi-15t",
+      primary_image: "/images/Realme15T-s.jpg",
+      searchIndex: {
+        ram: 4,
+        storage: 64
+      }
+    },
+    {
+      id:2,
+      name: "Xiaomi 15",
+      slug: "xiaomi-15",
+      primary_image: "/images/Realme15T-s.jpg",
+      searchIndex: {
+        ram: 4,
+        storage: 64
+      }
+    }
+  ]
+};
   // call your DB or external API directly
-  const res = await fetch(`https://api.mobile42.com/api/homepage`);
-  console.log(res)
-  const json = await res.json();
-  return json.data; // return phone object
+  // const res = await fetch(`https://api.mobile42.com/api/homepage`);
+  // const json = await res.json();
+  // return json.data; // return phone object
 }
 
 export async function getAllPhoneSlugs() {

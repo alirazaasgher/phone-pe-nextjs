@@ -247,36 +247,31 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
       {/* Sidebar */}
       <div
-        className={`
-                    fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-xl
-                    transform transition-transform duration-300
-                    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-                    overflow-y-auto
-                    md:translate-x-0 md:static md:shadow-none
-                  `}
-      >
-
-        {/* 🔍 Search bar section */}
-        <div className="p-3 border-b border-gray-200">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search mobiles..."
-              className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
-            </svg>
-          </div>
-        </div>
-        {/* Filters Content */}
+  className={`
+    fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-xl
+    transform transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0 md:static md:shadow-none
+  `}
+>
+  <div className="sticky top-0 z-20 relative p-3 sm:p-4 border-none sm:border-b">
+    <input
+      type="text"
+      placeholder="Search mobiles..."
+      className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg
+                 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      onChange={(e) => handleSearch(e.target.value)}
+    />
+    <svg
+      className="absolute left-7 top-6 w-4 h-4 text-gray-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+    </svg>
+  </div>
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           {/* Brand Section */}
           <details className="group" open>
@@ -368,7 +363,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         <div className="border-t mt-4 pt-3 space-y-7 p-3">
 
           {/* 1️⃣ Top Phones from Same Brand */}
-          <div>
+          {/* <div>
             <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
               Top Samsung Picks
@@ -395,10 +390,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* 2️⃣ Latest News */}
-          <div>
+          {/* <div>
             <h4 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
               Latest News
@@ -425,7 +420,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* 3️⃣ Tech Insights */}
           <div>
@@ -447,7 +442,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
           </div>
 
           {/* 4️⃣ Upcoming Models */}
-          <div>
+          {/* <div>
             <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full"></span>
               Upcoming Samsung Phones
@@ -471,7 +466,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* 5️⃣ Popular Comparisons */}
           <div>
@@ -520,7 +515,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
           </div>
 
           {/* 7️⃣ Price Drop Alerts */}
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
               <span className="w-1.5 h-5 bg-gradient-to-b from-red-500 to-pink-600 rounded-full"></span>
               Price Drop Alerts
@@ -546,7 +541,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>

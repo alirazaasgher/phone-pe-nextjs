@@ -50,6 +50,7 @@ import VariantImageGallery from "@/components/VariantImageGallery";
 import PhoneCard from "@/components/PhoneCard";
 import mobiles from "../../data/homepage";
 import MobileSpeficaion from "@/components/MobileSpecfications";
+import ColorSelector from "@/components/ColorSelector";
 export default function Details({ phoneDetails }) {
   const phones = mobiles?.data?.topNewMobiles || [];
   const [startIndex, setStartIndex] = useState(0);
@@ -302,72 +303,103 @@ export default function Details({ phoneDetails }) {
 
 
  {/* Right Specs */}
-<div className="flex-1 flex flex-col gap-4">
-  {/* Top Specs & Variants Section */}
-  <div className="flex flex-col lg:flex-row gap-1">
-    {/* Left: Top Specs List */}
-    <ul className="w-full lg:w-[280px] text-[14px] leading-tight border-b lg:border-b-0 lg:border-r border-gray-200 pb-3 lg:pb-0">
-      {[{ icon: <Calendar className="w-3 h-3 text-green-700"/>, text: "Released 2025, October 23" },
-        { icon: <Smartphone className="w-3 h-3 text-teal-600" />, text: "206g, 8mm thickness" },
-        { icon: <Shield className="w-3.5 h-3.5 text-indigo-500" />, text: "Android 16, HyperOS 3" },
-        { icon: <Cpu className="w-3.5 h-3.5 text-orange-600" />, text: "Snapdragon 8 Gen 3 (4nm)" },
-      ].map((item, i) => (
-        <li key={i} className="flex items-center gap-2 py-1">
-          {item.icon}
-          <span className="text-gray-700">{item.text}</span>
-        </li>
-      ))}
-    </ul>
+<div className="flex-1 flex flex-col gap-1">
+      {/* Top Specs & Variants Section */}
+      <div className="flex flex-col lg:flex-row gap-1 items-start">
+        {/* Left: Top Specs List */}
+        <ul className="w-full lg:w-[280px] text-[14px] leading-tight border border-gray-200/80 rounded-xl overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          {[
+            { icon: <Calendar className="w-3 h-3 text-green-600" />, text: "Released 2025, October 23", subText: "Official launch date" },
+            { icon: <Smartphone className="w-3 h-3 text-teal-600" />, text: "206g, 8mm thickness", subText: "Weight & Thickness" },
+            { icon: <Shield className="w-3.5 h-3.5 text-indigo-500" />, text: "Android 16, HyperOS 3", subText: "OS Version" },
+            { icon: <Cpu className="w-3.5 h-3.5 text-orange-600" />, text: "Snapdragon 8 Gen 3 (4nm)", subText: "Processor" },
+          ].map((item, i) => (
+            <li
+              key={i}
+              className={`flex items-center gap-2 py-1 px-2 ${
+                i !== 0 ? "border-t border-gray-200/60" : ""
+              } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+            >
+              <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
+                {item.icon}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-gray-900 font-semibold">{item.text}</span>
+                <span className="text-gray-500 text-sm">{item.subText}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+         {/* <ColorSelector
+          colors={phoneDetails.colors}
+          selectedColor={phoneDetails.colors[0].name}
+          // onSelect={setSelectedColor}
+        /> */}
+        
 
-    {/* Right: Variants */}
-    
-     <ul className="w-full lg:flex-1 grid grid-cols-2 gap-2 pl-2 pr-2">
-  {[
-    { storage: "256GB", type: "SSD", priceUSD: 799, pricePKR: 350000 },
-    { storage: "512GB", type: "SSD", priceUSD: 899, pricePKR: 400000 },
-    { storage: "1TB", type: "SSD", priceUSD: 1099, pricePKR: 490000 },
-    { storage: "1TB", type: "Pro SSD", priceUSD: 1299, pricePKR: 580000 },
-  ].map((variant, i) => (
-    <li
-      key={i}
-      className="flex flex-col gap-2 p-2 border border-gray-100 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
-    >
-      <div className="flex justify-between items-center">
-        <span className="text-gray-600 text-sm font-medium">{variant.storage}</span>
-        <span className="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
-          {variant.type}
-        </span>
+        {/* Right: Variants */}
+        <ul className="w-full lg:flex-1 grid grid-cols-2 gap-2 pl-2 pr-2">
+          {[
+            { ram:"4", storage: "256GB", type: "SSD", priceUSD: 799, pricePKR: 350000 },
+            { ram:"8", storage: "512GB", type: "SSD", priceUSD: 899, pricePKR: 400000 },
+            { ram:"12", storage: "1TB", type: "SSD", priceUSD: 1099, pricePKR: 490000 },
+            { ram:"16", storage: "1TB", type: "Pro SSD", priceUSD: 1299, pricePKR: 580000 },
+          ].map((variant, i, arr) => {
+            let colSpan = "col-span-1";
+            if (arr.length === 1) colSpan = "col-span-2";
+            if (arr.length === 3 && i === 2) colSpan = "col-span-2";
+
+            return (
+              <li
+                key={i}
+                className={`flex flex-col gap-2 p-2 rounded-xl bg-gradient-to-br from-white via-white to-gray-50/30 border border-gray-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.06)] hover:border-gray-300/80 cursor-pointer transition-all duration-300 group ${colSpan}`}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-xs text-gray-500 font-medium">{variant.ram}GB</span>
+                    <span className="text-sm font-bold text-gray-900">{variant.storage}</span>
+                  </div>
+                  <span
+                    className={`px-2 py-0.5 text-xs font-bold rounded-full ${
+                      variant.type.includes("Pro")
+                        ? "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border border-purple-200/50"
+                        : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-200/50"
+                    } shadow-sm group-hover:scale-105 transition-transform duration-200`}
+                  >
+                    {variant.type}
+                  </span>
+                </div>
+                <span className="font-bold text-gray-900 tracking-tight">
+                  ${variant.priceUSD}{" "}
+                  <span className="text-gray-500 text-xs font-medium">
+                    / PKR {variant.pricePKR.toLocaleString()}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
-      <span className="font-semibold text-gray-800">
-        ${variant.priceUSD} / PKR {variant.pricePKR.toLocaleString()}
-      </span>
-    </li>
-  ))}
-</ul>
+      
 
-
-    
-  </div>
-
-  {/* Specs Grid Below */}
-  <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-  {[
-    { icon: <MonitorSmartphone className="w-6 h-6 text-green-700" />, value: "6.59\"", subvalue: "1156x2510 pixels" },
-    { icon: <Camera className="w-6 h-6 text-green-700" />, value: "50MP", subvalue: "4320p" },
-    { icon: <Battery className="w-6 h-6 text-green-700" />, value: "7100mAh", subvalue: "100W" },
-  ].map((item, i) => (
-    <li
-      key={i}
-      className="flex flex-col items-start gap-1 p-3 border border-gray-100 rounded-lg bg-white shadow-sm"
-    >
-      <div className="text-center">{item.icon}</div>
-      <span className="text-base font-semibold text-gray-800">{item.value}</span>
-      <span className="text-xs text-gray-500">{item.subvalue}</span>
-    </li>
-  ))}
-</ul>
-
-</div>
+      {/* Specs Grid Below */}
+      <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+        {[
+          { icon: <MonitorSmartphone className="w-6 h-6 text-green-600" />, value: "6.59\"", subvalue: "1156x2510 pixels" },
+          { icon: <Camera className="w-6 h-6 text-teal-600" />, value: "50MP", subvalue: "4320p" },
+          { icon: <Battery className="w-6 h-6 text-orange-600" />, value: "7100mAh", subvalue: "100W" },
+        ].map((item, i) => (
+          <li
+            key={i}
+            className="flex flex-col items-start gap-1 p-3 border border-gray-200/80 rounded-xl bg-gradient-to-br from-white to-gray-50/40 shadow-[0_2px_6px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:border-gray-300/80 transition-all duration-300 cursor-pointer group"
+          >
+            <div className="text-center group-hover:scale-110 transition-transform duration-200">{item.icon}</div>
+            <span className="text-base font-bold text-gray-900">{item.value}</span>
+            <span className="text-xs text-gray-500 font-medium">{item.subvalue}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
 
 
         </div>
@@ -487,7 +519,7 @@ export default function Details({ phoneDetails }) {
               </h3>
 
               {/* Competitors List */}
-              <div className="max-h-[600px] overflow-y-auto ">
+              <div className="max-h-[600px]">
 
                 {/* Competitor Card */}
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
