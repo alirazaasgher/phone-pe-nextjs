@@ -114,8 +114,14 @@ export default function Details({ phoneDetails }) {
       name: "Battery",
       value: (
         <span className="inline-flex items-center gap-1">
-          <span className="text-red-600">4400</span> vs{" "}
-          <span className="text-blue-600">4832 mAh</span>
+          <span className="text-red-600">4400</span>
+          <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+            VS.
+          </span>
+          <span className="text-blue-600">4832</span>
+          {/* <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+            mAh
+          </span> */}
         </span>
       ),
     },
@@ -126,9 +132,6 @@ export default function Details({ phoneDetails }) {
         <span className="inline-flex items-center gap-1">
           <span className="text-[8px] lg:text-[10px] font-medium opacity-70"></span>
           <span className="text-blue-600">75,000</span> vs
-          <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
-            Rs.
-          </span>
           <span className="text-red-600">72,000</span>
         </span>
       ),
@@ -226,7 +229,7 @@ export default function Details({ phoneDetails }) {
   const highlightItems = [
     {
       label: '6.5" AMOLED',
-      value: "2800×1260 • 144Hz ",
+      value: "2800×1260",
       icon: <Smartphone size={16} />,
       color: "bg-blue-100 text-blue-600",
     },
@@ -242,10 +245,10 @@ export default function Details({ phoneDetails }) {
             <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
             <span className="font-bold text-blue-700">50W</span>
           </span>
-          <span className="inline-flex items-center">
+          {/* <span className="inline-flex items-center">
             <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
             <span className="font-bold text-gray-800">10W</span>
-          </span>
+          </span> */}
         </span>
       ),
       icon: <Battery size={16} />,
@@ -260,7 +263,7 @@ export default function Details({ phoneDetails }) {
 
     {
       label: "Snapdragon 8 Gen 2",
-      value: "Octa-core (3.3GHz)",
+      value: "Octa-core",
       icon: <Cpu size={16} />,
       color: "bg-yellow-100 text-yellow-600",
     },
@@ -516,7 +519,7 @@ export default function Details({ phoneDetails }) {
             </ul>
           </div>
         </div>
-        <div className="md:hidden px-4 py-3 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0 z-40">
+        <div className="md:hidden px-4 py-3 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0">
           {/* LEFT SECTION */}
           <div className="flex flex-col">
             <h1 className="text-xl font-semibold text-gray-900 leading-tight">
@@ -599,7 +602,7 @@ export default function Details({ phoneDetails }) {
             Dual SIM (Hybrid) • No SD card slot
           </p>
         </div>
-        <div className="md:hidden mb-2">
+        <div className="md:hidden mb-2 p-2">
           <div className="grid grid-cols-2 gap-1">
             {highlightItems.map((item) => (
               <div
@@ -727,7 +730,7 @@ export default function Details({ phoneDetails }) {
                         <div className="flex justify-between items-center">
                           <span className="flex items-center text-gray-500 truncate">
                             <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
-                            Internal Memory
+                            Memory
                           </span>
                           <span className="font-semibold text-gray-900 truncate ml-2">
                             256 GB
@@ -823,7 +826,7 @@ export default function Details({ phoneDetails }) {
                         <div className="flex justify-between items-center">
                           <span className="flex items-center text-gray-500 truncate">
                             <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
-                            Internal Memory
+                            Memory
                           </span>
                           <span className="font-semibold text-gray-900 truncate ml-2">
                             256 GB
