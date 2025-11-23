@@ -1,10 +1,7 @@
-export default function Loading() {
+export default function Loader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-4 text-gray-600 text-lg">Loading...</p>
-      </div>
+    <div className="absolute inset-0 flex items-center justify-center z-50">
+      <img src="/images/loader.gif" alt="Loading..." className="w-24 h-24" />
     </div>
-  )
+  );
 }

@@ -1,10 +1,33 @@
 // src/components/PhoneCard.js
 "use client";
 import Link from "next/link";
-import { Star, Eye, X, Plus, Calendar, Cable, Smartphone, Cpu, RotateCcw, Monitor, Camera, Battery, Shield, Wifi, MemoryStick, HardDrive } from "lucide-react"; // Icons from Lucide
-import { Inter, Poppins } from 'next/font/google';
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
-const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
+import {
+  Star,
+  Eye,
+  X,
+  Plus,
+  Calendar,
+  Cable,
+  Smartphone,
+  Cpu,
+  RotateCcw,
+  Monitor,
+  Camera,
+  Battery,
+  Shield,
+  Wifi,
+  MemoryStick,
+  HardDrive,
+} from "lucide-react"; // Icons from Lucide
+import { Inter, Poppins } from "next/font/google";
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 import { motion, AnimatePresence } from "framer-motion";
 import QuickViewDrawer from "@/components/QuickViewDrawer";
 import { useState } from "react";
@@ -18,12 +41,17 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
   const isCompared = comparedPhones.some((p) => p.id === phone.id);
   const getTagColor = (tag) => {
-    if (tag.includes('5G') || tag.includes('WiFi')) return 'bg-green-100 text-green-700';
-    if (tag.includes('Snapdragon') || tag.includes('Bionic')) return 'bg-purple-100 text-purple-700';
-    if (tag.includes('MP') || tag.includes('Camera')) return 'bg-blue-100 text-blue-700';
-    if (tag.includes('GB') || tag.includes('TB')) return 'bg-gray-100 text-gray-700';
-    if (tag.includes('Pro') || tag.includes('Max')) return 'bg-indigo-100 text-indigo-700';
-    return 'bg-blue-100 text-blue-700'; // default
+    if (tag.includes("5G") || tag.includes("WiFi"))
+      return "bg-green-100 text-green-700";
+    if (tag.includes("Snapdragon") || tag.includes("Bionic"))
+      return "bg-purple-100 text-purple-700";
+    if (tag.includes("MP") || tag.includes("Camera"))
+      return "bg-blue-100 text-blue-700";
+    if (tag.includes("GB") || tag.includes("TB"))
+      return "bg-gray-100 text-gray-700";
+    if (tag.includes("Pro") || tag.includes("Max"))
+      return "bg-indigo-100 text-indigo-700";
+    return "bg-blue-100 text-blue-700"; // default
   };
 
   const openModal = (phone) => {
@@ -41,30 +69,33 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
     <>
       <div
         className={`
-    ${inter.className} 
+    ${inter.className}
     bg-white
-    rounded-md 
-    lg:rounded-xl 
-    shadow-md 
-    border border-gray-200 
-    group 
-    flex flex-col 
-    relative 
+    rounded-md
+    lg:rounded-xl
+    shadow-md
+    border border-gray-200
+    group
+    flex flex-col
+    relative
     overflow-hidden
   `}
       >
-
         {/* Product Image */}
         <Link
           href={`/${phone.slug}`}
-          className="relative group w-full h:2 lg:aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+          className="relative group bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
         >
-          <img
-            src={phone.primary_image}
-            alt={phone.name}
-            loading="lazy"
-            className="w-full h-full object-contain mix-blend-multiply p-3"
-          />
+          <div className="flex-shrink-0 flex justify-center items-center h-full">
+            <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center">
+              <img
+                src={phone.primary_image || "images/default_placeholder.webp"}
+                alt={phone.name}
+                loading="lazy"
+                className="object-contain mix-blend-multiply max-w-[150px] max-h-[150px] lg:max-w-[200px] lg:max-h-[200px] p-3 sm:p-6"
+              />
+            </div>
+          </div>
 
           {/* Hover Overlay */}
           {/* Overlay gradient */}
@@ -73,7 +104,6 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
           {/* Specs and Price */}
           <div className="absolute bottom-0 left-0 right-0 flex flex-col items-start lg:p-2">
             <div className="relative inline-flex flex-col items-start group">
-
               {/* Storage Tag */}
               <div className="bg-gray-800  text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
                 {phone?.searchIndex?.ram}GB | {phone?.searchIndex?.storage}GB
@@ -82,25 +112,23 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               {/* Main Price Box */}
               <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[65px] lg:w-[95px] flex items-center">
                 <div className="flex items-baseline gap-0.5 w-full">
-                  <span className="text-[8px] lg:text-[10px] font-medium opacity-70">Rs.</span>
+                  <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+                    Rs.
+                  </span>
                   <span className="text-[9px] lg:text-[15px] font-bold text-gray-900">
-                    {phone?.searchIndex?.min_price ? phone?.searchIndex?.min_price : '67,999'}
+                    {phone?.searchIndex?.min_price
+                      ? phone?.searchIndex?.min_price
+                      : "67,999"}
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-
-
-
-
           {/* Before Tag (bottom right) */}
           {/* <div className="absolute bottom-1 left-3 right-0 bg-white rounded-md shadow-md border border-gray-200 px-1 text-[8px] text-gray-500">
       Before <span className="line-through text-red-500">₱69,999</span>
     </div> */}
-
-
 
           {/* Price Tag */}
           {/* <div className="relative group">
@@ -122,8 +150,6 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
             <Eye size={16} />
           </button>
         </Link>
-
-
 
         {/* Product Details */}
         <div className="px-2 py-1.5 lg:px-3.5 flex flex-col flex-grow">
@@ -202,12 +228,16 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                     {/* Charging specs with improved styling */}
                     <span className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-orange-50 to-orange-100 rounded-md text-[10px] border border-orange-200">
                       <Cable className="w-3 h-3 text-orange-600" />
-                      <span className="text-[9.5px] font-bold text-orange-700">120W</span>
+                      <span className="text-[9.5px] font-bold text-orange-700">
+                        120W
+                      </span>
                     </span>
 
                     <span className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-md text-[10px] border border-blue-200">
                       <Wifi className="w-3 h-3 text-blue-600" />
-                      <span className="text-[9.5px] font-bold text-blue-700">50W</span>
+                      <span className="text-[9.5px] font-bold text-blue-700">
+                        50W
+                      </span>
                     </span>
                   </span>
                 ),
@@ -220,8 +250,12 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                 name: "Chipset",
                 value: (
                   <span className="inline-flex items-center gap-1">
-                    <span className="text-[10px] font-bold">Snapdragon 8 Gen 2</span>
-                    <span className="hidden md:inline text-[9px] text-gray-500">(4nm)</span>
+                    <span className="text-[10px] font-bold">
+                      Snapdragon 8 Gen 2
+                    </span>
+                    <span className="hidden md:inline text-[9px] text-gray-500">
+                      (4nm)
+                    </span>
                   </span>
                 ),
                 badge: "",
@@ -230,29 +264,39 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               },
               {
                 icon: <Monitor size={14} className="text-purple-500" />,
-                name: 'Display',
+                name: "Display",
                 value: (
                   <span className="inline-flex items-center gap-0.5">
                     <span className="text-[10px] font-bold">6.79"</span>
-                    <span className="text-[9px] text-gray-600 hidden md:inline">AMOLED</span>
-                    <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">120Hz</span>
+                    <span className="text-[9px] text-gray-600 hidden md:inline">
+                      AMOLED
+                    </span>
+                    <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
+                      120Hz
+                    </span>
                   </span>
                 ),
                 hideOnSmall: true,
-              }
+              },
             ].map((spec, i) => (
               <div
                 key={i}
                 className={`group flex items-center justify-between lg:py-1
-                            shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-2 -mx-1 ${spec.hideOnSmall ? "hidden sm:flex" : ""}`}
+                            shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-2 -mx-1 ${
+                              spec.hideOnSmall ? "hidden sm:flex" : ""
+                            }`}
               >
                 <div className="flex items-center gap-1 lg:gap-1.5">
                   <span className="group-hover:scale-110 transition-transform duration-200">
                     {spec.icon}
                   </span>
-                  <span className="text-gray-700 text-[10px] font-bold">{spec.name}</span>
+                  <span className="text-gray-700 text-[10px] font-bold">
+                    {spec.name}
+                  </span>
                   {spec.badge && (
-                    <span className={`hidden lg:inline-block px-1 py-0.5 rounded text-[8px] font-bold ${spec.badgeColor}`}>
+                    <span
+                      className={`hidden lg:inline-block px-1 py-0.5 rounded text-[8px] font-bold ${spec.badgeColor}`}
+                    >
                       {spec.badge}
                     </span>
                   )}
@@ -261,10 +305,6 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               </div>
             ))}
           </div>
-
-
-
-
         </div>
       </div>
 
@@ -292,7 +332,9 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               {/* Header */}
               <div className="sticky top-0 flex justify-between items-center px-6 py-4 border-b bg-white/90 backdrop-blur z-10">
                 <div>
-                  <h2 className="text-2xl font-extrabold text-gray-900">{selectedPhone.name}</h2>
+                  <h2 className="text-2xl font-extrabold text-gray-900">
+                    {selectedPhone.name}
+                  </h2>
                   <p className="text-gray-500">{selectedPhone.brand}</p>
                 </div>
                 <button
@@ -321,9 +363,17 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
                     {/* Price Badge */}
                     <div className="absolute top-4 right-4 flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-5 py-2.5 rounded-full shadow-lg font-bold text-base backdrop-blur-sm border border-green-400/20 hover:shadow-xl transition-all hover:scale-105">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                       <span>{selectedPhone.price}</span>
                     </div>
@@ -336,8 +386,18 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                     {/* Zoom hint on hover */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                       <div className="bg-black/80 text-white px-5 py-2.5 rounded-full text-sm font-semibold backdrop-blur-md flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
+                          />
                         </svg>
                         Click to zoom
                       </div>
@@ -350,12 +410,18 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                       <span className="w-1.5 h-5 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full mr-2.5"></span>
                       Available Colors
                       <span className="ml-2.5 text-xs font-normal text-gray-500">
-                        {selectedPhone.colors.length} {selectedPhone.colors.length === 1 ? 'option' : 'options'}
+                        {selectedPhone.colors.length}{" "}
+                        {selectedPhone.colors.length === 1
+                          ? "option"
+                          : "options"}
                       </span>
                     </h4>
                     <div className="flex flex-wrap gap-4 justify-center">
                       {selectedPhone.colors.map((color, index) => (
-                        <div key={index} className="flex flex-col items-center gap-2 group cursor-pointer">
+                        <div
+                          key={index}
+                          className="flex flex-col items-center gap-2 group cursor-pointer"
+                        >
                           <div className="relative">
                             <button
                               className="relative w-12 h-12 rounded-full border-2 border-gray-300 shadow-md ring-2 ring-transparent hover:ring-indigo-500 hover:ring-offset-2 hover:scale-110 transition-all duration-200 hover:shadow-xl active:scale-95"
@@ -364,8 +430,8 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                                   color.toLowerCase() === "white"
                                     ? "#ffffff"
                                     : color.toLowerCase() === "black"
-                                      ? "#1a1a1a"
-                                      : color.toLowerCase(),
+                                    ? "#1a1a1a"
+                                    : color.toLowerCase(),
                               }}
                               title={color}
                               aria-label={`${color} color option`}
@@ -383,8 +449,16 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
                             {/* Selection indicator placeholder */}
                             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-indigo-600 rounded-full border-2 border-white shadow-md opacity-0 group-hover:opacity-0 transition-opacity flex items-center justify-center">
-                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              <svg
+                                className="w-3 h-3 text-white"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
                               </svg>
                             </div>
                           </div>
@@ -408,19 +482,21 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                     </h3>
                     <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl p-5 border border-gray-200/50">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {Object.entries(selectedPhone.specs).map(([key, value]) => (
-                          <div
-                            key={key}
-                            className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow duration-200"
-                          >
-                            <span className="text-sm text-gray-600 capitalize font-medium">
-                              {key.replace(/_/g, " ")}
-                            </span>
-                            <span className="text-sm font-bold text-gray-900 ml-3 text-right">
-                              {value}
-                            </span>
-                          </div>
-                        ))}
+                        {Object.entries(selectedPhone.specs).map(
+                          ([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow duration-200"
+                            >
+                              <span className="text-sm text-gray-600 capitalize font-medium">
+                                {key.replace(/_/g, " ")}
+                              </span>
+                              <span className="text-sm font-bold text-gray-900 ml-3 text-right">
+                                {value}
+                              </span>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>

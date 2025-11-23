@@ -1,14 +1,11 @@
-import { getPhoneBySlug, getAllPhoneSlugs } from "../services/phones";
+import { getPhoneBySlug } from "../services/phones";
 import { buildPhoneMetadata } from "../utils/metadata";
 import Head from 'next/head';
 import { notFound } from 'next/navigation';
 import Details from "./Details";
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
-  
-  // Use slug instead of hardcoded ID
   const phone = await getPhoneBySlug(slug);
-  console.log("Fetched phone data:", phone);
   if (!phone) {
     notFound(); // Better than returning JSX for 404
   }
@@ -21,17 +18,10 @@ export default async function DetailsPage({ params }) {
         <meta name="description" content={metadata.description} />
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
-        <meta property="og:image" content={phone.image} />
-        <meta property="og:url" content={`https://yoursite.com/${slug}`} />
+        <meta property="og:image" content={phone.primary_image} />
+        <meta property="og:url" content={`https://mobile42.com/${slug}`} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-
-        
-        {/* <DetailsClient 
-          phoneDetails={phone} 
-          normalizedSpecs={normalizedSpecs} 
-        /> */}
-
       
         <Details phoneDetails={phone} />
     </>
@@ -54,11 +44,11 @@ export async function generateMetadata({ params }) {
   
   return {
     title: metadata.title,
-    description: metadata.description,
+    description: metadata.title,
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      images: [phone.image],
+      images: [phone.primary_image],
     },
   };
 }

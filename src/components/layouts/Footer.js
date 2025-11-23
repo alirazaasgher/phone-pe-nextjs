@@ -12,7 +12,7 @@ export default function Footer() {
           
           {/* Brand */}
           <div>
-            <h2 className="text-xl font-bold text-white mb-3">Mobify</h2>
+            <h2 className="text-xl font-bold text-white mb-3">Mobile42</h2>
             <p className="text-sm text-gray-400">
               Compare, explore & discover the latest smartphones with ease.
             </p>
@@ -68,8 +68,8 @@ export default function Footer() {
 
         {/* Divider */}
         <div className="border-t border-gray-700 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© {new Date().getFullYear()} Mobify. All rights reserved.</p>
-          <p className="mt-2 sm:mt-0">Made with ❤️ for mobile lovers</p>
+          <p>© {new Date().getFullYear()} Mobile42. All rights reserved.</p>
+          {/* <p className="mt-2 sm:mt-0">Made with ❤️ for mobile lovers</p> */}
         </div>
       </div>
     </footer>

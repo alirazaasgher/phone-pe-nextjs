@@ -2,7 +2,7 @@
 export async function getPhoneById(id) {
   // call your DB or external API directly
   const res = await fetch(`https://api.mobile42.com/api/phones/${id}`);
-  if (!res.ok) return null; 
+  if (!res.ok) return null;
   const json = await res.json();
   return json.data; // return phone object
 }
@@ -10,40 +10,16 @@ export async function getPhoneById(id) {
 export async function getPhoneBySlug(slug) {
   // call your DB or external API directly
   const res = await fetch(`https://api.mobile42.com/api/phones/${slug}`);
-  if (!res.ok) return null; 
+  if (!res.ok) return null;
   const json = await res.json();
   return json.data; // return phone object
 }
 
 export async function homePageData() {
-  return {
-  latest_mobiles: [
-    {
-      id:1,
-      name: "Xiaomi 15t",
-      slug: "xiaomi-15t",
-      primary_image: "/images/Realme15T-s.jpg",
-      searchIndex: {
-        ram: 4,
-        storage: 64
-      }
-    },
-    {
-      id:2,
-      name: "Xiaomi 15",
-      slug: "xiaomi-15",
-      primary_image: "/images/Realme15T-s.jpg",
-      searchIndex: {
-        ram: 4,
-        storage: 64
-      }
-    }
-  ]
-};
   // call your DB or external API directly
-  // const res = await fetch(`https://api.mobile42.com/api/homepage`);
-  // const json = await res.json();
-  // return json.data; // return phone object
+  const res = await fetch(`https://api.mobile42.com/api/homepage`);
+  const json = await res.json();
+  return json.data; // return phone object
 }
 
 export async function getAllPhoneSlugs() {
@@ -53,19 +29,19 @@ export async function getAllPhoneSlugs() {
   return json.data; // return phone object
 }
 
-export async function mobilePageData(filters = [],sortValue) {
-    const body = {
-    filters,       // your parsed filters
+export async function mobilePageData(filters = [], sortValue) {
+  const body = {
+    filters, // your parsed filters
     // sort: sortValue
   };
-  console.log(JSON.stringify(body))
- const res = await fetch("https://api.mobile42.com/api/phones", {
-  method: "POST", // or "GET" if your backend expects query params
+  console.log(JSON.stringify(body));
+  const res = await fetch("https://api.mobile42.com/api/phones", {
+    method: "POST", // or "GET" if your backend expects query params
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json"
+      Accept: "application/json",
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
   const json = await res.json();
   return json.data; // return phone object

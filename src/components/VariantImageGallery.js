@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { ZoomIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import 'react-medium-image-zoom/dist/styles.css';
+import "react-medium-image-zoom/dist/styles.css";
 import ZoomModal from "./ZoomModel";
 import NavigationButton from "./NavigationButton ";
 import Dots from "./Dots";
@@ -13,20 +13,57 @@ function cn(...classes) {
 }
 
 export default function VariantImageGallery({ phone }) {
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(phone.colors[0].name);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const selectedColorImages = phone.colors[selectedColorIndex].images;
+  const [isMobile, setIsMobile] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [direction, setDirection] = useState(0);
   const isFirstRender = useRef(true);
+  const touchStartX = useRef(0);
+
+  // Detect screen size
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Swipe handlers
+  // Swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchEndX - touchStartX.current;
+
+    if (diff > 50) {
+      // swipe right → previous image
+      setDirection(-1);
+      setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
+    } else if (diff < -50) {
+      // swipe left → next image
+      setDirection(1);
+      setCurrentImageIndex((prev) =>
+        Math.min(prev + 1, imagesToShow.length - 1)
+      );
+    }
+  };
   useEffect(() => {
     isFirstRender.current = false;
   }, []);
+  // Images of the currently selected color
   const imagesToShow = useMemo(() => {
-    const colorObj = phone.colors.find((c) => c.name === selectedColor);
+    const colorObj = phone.colors[selectedColorIndex];
     return colorObj?.images || [];
-  }, [selectedColor, phone.colors]);
+  }, [selectedColorIndex, phone.colors]);
 
-  const activeSrc = imagesToShow[currentImageIndex]?.url;
+  const activeSrc = selectedColorImages[currentImageIndex].url;
 
   const nextImage = useCallback(() => {
     if (currentImageIndex < imagesToShow.length - 1) {
@@ -47,8 +84,8 @@ export default function VariantImageGallery({ phone }) {
       {/* 🖼️ Main Image */}
       {/* <div
   className="
-    flex flex-row-reverse md:flex-col 
-    items-start md:items-center 
+    flex flex-row-reverse md:flex-col
+    items-start md:items-center
     justify-start md:justify-center
     w-full md:max-w-md
   "
@@ -115,71 +152,92 @@ export default function VariantImageGallery({ phone }) {
 </div> */}
       {/* Image Dots */}
 
-
-
-
-
-
-
-
       <div className="flex-shrink-0 flex flex-col justify-center items-center h-full">
-        <div className="relative w-[220px] h-[260px] lg:w-[260px] lg:h-[260px] flex justify-center items-center bg-white overflow-hidden">
-          <AnimatePresence mode="wait">
+        <div className="relative w-[220px] h-[260px] lg:w-[200px] lg:h-[200px] flex justify-center items-center bg-white overflow-visible group">
+          <AnimatePresence>
             <motion.img
               key={`${selectedColor}-${currentImageIndex}`}
-              src={activeSrc}
+              src={activeSrc || "images/default_placeholder.webp"}
               alt={`${selectedColor} phone - Image ${currentImageIndex + 1}`}
-              className="max-w-full max-h-full object-contain scale-[1.25] cursor-pointer mix-blend-multiply"
-              initial={isFirstRender.current ? false : { opacity: 0, x: direction > 0 ? 80 : -80 }}
+              className="max-w-full max-h-full object-contain cursor-pointer mix-blend-multiply"
+              initial={
+                isFirstRender.current
+                  ? false
+                  : { opacity: 0, x: direction > 0 ? 80 : -80 }
+              }
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
               onClick={() => setZoomed(true)}
+              drag={isMobile ? "x" : false} // <--- Enable drag on mobile
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.3} // <--- Makes drag feel natural
+              onDragEnd={(event, info) => {
+                if (info.offset.x < -50) {
+                  // Swipe left
+                  nextImage();
+                } else if (info.offset.x > 50) {
+                  // Swipe right
+                  prevImage();
+                }
+              }}
             />
           </AnimatePresence>
+
+          {/* Navigation Buttons */}
+          {!isMobile && imagesToShow.length > 1 && (
+            <>
+              <NavigationButton
+                direction="left"
+                onClick={() =>
+                  setCurrentImageIndex((prev) => Math.max(prev - 1, 0))
+                }
+                disabled={currentImageIndex === 0}
+              />
+              <NavigationButton
+                direction="right"
+                onClick={() =>
+                  setCurrentImageIndex((prev) =>
+                    Math.min(prev + 1, imagesToShow.length - 1)
+                  )
+                }
+                disabled={currentImageIndex === imagesToShow.length - 1}
+              />
+            </>
+          )}
         </div>
 
         {/* Thumbnails below the main image */}
-        {imagesToShow.length > 1 && (
-          <div className="w-full">
-            <Thumbnails
-              images={imagesToShow}
-              active={currentImageIndex}
-              colors={phone.colors}
-              selectedColor={selectedColor}
-              onClick={(index) => {
-                setDirection(index > currentImageIndex ? 1 : -1);
-                setCurrentImageIndex(index);
-              }}
-            />
-          </div>
-        )}
+        <div className="w-full">
+          <Thumbnails
+            colors={phone.colors}
+            active={selectedColorIndex}
+            selectedColor={selectedColor}
+            onClick={(index) => {
+              setSelectedColorIndex(index);
+              setSelectedColor(phone.colors[index].name);
+              setCurrentImageIndex(0); // reset image index for new color
+            }}
+          />
+        </div>
       </div>
-
-
-
       {/* <ColorSelector
           colors={phone.colors}
           selectedColor={selectedColor}
           onSelect={setSelectedColor}
         /> */}
 
-
-
       {/* Zoom Modal */}
-      {
-        zoomed && (
-          <ZoomModal
-            activeSrc={activeSrc}
-            current={currentImageIndex}
-            total={imagesToShow.length}
-            onClose={() => setZoomed(false)}
-            onPrev={prevImage}
-            onNext={nextImage}
-          />
-        )
-      }
+      {zoomed && (
+        <ZoomModal
+          activeSrc={activeSrc}
+          current={currentImageIndex}
+          total={imagesToShow.length}
+          onClose={() => setZoomed(false)}
+          onPrev={prevImage}
+          onNext={nextImage}
+        />
+      )}
     </>
-
   );
 }

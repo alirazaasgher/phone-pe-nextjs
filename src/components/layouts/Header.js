@@ -11,38 +11,31 @@ export default function Header({ toggleSidebar }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const router = useRouter();
-  const {
-    query,
-    setQuery,
-    suggestions,
-    showSuggestions,
-    setShowSuggestions,
-  } = useSearch(mobiles);
+  const { query, setQuery, suggestions, showSuggestions, setShowSuggestions } =
+    useSearch(mobiles);
   const handleSelect = (name) => {
     setQuery(name);
     setShowSuggestions(false);
     router.push(`/search?q=${encodeURIComponent(name)}`);
   };
   useEffect(() => {
-     if (typeof window !== "undefined") {
-    window.onscroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-  }
+    if (typeof window !== "undefined") {
+      window.onscroll = () => {
+        setIsScrolled(window.scrollY > 20);
+      };
+    }
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
- 
 
   return (
-
-    
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
           ? "bg-slate-900/95 backdrop-blur-xl shadow-lg text-white"
           : "bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-700 text-white"
-        }`}
+      }`}
     >
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
         {/* Left Section - Logo + Mobile Menu */}
@@ -54,14 +47,15 @@ export default function Header({ toggleSidebar }) {
             <Menu className="text-white" size={22} />
           </button>
           <Link href="/" className="flex items-center gap-2">
-  <Smartphone className="text-white" size={26} />
-  <span className="text-lg font-bold tracking-tight text-white 
+            <Smartphone className="text-white" size={26} />
+            <span
+              className="text-lg font-bold tracking-tight text-white
                drop-shadow-[0_0_5px_rgba(0,255,255,0.8)]
-               drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]">
-    Mobile42
-  </span>
-</Link>
-
+               drop-shadow-[0_0_10px_rgba(0,255,255,0.6)]"
+            >
+              Mobile42
+            </span>
+          </Link>
         </div>
 
         {/* Middle Section - Navigation */}
@@ -100,8 +94,8 @@ export default function Header({ toggleSidebar }) {
             <input
               type="text"
               placeholder="Search phones, brands, specs..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-gray-200 
-              focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400 
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-gray-200
+              focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400
               bg-gray-50 text-gray-800 placeholder-gray-500 transition"
               value={query}
               onChange={(e) => {
@@ -122,7 +116,7 @@ export default function Header({ toggleSidebar }) {
               </button>
             )}
 
-            
+
             {showSuggestions && suggestions.length > 0 && (
               <ul className="absolute z-20 mt-2 w-full bg-white rounded-xl shadow-lg border border-gray-200 divide-y divide-gray-100 max-h-80 overflow-y-auto">
                 {suggestions.map((s) => (
@@ -158,6 +152,5 @@ export default function Header({ toggleSidebar }) {
         />
       )} */}
     </header>
-
   );
 }

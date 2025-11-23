@@ -4,7 +4,7 @@ export function buildPhoneMetadata(phone) {
 
   return {
     title: `${phone.name} - Specs, Price, Features`,
-    description: `Check full specifications, features, and price of ${phone.brand} ${phone.name}.`,
+    description: `Check full specifications, features, and price of ${phone.brand.name} ${phone.name}.`,
     openGraph: {
       title: `${phone.brand} ${phone.name}`,
       description: `${phone.brand} ${phone.name} features and specs.`,

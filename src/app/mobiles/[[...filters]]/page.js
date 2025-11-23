@@ -2,6 +2,7 @@
 import { mobilePageData } from "../../services/phones";
 import ClientPhoneGrid from "@/components/ClientPhoneGrid";
 import SideBarData from "@/data/SideBarData";
+import Head from 'next/head';
 // utils inside the same file
 export default async function Page({ params, searchParams  }) {
   const awaitedParams = await params;
@@ -53,8 +54,54 @@ export default async function Page({ params, searchParams  }) {
     return acc;
   }, {});
   return (
+    <>
     <ClientPhoneGrid phones={phones} filters={filters} parsed={parsed} availableFilters = {availableFilters}/>
+    </>
   );
 }
+
+export async function generateMetadata({ params, searchParams }) {
+  const awaitedParams = await params;
+  const awaitedSearchParams = await searchParams;
+  const sortValue = awaitedSearchParams.sort || "default";
+  const filters = awaitedParams.filters || [];
+
+  // Parse filters readable for metadata
+  const titleFilters = filters
+    .map(f => f.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()))
+    .join(", ");
+
+  const title = "Latest Mobiles - Compare Specs & Prices in Pakistan | Mobile42";
+
+  const description = titleFilters
+    ? `Compare ${titleFilters} mobile phones at the best prices in Pakistan. View specs, RAM, storage, battery, display, and performance details to choose the best phone for your needs.`
+    : "Explore and compare latest mobile phones in Pakistan. Filter by RAM, storage, camera, battery and price to find the best phone for your needs.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://mobile42.com/phones`,
+      images: [
+        {
+          url: "https://mobile42.com/og-image-default.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Mobile comparison"
+        }
+      ],
+      siteName: "Mobile42"
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://mobile42.com/og-image-default.jpg"]
+    }
+  };
+}
+
 
 
