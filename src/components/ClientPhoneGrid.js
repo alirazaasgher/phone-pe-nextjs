@@ -37,7 +37,7 @@ export default function ClientPhoneGrid({ phones, filters, parsed, availableFilt
       <ResultsHeader filters={filters} filteredResults="0" trending={[]} parsed={parsed} />
       <ActiveFilters filters={filters} parsed={parsed} availableFilters = {availableFilters}/>
 
-      {phones.length ? (
+      {phones?.length ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
           {phones.map((phone) => (
             <PhoneCard key={phone.id} phone={phone} />

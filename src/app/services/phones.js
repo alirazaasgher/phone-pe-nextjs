@@ -19,6 +19,7 @@ export async function homePageData() {
   // call your DB or external API directly
   const res = await fetch(`http://api.mobile42.com/api/homepage`);
   const json = await res.json();
+
   return json.data; // return phone object
 }
 
@@ -32,10 +33,9 @@ export async function getAllPhoneSlugs() {
 export async function mobilePageData(filters = [], sortValue) {
   const body = {
     filters, // your parsed filters
-    // sort: sortValue
+    sort: sortValue,
   };
-  console.log(JSON.stringify(body));
-  const res = await fetch("http://api.mobile42.com/api/phones", {
+  const res = await fetch("https://api.mobile42.com/api/phones", {
     method: "POST", // or "GET" if your backend expects query params
     headers: {
       "Content-Type": "application/json",
