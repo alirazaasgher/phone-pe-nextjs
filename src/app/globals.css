@@ -4,12 +4,12 @@
 @tailwind utilities;
 
 @layer base {
-  
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
     scroll-behavior: smooth;
   }
-  
+
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -19,21 +19,21 @@
   html, body {
     overflow-x: hidden;
   }
-  
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   ::-webkit-scrollbar-track {
     background: #f1f5f9;
   }
-  
+
   ::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }
@@ -41,37 +41,37 @@
 
 @layer components {
   /* Button variants */
-  
+
   button {
     @apply cursor-pointer;
   }
   .btn-primary {
-    @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 
-           focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+    @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700
+           focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
            transition-all duration-200 font-medium;
   }
-  
+
   .btn-secondary {
-    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 
-           focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
+    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300
+           focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
            transition-all duration-200 font-medium;
   }
-  
+
   /* Container utilities */
   .container-responsive {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   /* Touch-friendly button sizes */
   .btn-touch {
     @apply min-h-[44px] min-w-[44px];
   }
-  
+
   /* Safe area for devices with notches */
   .safe-top {
     padding-top: env(safe-area-inset-top);
   }
-  
+
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -82,17 +82,17 @@
   .text-balance {
     text-wrap: balance;
   }
-  
+
   /* Animation utilities */
   .animate-fade-in {
     animation: fadeIn 0.3s ease-in-out;
   }
-  
+
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  
+
   /* Focus utilities */
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
@@ -176,4 +176,7 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+.test-red {
+  color: red;
 }

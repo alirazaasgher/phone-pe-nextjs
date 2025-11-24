@@ -1,8 +1,10 @@
+
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
 import ClientLayout from "./ClientLayout";
 import Script from "next/script";
-// Module-scope declaration
+import AnalyticsTracker from "./AnalyticsTracker"; // we'll create this next
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -11,21 +13,7 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-import { Arimo, Roboto_Mono } from "next/font/google";
 
-// Primary font for headings & labels
-const arimo = Arimo({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"], // regular, medium, bold
-  variable: "--font-arimo", // optional CSS variable
-});
-
-// Optional monospace font for numbers / specs
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-roboto-mono",
-});
 export const metadata = {
   title: "Mobile42 - Latest & Upcoming Mobile Phones",
   description:
@@ -37,45 +25,37 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
+  userScalable: false, // optional
 };
+const GA_MEASUREMENT_ID = "G-KRGHF7G70Y"; // Replace with your GA4 ID
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
-      <head>
-        {/* Website schema for site name */}
-        <Script
-          id="website-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Mobile42",
-              alternateName: "Mobile 42",
-              url: "https://mobile42.com/",
-            }),
-          }}
-        />
-
-        {/* Organization schema for brand and logo */}
-        <Script
-          id="organization-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Mobile42",
-              url: "https://mobile42.com/",
-              logo: "https://mobile42.com/mobile42.jpeg",
-            }),
-          }}
-        />
-      </head>
       <body
         className={`flex flex-col min-h-screen ${poppins.className} bg-gray-50`}
       >
+        {/* Google Analytics Scripts */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+
+        {/* Track SPA Navigation */}
+        <AnalyticsTracker />
+
         <ClientLayout>
           <div className="relative min-h-screen w-full max-w-7xl mx-auto">
             {children}
