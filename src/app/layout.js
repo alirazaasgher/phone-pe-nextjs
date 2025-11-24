@@ -1,4 +1,3 @@
-
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
 import ClientLayout from "./ClientLayout";
@@ -13,7 +12,6 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-
 export const metadata = {
   title: "Mobile42 - Latest & Upcoming Mobile Phones",
   description:
