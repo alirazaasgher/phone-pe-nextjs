@@ -1,6 +1,18 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { X, HardDrive, MemoryStick, Gauge, Tag, Smartphone, Battery, BatteryCharging, Wifi, Server, ChevronDown } from "lucide-react";
+import {
+  X,
+  HardDrive,
+  MemoryStick,
+  Gauge,
+  Tag,
+  Smartphone,
+  Battery,
+  BatteryCharging,
+  Wifi,
+  Server,
+  ChevronDown,
+} from "lucide-react";
 import SideBarCard from "./sidebar/SideBarCard";
 import PriceRangeFilter from "./PriceRangeFilter";
 import { useRouter, usePathname } from "next/navigation";
@@ -10,20 +22,20 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const [expandedSections, setExpandedSections] = useState(["ram", "storage"]);
   const [selected, setSelected] = useState({});
   const toggleSection = (key) => {
-    setExpandedSections(prev =>
-      prev.includes(key)
-        ? prev.filter(k => k !== key)
-        : [...prev, key]
-    )
-  }
+    setExpandedSections((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
 
   // Whenever filters change, auto-open sections that have active filters
   useEffect(() => {
     const activeSections = Object.keys(selected).filter(
       (key) => selected[key]?.length > 0
-    )
-    setExpandedSections((prev) => Array.from(new Set([...prev, ...activeSections])))
-  }, [selected])
+    );
+    setExpandedSections((prev) =>
+      Array.from(new Set([...prev, ...activeSections]))
+    );
+  }, [selected]);
   const router = useRouter();
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
   const [selectedPoll, setSelectedPoll] = useState(null);
@@ -31,12 +43,27 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const filterSections = [
     { key: "ram", title: "RAM", icon: MemoryStick, grid: "grid-cols-2" },
     { key: "storage", title: "Storage", icon: HardDrive, grid: "grid-cols-2" },
-    { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
-    { key: "screenSize", title: "Screen Size", icon: Smartphone, grid: "grid-cols-1" },
+    {
+      key: "batteryCapacity",
+      title: "Battery Capacity",
+      icon: Battery,
+      grid: "grid-cols-1",
+    },
+    {
+      key: "screenSize",
+      title: "Screen Size",
+      icon: Smartphone,
+      grid: "grid-cols-1",
+    },
     // { key: "refreshRate", title: "Refresh Rate", icon: Gauge, grid: "grid-cols-2" },
     // { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
     // { key: "chargingSpeed", title: "Charging Speed", icon: BatteryCharging, grid: "grid-cols-1" },
-    { key: "networkConnectivity", title: "Network Connectivity", icon: Wifi, grid: "grid-cols-1" },
+    {
+      key: "networkConnectivity",
+      title: "Network Connectivity",
+      icon: Wifi,
+      grid: "grid-cols-1",
+    },
   ];
   const sideBarMap = SideBarData.reduce((acc, item) => {
     acc[item.slug] = item.values || [];
@@ -53,46 +80,58 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     networkConnectivity: sideBarMap["network-connectivity"] || [],
   };
 
-
   useEffect(() => {
     if (pathname !== "/") {
       // Your fetch or logic here
-      const parts = pathname.split('/').filter(Boolean); // remove empty strings
-      const brandsPart = parts.find(p => p.includes('mobile-phones'));
-      const pricePart = parts.find(p => p.startsWith('price-'));
-      const ramPart = parts.find(p => p.includes('gb') && p.includes('ram'));
-      const storagePart = parts.find(p => p.includes('gb') && p.includes('storage'));
-      const refreshRatePart = parts.find(p => p.includes('display'));
-      const batteryPart = parts.find(p => p.includes('battery'));
-      const chargingPart = parts.find(p => p.includes('charging'));
-      const networkPart = parts.find(p => p.includes('network'));
+      const parts = pathname.split("/").filter(Boolean); // remove empty strings
+      const brandsPart = parts.find((p) => p.includes("mobile-phones"));
+      const pricePart = parts.find((p) => p.startsWith("price-"));
+      const ramPart = parts.find((p) => p.includes("gb") && p.includes("ram"));
+      const storagePart = parts.find(
+        (p) => p.includes("gb") && p.includes("storage")
+      );
+      const refreshRatePart = parts.find((p) => p.includes("display"));
+      const batteryPart = parts.find((p) => p.includes("battery"));
+      const chargingPart = parts.find((p) => p.includes("charging"));
+      const networkPart = parts.find((p) => p.includes("network"));
       setSelected({
-        brands: brandsPart ? brandsPart.replace('-mobile-phones', '').split('-') : [],
-        priceRange: pricePart ? pricePart.replace('price-', '').split('-to-') : [],
-        ram: ramPart ? ramPart.replace('-ram', '').split('-to-') : [],
-        storage: storagePart ? storagePart.replace('-storage', '').split('-to-') : [],
-        refreshRate: refreshRatePart ? refreshRatePart.replace('-display', '').split('-to-') : [],
-        batteryCapacity: batteryPart ? batteryPart.replace('-battery', '').split('-to-') : [],
-        chargingSpeed: chargingPart ? chargingPart.replace('-charging', '').split('-to-') : [],
-        networkConnectivity: networkPart ? networkPart.replace('-network', '').split('-to-') : []
+        brands: brandsPart
+          ? brandsPart.replace("-mobile-phones", "").split("-")
+          : [],
+        priceRange: pricePart
+          ? pricePart.replace("price-", "").split("-to-")
+          : [],
+        ram: ramPart ? ramPart.replace("-ram", "").split("-to-") : [],
+        storage: storagePart
+          ? storagePart.replace("-storage", "").split("-to-")
+          : [],
+        refreshRate: refreshRatePart
+          ? refreshRatePart.replace("-display", "").split("-to-")
+          : [],
+        batteryCapacity: batteryPart
+          ? batteryPart.replace("-battery", "").split("-to-")
+          : [],
+        chargingSpeed: chargingPart
+          ? chargingPart.replace("-charging", "").split("-to-")
+          : [],
+        networkConnectivity: networkPart
+          ? networkPart.replace("-network", "").split("-to-")
+          : [],
       });
     }
-
   }, [pathname]);
   const multiSelectFilters = ["brands"]; // only these allow multi-select
   // Toggle multi-select filter options
 
-
-
   const toggle = (key, value) => {
-    setSelected(prev => {
+    setSelected((prev) => {
       const arr = Array.isArray(prev[key]) ? prev[key] : [];
 
       let next;
       if (multiSelectFilters.includes(key)) {
         // Multi-select: toggle
         next = arr.includes(value)
-          ? arr.filter(v => v !== value) // deselect
+          ? arr.filter((v) => v !== value) // deselect
           : [...arr, value]; // select
       } else {
         // Single-select: toggle
@@ -122,7 +161,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       if (!isNumeric) {
         return [...new Set(values.map(normalizeString))].sort();
       }
-      return [...new Set(values)].sort((a, b) => extractNumericValue(a) - extractNumericValue(b));
+      return [...new Set(values)].sort(
+        (a, b) => extractNumericValue(a) - extractNumericValue(b)
+      );
     };
 
     const formatRange = (values, key) => {
@@ -160,7 +201,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       let sortedBrands = sortValues(selected.brands, false);
 
       // Remove "mobile" or "mobiles"
-      sortedBrands = sortedBrands.filter(b => b !== "mobile" && b !== "mobiles");
+      sortedBrands = sortedBrands.filter(
+        (b) => b !== "mobile" && b !== "mobiles"
+      );
 
       if (sortedBrands.length) {
         // Filter out any empty strings just in case
@@ -171,13 +214,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       }
     }
 
-
     // ✅ Price range
     if (selected.priceRange?.length === 2) {
       let [min, max] = selected.priceRange;
       min = Number(min);
       max = Number(max);
-      if ((!isNaN(min) && min > 0) && !isNaN(max)) {
+      if (!isNaN(min) && min > 0 && !isNaN(max)) {
         if (max <= 15000) pathSegments.push("budget-smartphones");
         else if (max <= 30000) pathSegments.push("mid-range-phones");
         else if (max <= 50000) pathSegments.push("premium-mobiles");
@@ -197,14 +239,16 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       processor: { order: 6, isNumeric: false, suffix: "processor" },
     };
 
-    const sortedFilters = Object.entries(filterConfig).sort(([, a], [, b]) => a.order - b.order);
+    const sortedFilters = Object.entries(filterConfig).sort(
+      ([, a], [, b]) => a.order - b.order
+    );
 
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
 
       if (Array.isArray(value) && value.length) {
         // Filter numeric values if applicable
-        const filtered = value.filter(v => {
+        const filtered = value.filter((v) => {
           if (config.isNumeric) {
             const num = parseInt(v, 10);
             return !isNaN(num) && num > 0;
@@ -214,7 +258,8 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
         if (filtered.length) {
           const formattedValue = formatRange(filtered, key);
-          if (formattedValue) pathSegments.push(`${formattedValue}-${config.suffix}`);
+          if (formattedValue)
+            pathSegments.push(`${formattedValue}-${config.suffix}`);
         }
       }
     });
@@ -224,7 +269,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     const path = `/${pathSegments.join("/")}/`;
 
     if (path.length > 200) {
-      console.warn("URL is too long, consider using query params for extra filters");
+      console.warn(
+        "URL is too long, consider using query params for extra filters"
+      );
     }
 
     router.push(path, { scroll: false });
@@ -232,14 +279,13 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     setIsOpen?.(false);
   }, [selected, onApply, setIsOpen, router]);
 
-
   const handlePriceChange = useCallback((range) => {
     setSelectedFilters((prev) => ({ ...prev, priceRange: range }));
   }, []);
   return (
     <>
       {/* Overlay (mobile only) */}
-   {isOpen && (
+      {isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-30 md:hidden"
           onClick={() => setIsOpen(false)}
@@ -250,13 +296,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       <div
         className={`
           fixed inset-y-0 left-0 z-40
-          w-72 bg-white shadow-xl overflow-y-auto pt-14
+          w-65 bg-white shadow-xl overflow-y-auto pt-14
           transform transition-transform duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:static md:shadow-none md:pt-0
         `}
       >
-
         {/* Filters List */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           <input
@@ -287,13 +332,13 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               </span>
               <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
             </summary>
-              <SideBarCard
-                sideBarContent={filtersArray.brands}
-                selectedValues={selected["brands"]}
-                onSelect={(v) => toggle("brands", v)}
-                addContent={true}
-                className="grid-cols-2"
-              />
+            <SideBarCard
+              sideBarContent={filtersArray.brands}
+              selectedValues={selected["brands"]}
+              onSelect={(v) => toggle("brands", v)}
+              addContent={true}
+              className="grid-cols-2"
+            />
           </details>
 
           {/* Price Range */}
@@ -314,7 +359,8 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               className="border-t pt-4 group"
               open={expandedSections.includes(key)}
               onClick={(e) => {
-                if (e.target.tagName.toLowerCase() === 'summary') toggleSection(key);
+                if (e.target.tagName.toLowerCase() === "summary")
+                  toggleSection(key);
               }}
             >
               <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
@@ -345,17 +391,17 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
           <button
             onClick={handleApply}
-            disabled={!Object.values(selected).some(v => v?.length > 0)}
-            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 ${Object.values(selected).some(v => v?.length > 0)
-              ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            disabled={!Object.values(selected).some((v) => v?.length > 0)}
+            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 ${
+              Object.values(selected).some((v) => v?.length > 0)
+                ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
           >
             Apply Filters
           </button>
         </div>
         <div className="border-t mt-4 pt-3 space-y-7 p-3">
-
           {/* 1️⃣ Top Phones from Same Brand */}
           {/* <div>
             <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -418,16 +464,21 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
           {/* 3️⃣ Tech Insights */}
           <div>
-            <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">⚡ Tech Insights</h3>
+            <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              ⚡ Tech Insights
+            </h3>
             <ul className="space-y-3 text-sm text-gray-700">
               {[
                 "Snapdragon 8 Gen 3 is 35% faster than Gen 2.",
                 "OLED screens last 25% longer than AMOLED ones.",
                 "iPhones retain 70% resale value after 1 year.",
                 "5G drains 15% more battery than 4G on average.",
-                "AI-powered cameras now improve night shots by 40%."
+                "AI-powered cameras now improve night shots by 40%.",
               ].map((fact, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-gray-50 p-2 rounded-lg hover:bg-blue-50 transition">
+                <li
+                  key={idx}
+                  className="flex items-start gap-2 bg-gray-50 p-2 rounded-lg hover:bg-blue-50 transition"
+                >
                   <span className="text-blue-600 font-bold">•</span>
                   <span>{fact}</span>
                 </li>
@@ -474,10 +525,26 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 "Samsung A55 vs OnePlus 12R",
                 "Z Fold 6 vs Pixel Fold 2",
               ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 hover:shadow-sm hover:border-blue-400 transition-all duration-200 cursor-pointer">
-                  <span className="text-xs font-medium text-gray-700 truncate">{item}</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 hover:shadow-sm hover:border-blue-400 transition-all duration-200 cursor-pointer"
+                >
+                  <span className="text-xs font-medium text-gray-700 truncate">
+                    {item}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-500 transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.6}
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </div>
               ))}
@@ -490,21 +557,41 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               <span className="w-1.5 h-5 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full"></span>
               Vote Your Pick
             </h4>
-            <p className="text-sm text-gray-700 mb-3">Which flagship phone rules 2025?</p>
+            <p className="text-sm text-gray-700 mb-3">
+              Which flagship phone rules 2025?
+            </p>
             <div className="space-y-2">
-              {["iPhone 16 Pro Max", "Galaxy S24 Ultra", "Pixel 9 Pro", "OnePlus 12"].map((option, idx) => (
+              {[
+                "iPhone 16 Pro Max",
+                "Galaxy S24 Ultra",
+                "Pixel 9 Pro",
+                "OnePlus 12",
+              ].map((option, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedPoll(idx)}
-                  className={`w-full text-left text-sm border px-3 py-2 rounded-lg transition-all duration-200 ${selectedPoll === idx ? "bg-blue-50 border-blue-400" : "border-gray-200 hover:border-blue-400 hover:bg-blue-50"
-                    }`}
+                  className={`w-full text-left text-sm border px-3 py-2 rounded-lg transition-all duration-200 ${
+                    selectedPoll === idx
+                      ? "bg-blue-50 border-blue-400"
+                      : "border-gray-200 hover:border-blue-400 hover:bg-blue-50"
+                  }`}
                 >
                   {option}
                 </button>
               ))}
             </div>
             {selectedPoll !== null && (
-              <div className="mt-3 text-xs text-blue-600">You voted: {["iPhone 16 Pro Max", "Galaxy S24 Ultra", "Pixel 9 Pro", "OnePlus 12"][selectedPoll]}</div>
+              <div className="mt-3 text-xs text-blue-600">
+                You voted:{" "}
+                {
+                  [
+                    "iPhone 16 Pro Max",
+                    "Galaxy S24 Ultra",
+                    "Pixel 9 Pro",
+                    "OnePlus 12",
+                  ][selectedPoll]
+                }
+              </div>
             )}
           </div>
 
@@ -536,7 +623,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               ))}
             </div>
           </div> */}
-
         </div>
       </div>
     </>

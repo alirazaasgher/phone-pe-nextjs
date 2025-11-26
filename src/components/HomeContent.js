@@ -240,6 +240,7 @@ export default function HomeContent({ homePageResponse }) {
   // const getCurrentItems = () => {
   //   return phones.slice(startIndex, startIndex + itemsPerPage);
   // };
+  const scrollContainerRef = useRef(null);
   if (phones.length === 0) {
     return (
       <p className="text-center text-gray-500 py-8">No new mobiles available</p>
@@ -248,7 +249,7 @@ export default function HomeContent({ homePageResponse }) {
 
   return (
     <>
-      <div className="p-4 space-y-3">
+      <div className="p-1">
         {/* 📌 Brands */}
         <div className="">
           <h2 className="text-sm sm:text-2xl font-bold text-gray-800 mb-2">
@@ -290,7 +291,9 @@ export default function HomeContent({ homePageResponse }) {
               <a
                 key={brand.name}
                 href={`/mobiles/brand/${brand.name.toLowerCase()}`}
-                className={`flex flex-col items-center border border-gray-200 rounded-xl lg:p-4 group transition-transform transform hover:scale-105 hover:border-blue-400 hover:shadow-lg ${brand.color}`}
+                className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
+              hover:border-blue-400
+              ${brand.color}`}
               >
                 <div className="w-10 h-10 sm:w-10 sm:h-10 mb-1 lg:mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
                   <img
@@ -318,7 +321,7 @@ export default function HomeContent({ homePageResponse }) {
           </div>
 
           {/* MOBILE HORIZONTAL SCROLL */}
-          <div className="sm:hidden overflow-x-auto flex gap-3 scrollbar-hide">
+          <div className="sm:hidden overflow-x-auto flex gap-2 scrollbar-hide">
             {priceCategories.map((priceCategorie) => {
               const icons = {
                 1: (
@@ -416,7 +419,7 @@ export default function HomeContent({ homePageResponse }) {
           </div>
         </div>
         {/* Newly Launched */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-2 mb-3">
           <h2
             className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
           >
@@ -445,7 +448,7 @@ export default function HomeContent({ homePageResponse }) {
           )}
         </div>
 
-        <div className="relative">
+        <div className="">
           {/* Navigation Arrows */}
           {phones.length > itemsPerPage && (
             <>
@@ -476,18 +479,29 @@ export default function HomeContent({ homePageResponse }) {
               </button> */}
             </>
           )}
-          {/* Mobile horizontal scroll */}
-          {/* MOBILE HORIZONTAL SWIPE CARDS */}
-          <div className="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-1 scrollbar-hide scroll-smooth -webkit-overflow-scrolling-touch">
+          <div
+            ref={scrollContainerRef}
+            className="sm:hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-2"
+            onScroll={(e) => {
+              const scrollLeft = e.currentTarget.scrollLeft;
+              const containerWidth = e.currentTarget.offsetWidth;
+              const newIndex = Math.round(scrollLeft / containerWidth);
+              setPageIndex(newIndex);
+            }}
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             {pages.map((pageCards, page) => (
               <div
                 key={page}
                 data-index={page}
                 ref={(el) => (itemsRef.current[page] = el)}
-                className="snap-center w-full flex-shrink-0 flex gap-2"
+                className="snap-center w-full flex-shrink-0 flex"
               >
-                {pageCards.map((phone) => (
-                  <div key={phone.id} className="w-1/2">
+                {pageCards.map((phone, idx) => (
+                  <div
+                    key={phone.id}
+                    className={`w-1/2 ${idx === 0 ? "pr-1" : "pl-1"}`}
+                  >
                     <PhoneCard phone={phone} />
                   </div>
                 ))}

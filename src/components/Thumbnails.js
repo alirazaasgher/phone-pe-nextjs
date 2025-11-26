@@ -9,9 +9,10 @@ export default function Thumbnails({ colors, active, onClick }) {
           >
             <div
               className={`relative rounded-lg border-2 overflow-hidden transition-all duration-300 transform
-                ${i === active
-                  ? "border-blue-500 shadow-lg scale-105"
-                  : "border-gray-200 hover:border-gray-400 hover:scale-105"
+                ${
+                  i === active
+                    ? "border-blue-500 shadow-lg scale-105"
+                    : "border-gray-200 hover:border-gray-400 hover:scale-105"
                 }`}
               style={{ width: "56px", height: "56px" }}
             >

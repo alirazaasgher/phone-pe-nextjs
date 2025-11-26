@@ -203,18 +203,11 @@ export default function Details({ phoneDetails }) {
 
   const variants = [
     {
-      ram: "8GB",
-      storage: "128GB",
-      price: "₹27,999",
-      tag: "",
-      tagColor: "bg-blue-100 text-blue-700",
-    },
-    {
-      ram: "12GB",
+      ram: "4",
       storage: "256GB",
-      price: "₹31,499",
-      tag: "",
-      tagColor: "bg-green-100 text-green-700",
+      type: "SSD",
+      priceUSD: 799,
+      pricePKR: 350000,
     },
   ];
 
@@ -269,7 +262,7 @@ export default function Details({ phoneDetails }) {
     },
   ];
   return (
-    <div className="p-1.5 sm:p-0">
+    <>
       <div className="hidden md:flex relative px-6 py-4 bg-white/60 backdrop-blur-xl border-b border-gray-200/60 items-center justify-between shadow-sm">
         {/* Left: Name & Release */}
         <div className="flex-1">
@@ -351,7 +344,15 @@ export default function Details({ phoneDetails }) {
             {/* Top Specs & Variants Section */}
             <div className="flex flex-col lg:flex-row gap-1 items-start">
               {/* Left: Top Specs List */}
-              <ul className="w-full lg:w-[280px] text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <ul
+                className="w-full text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+                style={{
+                  width:
+                    variants.length === 1 || variants.length === 2
+                      ? "450px"
+                      : "280px",
+                }}
+              >
                 {[
                   {
                     icon: <Calendar className="w-3 h-3 text-green-600" />,
@@ -394,74 +395,46 @@ export default function Details({ phoneDetails }) {
               </ul>
 
               {/* Right: Variants */}
-              <ul className="w-full lg:flex-1 grid grid-cols-2 gap-1  pr-2">
-                {[
-                  {
-                    ram: "4",
-                    storage: "256GB",
-                    type: "SSD",
-                    priceUSD: 799,
-                    pricePKR: 350000,
-                  },
-                  {
-                    ram: "8",
-                    storage: "512GB",
-                    type: "SSD",
-                    priceUSD: 899,
-                    pricePKR: 400000,
-                  },
-                  {
-                    ram: "12",
-                    storage: "1TB",
-                    type: "SSD",
-                    priceUSD: 1099,
-                    pricePKR: 490000,
-                  },
-                  {
-                    ram: "16",
-                    storage: "1TB",
-                    type: "Pro SSD",
-                    priceUSD: 1299,
-                    pricePKR: 580000,
-                  },
-                ].map((variant, i, arr) => {
+              <ul
+                className={`w-full lg:flex-1 grid grid-cols-${
+                  variants.length === 1 ? "1" : "2"
+                } gap-1 pr-2`}
+              >
+                {variants.map((v, i, arr) => {
                   let colSpan = "col-span-1";
-                  if (arr.length === 1) colSpan = "col-span-2";
+                  if (arr.length === 2) colSpan = "col-span-2";
                   if (arr.length === 3 && i === 2) colSpan = "col-span-2";
-
                   return (
-                    <li
+                    <div
                       key={i}
-                      className={`flex flex-col gap-2 p-3 rounded-md bg-gradient-to-br from-white via-white to-gray-50/30 border border-gray-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08),0_2px_4px_rgba(0,0,0,0.06)] hover:border-gray-300/80 cursor-pointer transition-all duration-300 group ${colSpan}`}
+                      className={`p-4 border border-slate-200 rounded-md bg-white shadow-sm hover:shadow transition ${colSpan}`}
                     >
                       <div className="flex justify-between items-center">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-xs text-gray-500 font-medium">
-                            {variant.ram}GB
-                          </span>
-                          <span className="text-sm font-bold text-gray-900">
-                            {variant.storage}
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">
+                            {v.ram}GB / {v.storage}
+                          </p>
+                          <span className="inline-block mt-1 px-2.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">
+                            {v.type}
                           </span>
                         </div>
-                        <span
-                          className={`px-2 py-0.5 text-xs font-bold rounded-md ${
-                            variant.type.includes("Pro")
-                              ? "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border border-purple-200/50"
-                              : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-200/50"
-                          } shadow-sm group-hover:scale-105 transition-transform duration-200`}
-                        >
-                          {variant.type}
-                        </span>
+                        <div className="text-right">
+                          <p className="font-bold text-slate-900">
+                            ${v.priceUSD}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            PKR {v.pricePKR.toLocaleString()}
+                          </p>
+                        </div>
                       </div>
-                      <span className="font-bold text-gray-900 tracking-tight">
-                        ${variant.priceUSD}{" "}
-                        <span className="text-gray-500 text-xs font-medium">
-                          / PKR {variant.pricePKR.toLocaleString()}
-                        </span>
-                      </span>
-                    </li>
+                    </div>
                   );
                 })}
+                {variants.length === 1 && (
+                  <p className="text-[10px] text-gray-500 italic">
+                    Dual SIM (Hybrid) • No SD card slot
+                  </p>
+                )}
               </ul>
             </div>
 
@@ -851,6 +824,6 @@ export default function Details({ phoneDetails }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

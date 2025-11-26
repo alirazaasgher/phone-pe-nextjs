@@ -8,7 +8,7 @@ import {
   Info,
   Wifi,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 export default function SpecGroup({
   title,
@@ -71,16 +71,18 @@ export default function SpecGroup({
               <th className="font-poppins w-36 text-left px-4 py-2 font-semibold text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-sky-600" />
-                  {formatText(title)}
+                  <h3 className="font-poppins font-medium text-gray-900 text-[15px]">
+                    {formatText(title)}
+                  </h3>
                 </div>
               </th>
 
               {firstLabel && (
                 <>
-                  <td className="w-1/4 lg:px-3 lg:py-2 font-medium text-gray-600 text-[13.5px] font-inter">
+                  <td className="w-[28%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                     {highlightText(formatText(firstLabel))}
                   </td>
-                  <td className="px-1 py-1 px-3 py-2  text-gray-800 text-[14px] font-sans break-words">
+                  <td className="w-[72%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
                     {highlightText(firstValue)}
                   </td>
                 </>
@@ -122,7 +124,7 @@ export default function SpecGroup({
         </div>
 
         {/* Only render table if parent is open */}
-        <div className="w-full overflow-x-auto">
+        <div className="w-full">
           <table className="min-w-full border-collapse text-sm">
             <tbody>
               {entries.slice(0, max_visible).map(([label, value], i) => {
@@ -132,10 +134,10 @@ export default function SpecGroup({
                     key={i}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
                   >
-                    <td className="w-1/5 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[13.5px] font-inter whitespace-nowrap">
+                    <td className="w-[28%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
-                    <td className="px-1 py-1 lg:px-1 lg:py-0.5 text-gray-800 font-medium text-[14px] font-sans break-words">
+                    <td className="w-[72%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
                       {highlightText(value)}
                     </td>
 
@@ -163,10 +165,10 @@ export default function SpecGroup({
                     key={i}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-all"
                   >
-                    <td className="w-1/5 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[13.5px] font-inter whitespace-nowrap">
+                    <td className="w-[25%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
-                    <td className="px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[14px] font-sans break-words">
+                    <td className="w-[75%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
                       {highlightText(value)}
                     </td>
                   </tr>
@@ -177,4 +179,4 @@ export default function SpecGroup({
       </div>
     </div>
   );
-};
+}

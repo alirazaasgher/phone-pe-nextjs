@@ -13,8 +13,8 @@ import Link from "next/link";
 export default function MobileHeader() {
   return (
     <>
-      <div className="sm:hidden sticky top-0 backdrop-blur-md bg-white/80 border-b border-gray-200/50 shadow-sm">
-        <nav className="flex justify-around py-2">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[60] backdrop-blur-2xl bg-white/90 border-t border-gray-200/50 shadow-2xl shadow-slate-900/10">
+        <nav className="flex justify-around items-center py-2 px-2 max-w-7xl mx-auto">
           {[
             { href: "/", label: "Home", icon: Home },
             { href: "/mobiles", label: "Mobiles", icon: Smartphone },
@@ -24,16 +24,18 @@ export default function MobileHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-1 px-4 py-2 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 group"
+              className="relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all duration-300 group active:scale-95"
             >
-              <item.icon className="w-5 h-5 text-gray-600 group-hover:text-blue-600 group-hover:scale-110 transition-all duration-300" />
-              <span className="text-xs font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/10 group-hover:to-purple-500/10 rounded-xl transition-all duration-300"></div>
+              <item.icon className="relative w-5 h-5 text-gray-600 group-hover:text-indigo-600 group-hover:scale-110 transition-all duration-300" />
+              <span className="relative text-xs font-semibold text-gray-700 group-hover:text-indigo-600 transition-colors">
                 {item.label}
               </span>
             </Link>
           ))}
         </nav>
       </div>
+
       {/* <div className="sm:hidden p-4 space-y-3 bg-gradient-to-b from-gray-50 to-white">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl font-bold text-gray-900">Explore Phones</h2>

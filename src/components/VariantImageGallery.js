@@ -14,46 +14,14 @@ function cn(...classes) {
 
 export default function VariantImageGallery({ phone }) {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(phone.colors[0].name);
+  const [selectedColor, setSelectedColor] = useState(phone?.colors[0]?.name);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const selectedColorImages = phone.colors[selectedColorIndex].images;
+  const selectedColorImages = phone.colors[selectedColorIndex]?.images || [];
   const [isMobile, setIsMobile] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [direction, setDirection] = useState(0);
   const isFirstRender = useRef(true);
-  const touchStartX = useRef(0);
-
-  // Detect screen size
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Swipe handlers
-  // Swipe handlers
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchEndX - touchStartX.current;
-
-    if (diff > 50) {
-      // swipe right → previous image
-      setDirection(-1);
-      setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
-    } else if (diff < -50) {
-      // swipe left → next image
-      setDirection(1);
-      setCurrentImageIndex((prev) =>
-        Math.min(prev + 1, imagesToShow.length - 1)
-      );
-    }
-  };
   useEffect(() => {
     isFirstRender.current = false;
   }, []);
@@ -63,7 +31,7 @@ export default function VariantImageGallery({ phone }) {
     return colorObj?.images || [];
   }, [selectedColorIndex, phone.colors]);
 
-  const activeSrc = selectedColorImages[currentImageIndex].url;
+  const activeSrc = selectedColorImages[currentImageIndex]?.url || null;
 
   const nextImage = useCallback(() => {
     if (currentImageIndex < imagesToShow.length - 1) {
@@ -169,18 +137,6 @@ export default function VariantImageGallery({ phone }) {
               exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
               onClick={() => setZoomed(true)}
-              drag={isMobile ? "x" : false} // <--- Enable drag on mobile
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.3} // <--- Makes drag feel natural
-              onDragEnd={(event, info) => {
-                if (info.offset.x < -50) {
-                  // Swipe left
-                  nextImage();
-                } else if (info.offset.x > 50) {
-                  // Swipe right
-                  prevImage();
-                }
-              }}
             />
           </AnimatePresence>
 
