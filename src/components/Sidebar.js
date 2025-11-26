@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
-  const [expandedSections, setExpandedSections] = useState(["ram","storage"]);
+  const [expandedSections, setExpandedSections] = useState(["ram", "storage"]);
   const [selected, setSelected] = useState({});
   const toggleSection = (key) => {
     setExpandedSections(prev =>
@@ -31,10 +31,11 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const filterSections = [
     { key: "ram", title: "RAM", icon: MemoryStick, grid: "grid-cols-2" },
     { key: "storage", title: "Storage", icon: HardDrive, grid: "grid-cols-2" },
-    { key: "screenSize", title: "Screen Size", icon: Smartphone, grid: "grid-cols-1" },
-    { key: "refreshRate", title: "Refresh Rate", icon: Gauge, grid: "grid-cols-2" },
     { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
-    { key: "chargingSpeed", title: "Charging Speed", icon: BatteryCharging, grid: "grid-cols-1" },
+    { key: "screenSize", title: "Screen Size", icon: Smartphone, grid: "grid-cols-1" },
+    // { key: "refreshRate", title: "Refresh Rate", icon: Gauge, grid: "grid-cols-2" },
+    // { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
+    // { key: "chargingSpeed", title: "Charging Speed", icon: BatteryCharging, grid: "grid-cols-1" },
     { key: "networkConnectivity", title: "Network Connectivity", icon: Wifi, grid: "grid-cols-1" },
   ];
   const sideBarMap = SideBarData.reduce((acc, item) => {
@@ -238,7 +239,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   return (
     <>
       {/* Overlay (mobile only) */}
-      {isOpen && (
+   {isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-30 md:hidden"
           onClick={() => setIsOpen(false)}
@@ -247,39 +248,37 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
       {/* Sidebar */}
       <div
-  className={`
-    fixed top-0 bottom-0 left-0 z-40
-    w-72 bg-white shadow-xl h-full overflow-y-auto
-    transform transition-transform duration-300
-    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-    md:translate-x-0 md:static md:shadow-none
-  `}
->
-  <div className="sticky top-0 z-20 relative p-3 sm:p-4 border-none sm:border-b">
-    <input
-      type="text"
-      placeholder="Search mobiles..."
-      className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg
-                 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-      onChange={(e) => handleSearch(e.target.value)}
-    />
-    <svg
-      className="absolute left-7 top-6 w-4 h-4 text-gray-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
-    </svg>
-  </div>
+        className={`
+          fixed inset-y-0 left-0 z-40
+          w-72 bg-white shadow-xl overflow-y-auto pt-14
+          transform transition-transform duration-300
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0 md:static md:shadow-none md:pt-0
+        `}
+      >
+
+        {/* Filters List */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          {/* Brand Section */}
-          <details className="group" open>
+          <input
+            type="text"
+            placeholder="Search mobiles..."
+            className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          {/* <svg
+            className="absolute w-4 h-4 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+          </svg> */}
+          {/* Brands Section */}
+          <details className="border-t pt-4 group" open>
             <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
               <span className="flex items-center gap-2">
-                <Tag size={16} />
-                Brands
+                <Tag size={16} /> Brands
                 {selected["brands"]?.length > 0 && (
                   <span className="ml-1 text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">
                     {selected["brands"].length}
@@ -288,7 +287,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               </span>
               <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
             </summary>
-            <div className="mt-3">
               <SideBarCard
                 sideBarContent={filtersArray.brands}
                 selectedValues={selected["brands"]}
@@ -296,15 +294,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
                 addContent={true}
                 className="grid-cols-2"
               />
-            </div>
           </details>
 
           {/* Price Range */}
-          <details className="border-t pt-3 group" open>
+          <details className="border-t pt-4 group" open>
             <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
-              <span className="flex items-center gap-2">
-                💰 Price Range
-              </span>
+              <span className="flex items-center gap-2">💰 Price Range</span>
               <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
             </summary>
             <div className="mt-3">
@@ -312,15 +307,14 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             </div>
           </details>
 
-          {/* Dynamic Filters */}
+          {/* Dynamic Filter Sections */}
           {filterSections.map(({ key, title, icon, grid }) => (
             <details
               key={key}
-              className="border-t pt-3 group"
-              open={expandedSections.includes(key)} // controlled by state
+              className="border-t pt-4 group"
+              open={expandedSections.includes(key)}
               onClick={(e) => {
-                // Prevent closing when clicking inside filter options
-                if (e.target.tagName.toLowerCase() === 'summary') toggleSection(key)
+                if (e.target.tagName.toLowerCase() === 'summary') toggleSection(key);
               }}
             >
               <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
@@ -345,9 +339,8 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               </div>
             </details>
           ))}
-
-
         </div>
+
         {/* Sticky Apply Button */}
         <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
           <button
@@ -356,7 +349,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 ${Object.values(selected).some(v => v?.length > 0)
               ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
+            }`}
           >
             Apply Filters
           </button>

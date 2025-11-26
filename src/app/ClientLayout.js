@@ -19,14 +19,10 @@ export default function ClientLayout({ children }) {
             <MobileHeader/>
 
           <div
-  className={`w-full lg:pt-6 flex-1 ${
-    showSidebar
-      ? "max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-start sm:px-6 lg:px-4 gap-4 lg:gap-3"
-      : "px-4 sm:px-6 lg:px-8"
-  }`}
+  className={`w-full lg:pt-6 flex-1 max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 px-4 sm:px-6 lg:px-4`}
 >
   {showSidebar && (
-    <FilterSidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+    <FilterSidebar isOpen={isOpen} setIsOpen={setIsOpen}/>
   )}
  {/* ${
       showSidebar
