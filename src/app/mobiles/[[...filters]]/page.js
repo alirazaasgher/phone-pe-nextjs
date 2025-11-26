@@ -6,7 +6,7 @@ import Head from "next/head";
 export default async function Page({ params, searchParams }) {
   const awaitedParams = await params;
   const awaitedsearchParams = await searchParams;
-  const sortValue = awaitedsearchParams.sort || "default"; // fallback if not provided
+  const sortValue = awaitedsearchParams.sort || "newest"; // fallback if not provided
   const filters = awaitedParams.filters || [];
 
   // params.filters will be undefined if no filters in URL
