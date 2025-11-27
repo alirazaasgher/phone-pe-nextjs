@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function MobileHeader() {
   return (
     <>
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[60] backdrop-blur-2xl bg-white/90 border-t border-gray-200/50 shadow-2xl shadow-slate-900/10">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-[40] backdrop-blur-2xl bg-white/90 border-t border-gray-200/50 shadow-2xl shadow-slate-900/10">
         <nav className="flex justify-around items-center py-2 px-2 max-w-7xl mx-auto">
           {[
             { href: "/", label: "Home", icon: Home },

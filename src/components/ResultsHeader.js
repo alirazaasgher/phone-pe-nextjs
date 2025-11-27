@@ -2,20 +2,21 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { RotateCcw } from "lucide-react";
-import { useRouter,useSearchParams  } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Star, ArrowUp, ArrowDown, Clock } from 'lucide-react';
+import Loader from "@/app/loading";
 
 function getActiveTags(parsed) {
   const tags = [];
-  
+
   // Brands
   if (Array.isArray(parsed.brands) && parsed.brands.length > 0) {
     parsed.brands.forEach(b => {
       b.replace(/-mobile$/, "")
-       .split("-")
-       .forEach(name => {
-         if (name) tags.push(name.charAt(0).toUpperCase() + name.slice(1));
-       });
+        .split("-")
+        .forEach(name => {
+          if (name) tags.push(name.charAt(0).toUpperCase() + name.slice(1));
+        });
     });
   }
 
@@ -56,18 +57,17 @@ function getActiveTags(parsed) {
   return tags;
 }
 
-export default function ResultsHeader({ totalResults = 0, filteredResults = 0, trending = {}, parsed }) {
+export default function ResultsHeader({ totalResults = 0, filteredResults = 0, trending = {}, parsed,setLoading  }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isFiltered, setIsFiltered] = useState(false);
-  const selectedBrand = filteredResults?.brands?.[0] || null;
   const [imageErrors, setImageErrors] = useState({});
   const sortOptions = [
-  { value: 'newest', label: 'Newest', icon: <Clock size={16} /> },
-  { value: 'price_low_high', label: 'Price: Low to High', icon: <ArrowDown size={16} /> },
-  { value: 'price_high_low', label: 'Price: High to Low', icon: <ArrowUp size={16} /> },
-  { value: 'popular', label: 'Most Popular', icon: <Star size={16} /> },
-];
+    { value: 'newest', label: 'Newest', icon: <Clock size={16} /> },
+    { value: 'price_low_high', label: 'Price: Low to High', icon: <ArrowDown size={16} /> },
+    { value: 'price_high_low', label: 'Price: High to Low', icon: <ArrowUp size={16} /> },
+    { value: 'popular', label: 'Most Popular', icon: <Star size={16} /> },
+  ];
   useEffect(() => {
     setIsFiltered(filteredResults > 0 && filteredResults < totalResults);
   }, [filteredResults, totalResults]);
@@ -75,48 +75,52 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
     setImageErrors(prev => ({ ...prev, [index]: true }));
   };
   const activeTags = getActiveTags(parsed);
-  function clearAllFilters () {
- 
- router.push("/mobiles");
+  function clearAllFilters() {
+     setLoading(true);
+    router.push("/mobiles");
 
-}
+  }
 
   const handleSortChange = (e) => {
-   const params = new URLSearchParams(searchParams.toString());
-   const value = e.target.value; 
-  params.set("sort", value);
+     setLoading(true);
+    const params = new URLSearchParams(searchParams.toString());
+    const value = e.target.value;
+    params.set("sort", value);
 
-  router.push(`?${params.toString()}`, { scroll: false });
+    router.push(`?${params.toString()}`, { scroll: false });
   };
   return (
-    <div className="mb-6">
+    <>
       {/* Results Summary */}
-      <div className="sticky top-4 bg-white rounded-2xl border border-gray-200 p-5 mb-6 shadow-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
+      <div className="sticky top-6 bg-white rounded-md border border-gray-200 p-3 sm:p-5 mb-4 shadow-md">
+        {/* Row: Sort + Clear All */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
-        {/* Sort Dropdown */}
-        <div className="relative w-full sm:w-auto">
-          <select
-            className="appearance-none w-full sm:w-auto bg-white border border-gray-300 hover:border-gray-400 text-gray-700 py-2 px-4 pr-10 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm cursor-pointer"
-            onChange={handleSortChange}
-          >
-            <option value="newest">🆕 Newest</option>
-            <option value="price_low_high">⬇ Price: Low to High</option>
-            <option value="price_high_low">⬆ Price: High to Low</option>
-            <option value="popular">⭐ Most Popular</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
+          {/* Sort Dropdown */}
+          <div className="relative w-full sm:w-auto">
+            <select
+              className="appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 text-gray-700 py-2.5 px-4 pr-10 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm cursor-pointer"
+              onChange={handleSortChange}
+              value={searchParams.get("sort") || "newest"}
+            >
+              <option value="newest">🆕 Newest</option>
+              <option value="price_low_high">⬇ Price: Low to High</option>
+              <option value="price_high_low">⬆ Price: High to Low</option>
+              <option value="popular">⭐ Most Popular</option>
+            </select>
+
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
           </div>
-        </div>
 
-        {/* Filter Summary & Clear All */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+          {/* Clear All button */}
           {activeTags.length > 0 && (
             <button
               onClick={clearAllFilters}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-full shadow transition-transform hover:scale-105"
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-full shadow-sm transition-all"
             >
               <RotateCcw size={16} />
               Clear All ({activeTags.length})
@@ -124,6 +128,7 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
           )}
         </div>
       </div>
+
 
       {/* Trending Picks (only if no filters applied) */}
       {/* {!isFiltered && trending.length > 0 && (
@@ -206,6 +211,6 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
 
       </div>
 
-    </div>
+    </>
   );
 }

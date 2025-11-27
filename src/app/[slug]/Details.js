@@ -492,7 +492,7 @@ export default function Details({ phoneDetails }) {
             </ul>
           </div>
         </div>
-        <div className="md:hidden px-4 py-3 flex items-center justify-between border-b border-gray-100 bg-white sticky top-0">
+        <div className="md:hidden flex items-center justify-between border-b border-gray-100 bg-white sticky top-0">
           {/* LEFT SECTION */}
           <div className="flex flex-col">
             <h1 className="text-xl font-semibold text-gray-900 leading-tight">
@@ -540,7 +540,7 @@ export default function Details({ phoneDetails }) {
         </div>
 
         {/* Variant Selector */}
-        <div className="md:hidden p-3 border-t border-gray-200">
+        <div className="md:hidden border-t border-gray-200">
           {/* Header */}
           <div className="flex items-center gap-1 mb-2">
             <div className="bg-white p-1 rounded-xl shadow-sm">
@@ -575,7 +575,7 @@ export default function Details({ phoneDetails }) {
             Dual SIM (Hybrid) • No SD card slot
           </p>
         </div>
-        <div className="md:hidden mb-2 p-2">
+        <div className="md:hidden mb-2">
           <div className="grid grid-cols-2 gap-1">
             {highlightItems.map((item) => (
               <div

@@ -178,68 +178,6 @@ export default function HomeContent({ homePageResponse }) {
   for (let i = 0; i < phones.length; i += 2) {
     pages.push(phones.slice(i, i + 2));
   }
-
-  // IntersectionObserver to detect current page
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       entries.forEach((entry) => {
-  //         if (entry.isIntersecting) {
-  //           const index = Number(entry.target.dataset.index);
-  //           setPageIndex(index);
-  //         }
-  //       });
-  //     },
-  //     { threshold: 0.6 }
-  //   );
-
-  //   itemsRef.current.forEach((item) => item && observer.observe(item));
-
-  //   return () => {
-  //     itemsRef.current.forEach((item) => item && observer.unobserve(item));
-  //   };
-  // }, [pages.length]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.dataset.index);
-            setPageIndex(index); // update indicator in real-time while swiping
-          }
-        });
-      },
-      { threshold: 0.5 } // triggers when 50% of the page is visible
-    );
-
-    itemsRef.current.forEach((item) => item && observer.observe(item));
-
-    return () => {
-      itemsRef.current.forEach((item) => item && observer.unobserve(item));
-    };
-  }, [pages.length]);
-  // ✅ Phone Card
-  // const [startIndex, setStartIndex] = useState(0);
-
-  // const nextSlide = () => {
-  //   if (startIndex + itemsPerPage < phones.length) {
-  //     setStartIndex((prev) => prev + 1);
-  //   }
-  // };
-
-  // const prevSlide = () => {
-  //   if (startIndex > 0) {
-  //     setStartIndex((prev) => prev - 1);
-  //   }
-  // };
-
-  // const isPrevDisabled = startIndex === 0;
-  // const isNextDisabled = startIndex + itemsPerPage >= phones.length;
-
-  // const getCurrentItems = () => {
-  //   return phones.slice(startIndex, startIndex + itemsPerPage);
-  // };
   const scrollContainerRef = useRef(null);
   if (phones.length === 0) {
     return (

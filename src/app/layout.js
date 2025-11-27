@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         className={`flex flex-col min-h-screen ${poppins.className} bg-gray-50`}
       >
         {/* Google Analytics Scripts */}
-        <Script
+        {/* <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         />
@@ -49,10 +49,10 @@ export default function RootLayout({ children }) {
               page_path: window.location.pathname,
             });
           `}
-        </Script>
+        </Script> */}
 
         {/* Track SPA Navigation */}
-        <AnalyticsTracker />
+        {/* <AnalyticsTracker /> */}
 
         <ClientLayout>
           <div className="relative min-h-screen w-full">{children}</div>

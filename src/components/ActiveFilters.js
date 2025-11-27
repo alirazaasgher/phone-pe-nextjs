@@ -97,10 +97,11 @@ function removeBrandFromFilter(filterString, brand) {
 
 
 
-export default function ActiveFilters({ filters, parsed,availableFilters}) {
+export default function ActiveFilters({ filters, parsed,availableFilters,setLoading}) {
   const activeTags = getActiveTags(parsed,availableFilters);
   const router = useRouter(activeTags, parsed);
   const removeFilter = (tag) => {
+    setLoading(true);
   const filterValue = tagToFilter(tag, filters);
   let updatedFilters = [...filters];
 

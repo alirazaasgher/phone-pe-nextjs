@@ -19,6 +19,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
+  const [loading, setLoading] = useState(false);
   const [expandedSections, setExpandedSections] = useState(["ram", "storage"]);
   const [selected, setSelected] = useState({});
   const toggleSection = (key) => {
@@ -275,7 +276,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     }
 
     router.push(path, { scroll: false });
-    onApply?.(selected);
+    onApply?.();
     setIsOpen?.(false);
   }, [selected, onApply, setIsOpen, router]);
 
