@@ -268,7 +268,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     // ✅ Build final path
     pathSegments = pathSegments.filter(Boolean);
     const path = `/${pathSegments.join("/")}/`;
-
+    console.log(path);
     if (path.length > 200) {
       console.warn(
         "URL is too long, consider using query params for extra filters"
@@ -283,9 +283,13 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const handlePriceChange = useCallback((range) => {
     setSelectedFilters((prev) => ({ ...prev, priceRange: range }));
   }, []);
+  useEffect(() => {
+    if (Object.keys(selected).length) {
+      handleApply();
+    }
+  }, [selected]);
   return (
     <>
-      {/* Overlay (mobile only) */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-30 md:hidden"
@@ -296,15 +300,14 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-          fixed inset-y-0 left-0 z-40
-          w-65 bg-white shadow-xl overflow-y-auto pt-14
-          transform transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:static md:shadow-none md:pt-0
-        `}
+    fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
+    transform transition-transform duration-300 overflow-y-auto
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+    md:static md:translate-x-0 md:shadow-none md:pt-0
+  `}
       >
         {/* Filters List */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        <div className="px-4 py-4 space-y-4">
           <input
             type="text"
             placeholder="Search mobiles..."
@@ -336,7 +339,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             <SideBarCard
               sideBarContent={filtersArray.brands}
               selectedValues={selected["brands"]}
-              onSelect={(v) => toggle("brands", v)}
+              onSelect={(v) => toggle("brands", v)} // only toggle state
               addContent={true}
               className="grid-cols-2"
             />
@@ -389,7 +392,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         </div>
 
         {/* Sticky Apply Button */}
-        <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
+        {/* <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
           <button
             onClick={handleApply}
             disabled={!Object.values(selected).some((v) => v?.length > 0)}
@@ -401,7 +404,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
           >
             Apply Filters
           </button>
-        </div>
+        </div> */}
         <div className="border-t mt-4 pt-3 space-y-7 p-3">
           {/* 1️⃣ Top Phones from Same Brand */}
           {/* <div>

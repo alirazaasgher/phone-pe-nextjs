@@ -35,10 +35,8 @@ export default function ClientPhoneGrid({
   phones,
   filters,
   parsed,
-  availableFilters
+  availableFilters,
 }) {
-
-  
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function ClientPhoneGrid({
   return (
     <>
       {loading ? (
-          <Loader />
+        <Loader />
       ) : (
         <>
           <div className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-200">
@@ -90,6 +88,5 @@ export default function ClientPhoneGrid({
         </>
       )}
     </>
-
   );
 }

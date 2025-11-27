@@ -1,7 +1,6 @@
 import { mobilePageData } from "../../services/phones";
 import ClientPhoneGrid from "@/components/ClientPhoneGrid";
 import SideBarData from "@/data/SideBarData";
-import Head from "next/head";
 // utils inside the same file
 export default async function Page({ params, searchParams }) {
   const awaitedParams = await params;

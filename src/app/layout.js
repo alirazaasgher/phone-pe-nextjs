@@ -55,7 +55,9 @@ export default function RootLayout({ children }) {
         <AnalyticsTracker />
 
         <ClientLayout>
-          <div className="relative min-h-screen w-full">{children}</div>
+          <div className="relative flex-1 sm:min-h-screen w-full">
+            {children}
+          </div>
         </ClientLayout>
       </body>
     </html>
