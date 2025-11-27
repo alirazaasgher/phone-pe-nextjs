@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/layouts/Header";
 import FilterSidebar from "@/components/Sidebar";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Footer from "@/components/layouts/Footer";
 import MobileHeader from "@/components/layouts/MobileHeader";
 import Loader from "./loading";
@@ -12,11 +12,11 @@ export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const showSidebar = shouldShowSidebar(pathname);
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const toggleSidebar = () => setIsOpen((prev) => !prev);
-  useEffect(() => {
-    setLoading(false);
-  }, [searchParams]);
+  // useEffect(() => {
+  //   setLoading(false);
+  // }, [searchParams]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100">
