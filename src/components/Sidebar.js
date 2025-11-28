@@ -1,16 +1,11 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  X,
   HardDrive,
   MemoryStick,
-  Gauge,
   Tag,
   Smartphone,
   Battery,
-  BatteryCharging,
-  Wifi,
-  Server,
   ChevronDown,
 } from "lucide-react";
 import SideBarCard from "./sidebar/SideBarCard";
@@ -19,8 +14,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
-  const [loading, setLoading] = useState(false);
-  const [expandedSections, setExpandedSections] = useState(["ram", "storage"]);
+  const [expandedSections, setExpandedSections] = useState([]);
   const [selected, setSelected] = useState({});
   const toggleSection = (key) => {
     setExpandedSections((prev) =>
@@ -37,9 +31,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       Array.from(new Set([...prev, ...activeSections]))
     );
   }, [selected]);
-  const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-  const [selectedPoll, setSelectedPoll] = useState(null);
   const pathname = usePathname();
   const filterSections = [
     { key: "ram", title: "RAM", icon: MemoryStick, grid: "grid-cols-2" },
@@ -59,12 +50,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     // { key: "refreshRate", title: "Refresh Rate", icon: Gauge, grid: "grid-cols-2" },
     // { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
     // { key: "chargingSpeed", title: "Charging Speed", icon: BatteryCharging, grid: "grid-cols-1" },
-    {
-      key: "networkConnectivity",
-      title: "Network Connectivity",
-      icon: Wifi,
-      grid: "grid-cols-1",
-    },
+    // {
+    //   key: "networkConnectivity",
+    //   title: "Network Connectivity",
+    //   icon: Wifi,
+    //   grid: "grid-cols-1",
+    // },
   ];
   const sideBarMap = SideBarData.reduce((acc, item) => {
     acc[item.slug] = item.values || [];
@@ -141,6 +132,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
       return { ...prev, [key]: next };
     });
+    // handleApply();
   };
 
   // Apply filters to parent
@@ -215,35 +207,51 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       }
     }
 
-    // ✅ Price range
-    if (selected.priceRange?.length === 2) {
-      let [min, max] = selected.priceRange;
-      min = Number(min);
-      max = Number(max);
-      if (!isNaN(min) && min > 0 && !isNaN(max)) {
+
+    // Price range building
+    if (selected.priceRange) {
+      let min = Number(selected.priceRange.min);
+      let max = Number(selected.priceRange.max);
+
+      // Case: Only Min provided
+      if (!isNaN(min) && min >= 0 && (isNaN(max) || max === 0)) {
+        pathSegments.push(`price-from-${min}`);
+      }
+
+      // Case: Only Max provided
+      if (!isNaN(max) && max > 0 && (isNaN(min) || min === 0)) {
         if (max <= 15000) pathSegments.push("budget-smartphones");
         else if (max <= 30000) pathSegments.push("mid-range-phones");
         else if (max <= 50000) pathSegments.push("premium-mobiles");
         else pathSegments.push("flagship-phones");
 
-        pathSegments.push(`price-${min}-to-${max}`);
+        pathSegments.push(`price-up-to-${max}`);
+      }
+
+      // Case: both provided
+      if (!isNaN(min) && min >= 0 && !isNaN(max) && max > 0 && min <= max) {
+        if (max <= 15000) pathSegments.push("budget-smartphones");
+        else if (max <= 30000) pathSegments.push("mid-range-phones");
+        else if (max <= 50000) pathSegments.push("premium-mobiles");
+        else pathSegments.push("flagship-phones");
+
+        pathSegments.push(`${min}-to-${max}`);
       }
     }
-
     // ✅ Other filters
     const filterConfig = {
       ram: { order: 1, isNumeric: true, suffix: "ram" },
       storage: { order: 2, isNumeric: true, suffix: "storage" },
       refreshRate: { order: 3, isNumeric: true, suffix: "refresh-rate" },
       camera: { order: 4, isNumeric: true, suffix: "camera" },
-      battery: { order: 5, isNumeric: true, suffix: "battery" },
-      processor: { order: 6, isNumeric: false, suffix: "processor" },
+      batteryCapacity: { order: 5, isNumeric: true, suffix: "battery" },
+      screenSize: { order: 6, isNumeric: true, suffix: "screen-size" },
+      processor: { order: 7, isNumeric: false, suffix: "processor" },
     };
-
     const sortedFilters = Object.entries(filterConfig).sort(
       ([, a], [, b]) => a.order - b.order
     );
-
+   
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
 
@@ -268,26 +276,28 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     // ✅ Build final path
     pathSegments = pathSegments.filter(Boolean);
     const path = `/${pathSegments.join("/")}/`;
-    console.log(path);
     if (path.length > 200) {
       console.warn(
         "URL is too long, consider using query params for extra filters"
       );
     }
-
-    router.push(path, { scroll: false });
-    onApply?.();
+    onApply?.(path);
     setIsOpen?.(false);
-  }, [selected, onApply, setIsOpen, router]);
+  }, [selected]);
 
   const handlePriceChange = useCallback((range) => {
-    setSelectedFilters((prev) => ({ ...prev, priceRange: range }));
-  }, []);
-  useEffect(() => {
-    if (Object.keys(selected).length) {
-      handleApply();
+
+    setSelected((prev) => ({ ...prev, priceRange: range }));
+  });
+
+  const isSelected = Object.values(selected).some((v) => {
+    if (Array.isArray(v)) return v.length > 0; // check arrays
+    if (v && typeof v === 'object') {
+      // check if object has any value (number/string) set
+      return Object.values(v).some(val => val !== null && val !== undefined && val !== '');
     }
-  }, [selected]);
+    return false;
+  });
   return (
     <>
       {isOpen && (
@@ -300,30 +310,23 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
-    transform transition-transform duration-300 overflow-y-auto
-    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-    md:static md:translate-x-0 md:shadow-none md:pt-0
-  `}
+        fixed top-14 left-0 z-40 w-65 bg-white shadow-xl
+        transform transition-transform duration-300
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        md:static md:translate-x-0 md:shadow-none
+        flex flex-col
+      `}
+        style={{ height: 'calc(95vh - 3.5rem)' }}
       >
-        {/* Filters List */}
-        <div className="px-4 py-4 space-y-4">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4
+                  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
           <input
             type="text"
             placeholder="Search mobiles..."
             className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             onChange={(e) => handleSearch(e.target.value)}
           />
-          {/* <svg
-            className="absolute w-4 h-4 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
-          </svg> */}
-          {/* Brands Section */}
           <details className="border-t pt-4 group" open>
             <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
               <span className="flex items-center gap-2">
@@ -352,7 +355,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
             </summary>
             <div className="mt-3">
-              <PriceRangeFilter value={selected} onChange={handlePriceChange} />
+              <PriceRangeFilter value={selected} handlePriceChange={handlePriceChange} />
             </div>
           </details>
 
@@ -361,7 +364,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             <details
               key={key}
               className="border-t pt-4 group"
-              open={expandedSections.includes(key)}
+              open={true}
               onClick={(e) => {
                 if (e.target.tagName.toLowerCase() === "summary")
                   toggleSection(key);
@@ -392,241 +395,18 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         </div>
 
         {/* Sticky Apply Button */}
-        {/* <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
+        <div className="flex-shrink-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
           <button
             onClick={handleApply}
-            disabled={!Object.values(selected).some((v) => v?.length > 0)}
-            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 ${
-              Object.values(selected).some((v) => v?.length > 0)
+            disabled={!isSelected}
+            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 
+              ${isSelected
                 ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
+              }`}
           >
             Apply Filters
           </button>
-        </div> */}
-        <div className="border-t mt-4 pt-3 space-y-7 p-3">
-          {/* 1️⃣ Top Phones from Same Brand */}
-          {/* <div>
-            <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
-              Top Samsung Picks
-            </h4>
-
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { id: 1, name: "Galaxy S24 Ultra", image: "" },
-                { id: 2, name: "Galaxy Z Fold 6", image: "" },
-                { id: 3, name: "Galaxy A55", image: "" },
-                { id: 4, name: "Galaxy A35", image: "" },
-              ].map((p) => (
-                <div key={p.id} className="group flex flex-col items-center text-center cursor-pointer">
-                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-2 flex items-center justify-center">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  <span className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
-                    {p.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-          {/* 2️⃣ Latest News */}
-          {/* <div>
-            <h4 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
-              Latest News
-            </h4>
-
-            <div className="divide-y divide-gray-100 border-t border-gray-100">
-              {[
-                { id: 1, title: "Apple Unveils iPhone 17 with Holographic Display", image: "", category: "Mobile" },
-                { id: 2, title: "Elon Musk’s Neuralink Uploads Human Memory", image: "", category: "AI" },
-                { id: 3, title: "Samsung Galaxy S25 to Feature Transparent Display", image: "", category: "Tech" },
-              ].map((p) => (
-                <div key={p.id} className="group flex items-center gap-4 py-4 cursor-pointer hover:bg-gray-50 px-2 rounded-lg transition-all duration-200">
-                  <div className="relative w-24 h-16 flex-shrink-0 overflow-hidden rounded-md">
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-col flex-grow">
-                    <span className="text-xs text-blue-600 font-medium uppercase tracking-wide mb-1">{p.category}</span>
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">{p.title}</h3>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-          {/* 3️⃣ Tech Insights */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              ⚡ Tech Insights
-            </h3>
-            <ul className="space-y-3 text-sm text-gray-700">
-              {[
-                "Snapdragon 8 Gen 3 is 35% faster than Gen 2.",
-                "OLED screens last 25% longer than AMOLED ones.",
-                "iPhones retain 70% resale value after 1 year.",
-                "5G drains 15% more battery than 4G on average.",
-                "AI-powered cameras now improve night shots by 40%.",
-              ].map((fact, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-2 bg-gray-50 p-2 rounded-lg hover:bg-blue-50 transition"
-                >
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>{fact}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 4️⃣ Upcoming Models */}
-          {/* <div>
-            <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full"></span>
-              Upcoming Samsung Phones
-            </h4>
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { id: 1, name: "Galaxy S25 Ultra", image: "" },
-                { id: 2, name: "Galaxy Z Fold 7", image: "" },
-                { id: 3, name: "Galaxy S25 Ultra", image: "" },
-                { id: 4, name: "Galaxy Z Fold 7", image: "" },
-              ].map((p) => (
-                <div key={p.id} className="group flex flex-col items-center text-center cursor-pointer">
-                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-2 flex items-center justify-center">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  <span className="text-xs sm:text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">{p.name}</span>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-          {/* 5️⃣ Popular Comparisons */}
-          <div>
-            <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-green-500 to-green-600 rounded-full"></span>
-              Popular Comparisons
-            </h4>
-            <div className="space-y-2">
-              {[
-                "Galaxy S24 Ultra vs iPhone 15 Pro Max",
-                "Samsung A55 vs OnePlus 12R",
-                "Z Fold 6 vs Pixel Fold 2",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2 hover:shadow-sm hover:border-blue-400 transition-all duration-200 cursor-pointer"
-                >
-                  <span className="text-xs font-medium text-gray-700 truncate">
-                    {item}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-3.5 h-3.5 text-gray-400 group-hover:text-blue-500 transition-colors"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.6}
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 6️⃣ Mini Poll */}
-          <div className="mt-7">
-            <h4 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full"></span>
-              Vote Your Pick
-            </h4>
-            <p className="text-sm text-gray-700 mb-3">
-              Which flagship phone rules 2025?
-            </p>
-            <div className="space-y-2">
-              {[
-                "iPhone 16 Pro Max",
-                "Galaxy S24 Ultra",
-                "Pixel 9 Pro",
-                "OnePlus 12",
-              ].map((option, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedPoll(idx)}
-                  className={`w-full text-left text-sm border px-3 py-2 rounded-lg transition-all duration-200 ${
-                    selectedPoll === idx
-                      ? "bg-blue-50 border-blue-400"
-                      : "border-gray-200 hover:border-blue-400 hover:bg-blue-50"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-            {selectedPoll !== null && (
-              <div className="mt-3 text-xs text-blue-600">
-                You voted:{" "}
-                {
-                  [
-                    "iPhone 16 Pro Max",
-                    "Galaxy S24 Ultra",
-                    "Pixel 9 Pro",
-                    "OnePlus 12",
-                  ][selectedPoll]
-                }
-              </div>
-            )}
-          </div>
-
-          {/* 7️⃣ Price Drop Alerts */}
-          {/* <div className="mt-8">
-            <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="w-1.5 h-5 bg-gradient-to-b from-red-500 to-pink-600 rounded-full"></span>
-              Price Drop Alerts
-            </h4>
-
-            <div className="space-y-4">
-              {[
-                { id: 1, name: "Samsung Galaxy S24 Ultra", oldPrice: "Rs. 539,999", newPrice: "Rs. 499,999", image: "" },
-                { id: 2, name: "iPhone 15 Pro Max", oldPrice: "Rs. 589,999", newPrice: "Rs. 559,999", image: "" },
-                { id: 3, name: "OnePlus 12", oldPrice: "Rs. 239,999", newPrice: "Rs. 214,999", image: "" },
-              ].map((p) => (
-                <div key={p.id} className="flex items-center gap-4 p-2 border border-gray-100 rounded-lg hover:border-red-400 hover:shadow-sm transition-all duration-200 cursor-pointer">
-                  <div className="w-16 h-16 flex-shrink-0 overflow-hidden rounded-md">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-contain" />
-                  </div>
-                  <div className="flex flex-col flex-grow">
-                    <span className="text-sm font-medium text-gray-800 line-clamp-1">{p.name}</span>
-                    <div className="flex items-center gap-2 text-xs mt-1">
-                      <span className="text-gray-400 line-through">{p.oldPrice}</span>
-                      <span className="text-red-600 font-semibold">{p.newPrice}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
         </div>
       </div>
     </>

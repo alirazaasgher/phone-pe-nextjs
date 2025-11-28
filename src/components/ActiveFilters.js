@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 function getActiveTags(parsed, availableFilters) {
   const tags = [];
   const capitalize = str => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
-
   // Brands
   if (Array.isArray(parsed.brands)) {
-   
+
     parsed.brands.forEach(b => {
       const cleaned = b.replace(/-mobile$/, "").split("-").filter(Boolean);
       cleaned.forEach(name => {
@@ -24,9 +23,40 @@ function getActiveTags(parsed, availableFilters) {
   // Price Range
   if (Array.isArray(parsed.priceRange) && parsed.priceRange.length === 2) {
     const [min, max] = parsed.priceRange;
+
     if (min != null && max != null) {
-      tags.push(`$${min} - $${max}`);
+      // Both values exist
+      tags.push(`${min} - ${max}`);
     }
+    else if (min != null && (max == null || max === "")) {
+      // Only min exists
+      tags.push(`${min}`);
+    }
+    else if (max != null && (min == null || min === "")) {
+      // Only max exists
+      tags.push(`${max}`);
+    }
+  }
+
+  // Screen Size
+  if (Array.isArray(parsed.screenSizes)) {
+    parsed.screenSizes.forEach(range => {
+      let tag = range;
+
+      // Match "min-to-max" formats like "4.5to5.0" or "5.0to5.5"
+      const match = range.match(/^(\d+(\.\d+)?)to(\d+(\.\d+)?)$/);
+      if (match) {
+        const min = match[1];
+        const max = match[3];
+        tag = `${min} - ${max} inch`; // human-readable format
+      } else if (!isNaN(Number(range))) {
+        // Single number, e.g., "6"
+        tag = `${range} inch`;
+      }
+
+      // Push to tags array
+      tags.push(tag);
+    });
   }
 
   // RAM & Storage
@@ -37,26 +67,35 @@ function getActiveTags(parsed, availableFilters) {
 
   specMappings.forEach(({ key, label }) => {
     if (Array.isArray(parsed[key])) {
-      parsed[key].filter(Boolean).forEach(v => {
-        if (availableFilters[key]?.includes(v)) {
-          tags.push(`${v}${label}`);
-        }
-      });
+      parsed[key]
+        .filter(Boolean)
+        .forEach(v => {
+          // Match with availableFilters[key] objects by 'name' or 'value'
+          const match = availableFilters[key]?.find(f =>
+            f.name === `${v}gb` || f.value === `${v} GB`
+          );
+
+          if (match) {
+            tags.push(`${v}${label}`);
+          }
+        });
     }
   });
 
-  // Features
-  if (Array.isArray(parsed.features)) {
-    parsed.features.filter(Boolean).forEach(f => {
-      if (availableFilters.features?.includes(f.toLowerCase())) {
-        tags.push(capitalize(f));
-      }
-    });
-  }
+  if (Array.isArray(parsed.batteryCapacity)) {
+    parsed.batteryCapacity.forEach(batt => {
+      let tag = batt;
 
-  // Category
-  if (parsed.category && availableFilters.category?.includes(parsed.category.toLowerCase())) {
-    tags.push(capitalize(parsed.category));
+      // Match numeric values with optional "mAh" suffix
+      const match = batt.match(/^(\d+)(mAh)?$/i);
+      if (match) {
+        const value = match[1];
+        tag = `${value} mAh`; // human-readable format
+      }
+
+      // Push to tags array
+      tags.push(tag);
+    });
   }
 
   return tags;
@@ -65,23 +104,47 @@ function getActiveTags(parsed, availableFilters) {
 
 
 function tagToFilter(tag) {
-  const cleanTag = tag.trim();
+  const cleanTag = tag.trim().toLowerCase();
 
-  if (/^\d+\s*RAM$/i.test(cleanTag)) {
-    return `${cleanTag.replace(/\s*RAM$/i, "").trim()}gb-ram`;
+  // Screen size range: e.g., "4.5to5.0 inch", "5.0-5.5 inch"
+  if (/^\d+(\.\d+)?\s*(to|-)\s*\d+(\.\d+)?\s*inch$/i.test(cleanTag)) {
+    const parts = cleanTag
+      .replace(/\s*inch\s*$/i, "")       // remove "inch"
+      .split(/\s*to\s*|\s*-\s*/)         // split on "to" or "-"
+      .map(s => s.trim());
+    return `${parts[0]}to${parts[1]}-screen-size`;
   }
 
-  if (/^\d+\s*Storage$/i.test(cleanTag)) {
-    return `${cleanTag.replace(/\s*Storage$/i, "").trim()}gb-storage`;
-  }
+  // Battery: e.g., "3000 mAh"
+  else if (/^\d+(\s*(to|-)\s*\d+)?\s*(mAh)?$/i.test(cleanTag)) {
+  // Remove trailing "mAh" and extra spaces
+  let value = cleanTag.replace(/\s*mAh\s*$/i, "").trim();
+  // Normalize ranges: remove spaces around "to" or "-"
+  value = value.replace(/\s*to\s*/i, "to").replace(/\s*-\s*/, "-");
 
-  if (/^\$\d+\s*-\s*\$\d+$/.test(cleanTag)) {
-    const [min, max] = cleanTag.replace(/\$/g, "").split("-").map(s => s.trim());
-    return `price-${min}-to-${max}`;
-  }
-
-  return cleanTag.toLowerCase().replace(/\s+/g, "-");
+  return `${value}mAh-battery`;
 }
+
+  // RAM: e.g., "6 RAM"
+  else if (/^\d+\s*ram$/i.test(cleanTag)) {
+    return `${cleanTag.replace(/\s*ram$/i, "").trim()}gb-ram`;
+  }
+
+  // Storage: e.g., "128 Storage"
+  else if (/^\d+\s*storage$/i.test(cleanTag)) {
+    return `${cleanTag.replace(/\s*storage$/i, "").trim()}gb-storage`;
+  }
+
+  // Price: single number
+  else if (/^\d+$/.test(cleanTag)) {
+    return `price-${cleanTag}`;
+  }
+
+  // Default: replace spaces with dash
+  return cleanTag.replace(/\s+/g, "-");
+}
+
+
 
 function removeBrandFromFilter(filterString, brand) {
   const cleaned = filterString
@@ -91,38 +154,56 @@ function removeBrandFromFilter(filterString, brand) {
     .replace(/^-|-$/g, ""); // remove leading/trailing dash
 
   // If it resolves to generic meaningless string → return empty string
-  const invalids = ["","mobile-phones"];
+  const invalids = ["", "mobile-phones"];
   return invalids.includes(cleaned) ? "" : cleaned;
 }
 
 
 
-export default function ActiveFilters({ filters, parsed,availableFilters,setLoading}) {
-  const activeTags = getActiveTags(parsed,availableFilters);
+export default function ActiveFilters({ filters, parsed, availableFilters, setLoading }) {
+
+  const activeTags = getActiveTags(parsed, availableFilters);
   const router = useRouter(activeTags, parsed);
   const removeFilter = (tag) => {
     setLoading(true);
-  const filterValue = tagToFilter(tag, filters);
-  let updatedFilters = [...filters];
 
-  // Find combined brand filters like: "oneplus-samsung-mobile-phones"
-  const combinedBrand = filters.find(f => f.includes("-mobile"));
+    const filterValue = tagToFilter(tag, filters); // normalize tag
+    console.log(filterValue)
+    console.log(filters)
+    let updatedFilters = [...filters];
 
-  if (combinedBrand && filterValue && combinedBrand.includes(filterValue)) {
-    const newBrandString = removeBrandFromFilter(combinedBrand, filterValue);
+    const isPriceFilter = (f) =>
+      /^price-/.test(f) || /^\d+(-to-\d+)?$/.test(f);
+    const combinedBrand = filters.find(f => f.includes("-mobile"));
+    const isPriceCategory = (f) =>
+      f.endsWith("-smartphones") || f.endsWith("-mobiles") || f.endsWith("-phones");
+    // Remove price filters if the clicked tag is a price
+    if (isPriceFilter(filterValue)) {
+      updatedFilters = updatedFilters.filter(f => !isPriceFilter(f));
+      // Remove any dynamically generated price category
+      updatedFilters = updatedFilters.filter(f => !isPriceCategory(f));
+    }
 
-    updatedFilters = filters.map(f => (f === combinedBrand ? newBrandString : f))
-                           .filter(Boolean); // remove empty entries
-  } else {
-    updatedFilters = updatedFilters.filter(f => f !== filterValue);
-  }
+    // Remove brand inside combined brands
+    else if (combinedBrand && combinedBrand.includes(filterValue)) {
+      const newBrandString = removeBrandFromFilter(combinedBrand, filterValue);
 
-  const path = updatedFilters.length
-    ? `/mobiles/${updatedFilters.join("/")}`
-    : `/mobiles`;
+      updatedFilters = updatedFilters
+        .map(f => (f === combinedBrand ? newBrandString : f))
+        .filter(Boolean); // Remove empty items
+    }
+    // Normal remove
+    else {
+      updatedFilters = updatedFilters.filter(f => f !== filterValue);
+    }
 
-  router.push(path);
-};
+    const path = updatedFilters.length
+      ? `/mobiles/${updatedFilters.join("/")}`
+      : `/mobiles`;
+
+    router.push(path);
+  };
+
   return (
     <>
       {activeTags.length > 0 && (

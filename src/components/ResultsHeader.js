@@ -4,7 +4,6 @@ import Image from "next/image";
 import { RotateCcw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Star, ArrowUp, ArrowDown, Clock } from 'lucide-react';
-import Loader from "@/app/loading";
 
 function getActiveTags(parsed) {
   const tags = [];
@@ -24,7 +23,7 @@ function getActiveTags(parsed) {
   if (Array.isArray(parsed.priceRange) && parsed.priceRange.length === 2) {
     const [min, max] = parsed.priceRange;
     if (min != null && max != null) {
-      tags.push(`$${min} - $${max}`);
+      tags.push(`${min} - ${max}`);
     }
   }
 

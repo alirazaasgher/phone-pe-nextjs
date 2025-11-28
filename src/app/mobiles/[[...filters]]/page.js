@@ -10,18 +10,29 @@ export default async function Page({ params, searchParams }) {
 
   // params.filters will be undefined if no filters in URL
   const parsed = {
-    category: null,
     priceRange: null,
     brands: [],
     ram: [],
     storage: [],
-    features: [],
+    screenSizes: [],
+    batteryCapacity: [],
   };
 
   filters.forEach((f) => {
-    if (f.startsWith("price-")) {
-      // e.g., "price-100-to-500" => [100, 500]
-      parsed.priceRange = f.replace("price-", "").split("-to-").map(Number); // convert to numbers
+    if (f.startsWith("price-from-")) {
+      // Only min
+      const min = Number(f.replace("price-from-", ""));
+      parsed.priceRange = [min, null];
+    }
+    else if (f.startsWith("price-up-to-")) {
+      // Only max
+      const max = Number(f.replace("price-up-to-", ""));
+      parsed.priceRange = [null, max];
+    }
+    else if (f.includes("-to-")) {
+      // Both min and max
+      const [min, max] = f.split("-to-").map(Number);
+      parsed.priceRange = [min, max];
     } else if (f.endsWith("gb-ram")) {
       // e.g., "6gb-ram" => [6]
       const value = parseInt(f.replace("-ram", ""), 10);
@@ -38,9 +49,14 @@ export default async function Page({ params, searchParams }) {
         .split("-")
         .map((b) => b.charAt(0).toUpperCase() + b.slice(1));
       parsed.brands.push(...brandsArray);
-    } else {
-      // e.g., "smartphones" => "Smartphones"
-      parsed.category = f.charAt(0).toUpperCase() + f.slice(1);
+    } else if (f.includes("screen-size")) {
+      const screenSize = f.replace("-screen-size", ""); // remove suffix
+      parsed.screenSizes = parsed.screenSizes || [];
+      parsed.screenSizes.push(screenSize); // e.g., "4.5to5.0"
+    } else if (f.includes("battery")) {
+      const battery = f.replace("-battery", ""); // remove suffix
+      parsed.batteryCapacity = parsed.batteryCapacity || [];
+      parsed.batteryCapacity.push(battery); // e.g., "3000mAh"
     }
   });
   const phones = await mobilePageData(parsed, sortValue);
@@ -60,7 +76,6 @@ export default async function Page({ params, searchParams }) {
 
 export async function generateMetadata({ params, searchParams }) {
   const awaitedParams = await params;
-  const awaitedSearchParams = await searchParams;
   const filters = awaitedParams.filters || [];
 
   // Parse filters readable for metadata

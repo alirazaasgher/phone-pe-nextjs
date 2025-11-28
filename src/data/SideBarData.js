@@ -224,7 +224,7 @@ const SideBarData = [
                 "id": 22,
                 "filter_id": 5,
                 "value": "Below 3000 mAh",
-                "name": null,
+                "name": "3000mAh",
                 "created_at": "2025-08-24T15:40:23.000000Z",
                 "updated_at": "2025-08-24T15:40:23.000000Z"
             },
@@ -232,7 +232,7 @@ const SideBarData = [
                 "id": 23,
                 "filter_id": 5,
                 "value": "3000 - 3999 mAh",
-                "name": null,
+                "name": "3000-3999mAh",
                 "created_at": "2025-08-24T15:40:23.000000Z",
                 "updated_at": "2025-08-24T15:40:23.000000Z"
             },
@@ -240,7 +240,7 @@ const SideBarData = [
                 "id": 24,
                 "filter_id": 5,
                 "value": "4000 - 4999 mAh",
-                "name": null,
+                "name": "4000-4999mAh",
                 "created_at": "2025-08-24T15:40:23.000000Z",
                 "updated_at": "2025-08-24T15:40:23.000000Z"
             },
@@ -248,7 +248,7 @@ const SideBarData = [
                 "id": 25,
                 "filter_id": 5,
                 "value": "5000 - 5999 mAh",
-                "name": null,
+                "name": "5000-5999mAh",
                 "created_at": "2025-08-24T15:40:23.000000Z",
                 "updated_at": "2025-08-24T15:40:23.000000Z"
             },
@@ -256,7 +256,7 @@ const SideBarData = [
                 "id": 26,
                 "filter_id": 5,
                 "value": "6000 mAh & Above",
-                "name": null,
+                "name": "6000&Above",
                 "created_at": "2025-08-24T15:40:23.000000Z",
                 "updated_at": "2025-08-24T16:06:32.000000Z"
             }

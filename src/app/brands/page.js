@@ -1,18 +1,3 @@
-import {
-  Smartphone,
-  Apple,
-  Square,
-  Circle,
-  Star as StarIcon,
-  ChevronLeft,
-  ChevronRight,
-  Diamond,
-  Scale,
-  Flame,
-  Lightbulb,
-  Phone,
-} from "lucide-react";
-import Container from "@/components/Container";
 export default function BrandsPage() {
   const brands = [
     {
@@ -182,8 +167,6 @@ export default function BrandsPage() {
               </span>
               <span className="text-xs sm:text-sm text-gray-400">models</span>
             </div>
-
-            {/* Hover Effect Overlay */}
           </a>
         ))}
       </div>
