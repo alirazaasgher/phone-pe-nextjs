@@ -224,12 +224,12 @@ export default function HomeContent({ homePageResponse }) {
           </p>
 
           {/* DESKTOP VIEW - ORIGINAL GRID */}
-          <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2">
             {brands.map((brand) => (
               <a
                 key={brand.name}
                 href={`/mobiles/brand/${brand.name.toLowerCase()}`}
-                className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
+                className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4
               hover:border-blue-400
               ${brand.color}`}
               >

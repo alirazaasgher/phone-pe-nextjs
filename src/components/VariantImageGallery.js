@@ -30,7 +30,6 @@ export default function VariantImageGallery({ phone }) {
     const colorObj = phone.colors[selectedColorIndex];
     return colorObj?.images || [];
   }, [selectedColorIndex, phone.colors]);
-
   const activeSrc = selectedColorImages[currentImageIndex]?.url || null;
 
   const nextImage = useCallback(() => {
@@ -122,7 +121,7 @@ export default function VariantImageGallery({ phone }) {
 
       <div className="flex-shrink-0 flex flex-col justify-center items-center h-full">
         <div className="relative w-[220px] h-[260px] lg:w-[200px] lg:h-[200px] flex justify-center items-center bg-white overflow-visible group">
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             <motion.img
               key={`${selectedColor}-${currentImageIndex}`}
               src={activeSrc || "images/default_placeholder.webp"}
@@ -139,7 +138,12 @@ export default function VariantImageGallery({ phone }) {
               onClick={() => setZoomed(true)}
             />
           </AnimatePresence>
-
+          {/* Image counter at bottom-right */}
+          {imagesToShow.length > 1 && (
+            <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+              {currentImageIndex + 1} / {imagesToShow.length}
+            </div>
+          )}
           {/* Navigation Buttons */}
           {!isMobile && imagesToShow.length > 1 && (
             <>
@@ -172,7 +176,7 @@ export default function VariantImageGallery({ phone }) {
             onClick={(index) => {
               setSelectedColorIndex(index);
               setSelectedColor(phone.colors[index].name);
-              setCurrentImageIndex(0); // reset image index for new color
+              setCurrentImageIndex(0);
             }}
           />
         </div>

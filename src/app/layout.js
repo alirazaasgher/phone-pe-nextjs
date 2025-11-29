@@ -18,6 +18,10 @@ export const metadata = {
     "Discover the latest and upcoming mobile phones with detailed specs, prices, and reviews",
   keywords:
     "mobile phones, smartphones, latest mobiles, upcoming phones, phone specs, mobile reviews",
+    icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport = {

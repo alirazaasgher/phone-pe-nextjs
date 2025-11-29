@@ -1,19 +1,24 @@
 // components/ActiveFilters.js (Client Component)
 "use client";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 function getActiveTags(parsed, availableFilters) {
   const tags = [];
-  const capitalize = str => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+  const capitalize = (str) =>
+    str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
   // Brands
   if (Array.isArray(parsed.brands)) {
-
-    parsed.brands.forEach(b => {
-      const cleaned = b.replace(/-mobile$/, "").split("-").filter(Boolean);
-      cleaned.forEach(name => {
-        if (availableFilters.brands.some(
-          (brand) => brand.name.toLowerCase() === name.toLowerCase()
-        )) {
+    parsed.brands.forEach((b) => {
+      const cleaned = b
+        .replace(/-mobile$/, "")
+        .split("-")
+        .filter(Boolean);
+      cleaned.forEach((name) => {
+        if (
+          availableFilters.brands.some(
+            (brand) => brand.name.toLowerCase() === name.toLowerCase()
+          )
+        ) {
           tags.push(capitalize(name));
         }
       });
@@ -27,12 +32,10 @@ function getActiveTags(parsed, availableFilters) {
     if (min != null && max != null) {
       // Both values exist
       tags.push(`${min} - ${max}`);
-    }
-    else if (min != null && (max == null || max === "")) {
+    } else if (min != null && (max == null || max === "")) {
       // Only min exists
       tags.push(`${min}`);
-    }
-    else if (max != null && (min == null || min === "")) {
+    } else if (max != null && (min == null || min === "")) {
       // Only max exists
       tags.push(`${max}`);
     }
@@ -40,7 +43,7 @@ function getActiveTags(parsed, availableFilters) {
 
   // Screen Size
   if (Array.isArray(parsed.screenSizes)) {
-    parsed.screenSizes.forEach(range => {
+    parsed.screenSizes.forEach((range) => {
       let tag = range;
 
       // Match "min-to-max" formats like "4.5to5.0" or "5.0to5.5"
@@ -62,28 +65,26 @@ function getActiveTags(parsed, availableFilters) {
   // RAM & Storage
   const specMappings = [
     { key: "ram", label: "GB RAM" },
-    { key: "storage", label: "GB Storage" }
+    { key: "storage", label: "GB Storage" },
   ];
 
   specMappings.forEach(({ key, label }) => {
     if (Array.isArray(parsed[key])) {
-      parsed[key]
-        .filter(Boolean)
-        .forEach(v => {
-          // Match with availableFilters[key] objects by 'name' or 'value'
-          const match = availableFilters[key]?.find(f =>
-            f.name === `${v}gb` || f.value === `${v} GB`
-          );
+      parsed[key].filter(Boolean).forEach((v) => {
+        // Match with availableFilters[key] objects by 'name' or 'value'
+        const match = availableFilters[key]?.find(
+          (f) => f.name === `${v}gb` || f.value === `${v} GB`
+        );
 
-          if (match) {
-            tags.push(`${v}${label}`);
-          }
-        });
+        if (match) {
+          tags.push(`${v}${label}`);
+        }
+      });
     }
   });
 
   if (Array.isArray(parsed.batteryCapacity)) {
-    parsed.batteryCapacity.forEach(batt => {
+    parsed.batteryCapacity.forEach((batt) => {
       let tag = batt;
 
       // Match numeric values with optional "mAh" suffix
@@ -101,50 +102,48 @@ function getActiveTags(parsed, availableFilters) {
   return tags;
 }
 
-
-
 function tagToFilter(tag) {
   const cleanTag = tag.trim().toLowerCase();
 
   // Screen size range: e.g., "4.5to5.0 inch", "5.0-5.5 inch"
   if (/^\d+(\.\d+)?\s*(to|-)\s*\d+(\.\d+)?\s*inch$/i.test(cleanTag)) {
     const parts = cleanTag
-      .replace(/\s*inch\s*$/i, "")       // remove "inch"
-      .split(/\s*to\s*|\s*-\s*/)         // split on "to" or "-"
-      .map(s => s.trim());
+      .replace(/\s*inch\s*$/i, "")
+      .split(/\s*(?:to|-)\s*/)
+      .map((s) => s.trim());
     return `${parts[0]}to${parts[1]}-screen-size`;
   }
 
-  // Battery: e.g., "3000 mAh"
-  else if (/^\d+(\s*(to|-)\s*\d+)?\s*(mAh)?$/i.test(cleanTag)) {
-  // Remove trailing "mAh" and extra spaces
-  let value = cleanTag.replace(/\s*mAh\s*$/i, "").trim();
-  // Normalize ranges: remove spaces around "to" or "-"
-  value = value.replace(/\s*to\s*/i, "to").replace(/\s*-\s*/, "-");
-
-  return `${value}mAh-battery`;
-}
-
-  // RAM: e.g., "6 RAM"
-  else if (/^\d+\s*ram$/i.test(cleanTag)) {
-    return `${cleanTag.replace(/\s*ram$/i, "").trim()}gb-ram`;
+  // Battery: must contain "mAh" to differentiate from price
+  // e.g., "3000 mAh", "3000-4000 mAh"
+  if (/^\d+(\s*(?:to|-)\s*\d+)?\s*mAh$/i.test(cleanTag)) {
+    const value = cleanTag
+      .replace(/\s*mAh\s*$/i, "")
+      .replace(/\s*(?:to|-)\s*/g, (match) =>
+        match.includes("to") ? "to" : "-"
+      )
+      .trim();
+    return `${value}mAh-battery`;
   }
 
-  // Storage: e.g., "128 Storage"
-  else if (/^\d+\s*storage$/i.test(cleanTag)) {
-    return `${cleanTag.replace(/\s*storage$/i, "").trim()}gb-storage`;
+  // RAM: e.g., "6 RAM", "8GB RAM"
+  if (/^\d+\s*(?:gb\s*)?ram$/i.test(cleanTag)) {
+    return `${cleanTag.replace(/\s*(?:gb\s*)?ram$/i, "").trim()}gb-ram`;
   }
 
-  // Price: single number
-  else if (/^\d+$/.test(cleanTag)) {
+  // Storage: e.g., "128 Storage", "256GB Storage"
+  if (/^\d+\s*(?:gb\s*)?storage$/i.test(cleanTag)) {
+    return `${cleanTag.replace(/\s*(?:gb\s*)?storage$/i, "").trim()}gb-storage`;
+  }
+
+  // Price: single number (no units)
+  if (/^\d+$/.test(cleanTag)) {
     return `price-${cleanTag}`;
   }
 
   // Default: replace spaces with dash
   return cleanTag.replace(/\s+/g, "-");
 }
-
-
 
 function removeBrandFromFilter(filterString, brand) {
   const cleaned = filterString
@@ -158,30 +157,33 @@ function removeBrandFromFilter(filterString, brand) {
   return invalids.includes(cleaned) ? "" : cleaned;
 }
 
-
-
-export default function ActiveFilters({ filters, parsed, availableFilters, setLoading }) {
-
+export default function ActiveFilters({
+  filters,
+  parsed,
+  availableFilters,
+  setLoading,
+}) {
   const activeTags = getActiveTags(parsed, availableFilters);
   const router = useRouter(activeTags, parsed);
   const removeFilter = (tag) => {
     setLoading(true);
 
     const filterValue = tagToFilter(tag, filters); // normalize tag
-    console.log(filterValue)
-    console.log(filters)
+    console.log(filterValue);
+    console.log(filters);
     let updatedFilters = [...filters];
 
-    const isPriceFilter = (f) =>
-      /^price-/.test(f) || /^\d+(-to-\d+)?$/.test(f);
-    const combinedBrand = filters.find(f => f.includes("-mobile"));
+    const isPriceFilter = (f) => /^price-/.test(f) || /^\d+(-to-\d+)?$/.test(f);
+    const combinedBrand = filters.find((f) => f.includes("-mobile"));
     const isPriceCategory = (f) =>
-      f.endsWith("-smartphones") || f.endsWith("-mobiles") || f.endsWith("-phones");
+      f.endsWith("-smartphones") ||
+      f.endsWith("-mobiles") ||
+      f.endsWith("-phones");
     // Remove price filters if the clicked tag is a price
     if (isPriceFilter(filterValue)) {
-      updatedFilters = updatedFilters.filter(f => !isPriceFilter(f));
+      updatedFilters = updatedFilters.filter((f) => !isPriceFilter(f));
       // Remove any dynamically generated price category
-      updatedFilters = updatedFilters.filter(f => !isPriceCategory(f));
+      updatedFilters = updatedFilters.filter((f) => !isPriceCategory(f));
     }
 
     // Remove brand inside combined brands
@@ -189,12 +191,12 @@ export default function ActiveFilters({ filters, parsed, availableFilters, setLo
       const newBrandString = removeBrandFromFilter(combinedBrand, filterValue);
 
       updatedFilters = updatedFilters
-        .map(f => (f === combinedBrand ? newBrandString : f))
+        .map((f) => (f === combinedBrand ? newBrandString : f))
         .filter(Boolean); // Remove empty items
     }
     // Normal remove
     else {
-      updatedFilters = updatedFilters.filter(f => f !== filterValue);
+      updatedFilters = updatedFilters.filter((f) => f !== filterValue);
     }
 
     const path = updatedFilters.length
@@ -213,9 +215,9 @@ export default function ActiveFilters({ filters, parsed, availableFilters, setLo
               key={tag}
               title={tag}
               className="group flex items-center gap-2 px-3 py-1.5
-                   bg-white/70 backdrop-blur-sm 
-                   border border-blue-100/60 
-                   rounded-full text-[13px] font-medium 
+                   bg-white/70 backdrop-blur-sm
+                   border border-blue-100/60
+                   rounded-full text-[13px] font-medium
                    text-blue-700 shadow-sm
                    hover:bg-blue-50 hover:shadow-md hover:border-blue-200
                    transition-all duration-200 cursor-pointer"
@@ -226,9 +228,9 @@ export default function ActiveFilters({ filters, parsed, availableFilters, setLo
               {/* Remove button */}
               <button
                 onClick={() => removeFilter(tag)}
-                className="flex items-center justify-center w-5 h-5 rounded-full 
+                className="flex items-center justify-center w-5 h-5 rounded-full
                      bg-blue-100/70 text-blue-700
-                     group-hover:bg-blue-500 group-hover:text-white 
+                     group-hover:bg-blue-500 group-hover:text-white
                      transition-all duration-300 hover:rotate-90 shadow-sm"
                 aria-label={`Remove ${tag} filter`}
               >
@@ -238,8 +240,6 @@ export default function ActiveFilters({ filters, parsed, availableFilters, setLo
           ))}
         </div>
       )}
-
     </>
-
   );
 }

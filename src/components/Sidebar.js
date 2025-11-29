@@ -207,7 +207,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       }
     }
 
-
     // Price range building
     if (selected.priceRange) {
       let min = Number(selected.priceRange.min);
@@ -251,7 +250,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     const sortedFilters = Object.entries(filterConfig).sort(
       ([, a], [, b]) => a.order - b.order
     );
-   
+
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
 
@@ -286,18 +285,55 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   }, [selected]);
 
   const handlePriceChange = useCallback((range) => {
-
     setSelected((prev) => ({ ...prev, priceRange: range }));
   });
 
   const isSelected = Object.values(selected).some((v) => {
     if (Array.isArray(v)) return v.length > 0; // check arrays
-    if (v && typeof v === 'object') {
+    if (v && typeof v === "object") {
       // check if object has any value (number/string) set
-      return Object.values(v).some(val => val !== null && val !== undefined && val !== '');
+      return Object.values(v).some(
+        (val) => val !== null && val !== undefined && val !== ""
+      );
     }
     return false;
   });
+
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
+    if (isOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+
+      // Lock body scroll
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+    } else {
+      // Get the scroll position before unlocking
+      const scrollY = document.body.style.top;
+
+      // Unlock body scroll
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+
+      // Restore scroll position
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+
+    // Cleanup
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+    };
+  }, [isOpen]);
   return (
     <>
       {isOpen && (
@@ -310,17 +346,15 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-        fixed top-14 left-0 z-40 w-65 bg-white shadow-xl
-        transform transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        md:static md:translate-x-0 md:shadow-none
-        flex flex-col
-      `}
-        style={{ height: 'calc(95vh - 3.5rem)' }}
+    fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
+    transform transition-transform duration-300 overflow-y-auto
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0 md:shadow-none md:pt-0
+    lg:static lg:flex lg:flex-col lg:h-[calc(95vh-3.5rem)]
+  `}
       >
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4
-                  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           <input
             type="text"
             placeholder="Search mobiles..."
@@ -355,7 +389,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180" />
             </summary>
             <div className="mt-3">
-              <PriceRangeFilter value={selected} handlePriceChange={handlePriceChange} />
+              <PriceRangeFilter
+                value={selected}
+                handlePriceChange={handlePriceChange}
+              />
             </div>
           </details>
 
@@ -395,14 +432,15 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         </div>
 
         {/* Sticky Apply Button */}
-        <div className="flex-shrink-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
+        <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
           <button
             onClick={handleApply}
             disabled={!isSelected}
-            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200 
-              ${isSelected
-                ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200
+              ${
+                isSelected
+                  ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
           >
             Apply Filters

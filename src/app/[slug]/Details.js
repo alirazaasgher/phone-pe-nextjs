@@ -344,15 +344,7 @@ export default function Details({ phoneDetails }) {
             {/* Top Specs & Variants Section */}
             <div className="flex flex-col lg:flex-row gap-1 items-start">
               {/* Left: Top Specs List */}
-              <ul
-                className="w-full text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-                style={{
-                  width:
-                    variants.length === 1 || variants.length === 2
-                      ? "450px"
-                      : "280px",
-                }}
-              >
+              <ul className="w-[280px] sm:w-[350px] 2xl:w-[450px]  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
                 {[
                   {
                     icon: <Calendar className="w-3 h-3 text-green-600" />,

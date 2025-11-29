@@ -15,11 +15,14 @@ export default function ClientLayout({ children }) {
   const toggleSidebar = () => setIsOpen((prev) => !prev);
   const [isPending, startTransition] = useTransition();
   // Function to navigate with loader
-  const navigate = useCallback((path) => {
-    startTransition(() => {
-      router.push(path); // App Router
-    });
-  }, [router]);
+  const navigate = useCallback(
+    (path) => {
+      startTransition(() => {
+        router.push(path); // App Router
+      });
+    },
+    [router]
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100">
@@ -30,26 +33,24 @@ export default function ClientLayout({ children }) {
         <div className="xl:max-w-6xl 2xl:max-w-7xl sm:max-w-3xl mx-auto flex flex-col lg:flex-row sm:gap-4 sm:px-6 lg:px-8 py-4 relative">
           {showSidebar && (
             <aside className="lg:w-65">
-              <div className="lg:sticky lg:top-24">
-                <FilterSidebar
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  onApply={(path) => navigate(path)}
-                />
-              </div>
+              <FilterSidebar
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                onApply={(path) => navigate(path)}
+              />
             </aside>
           )}
 
           <main className="flex-1 min-w-0">
-  <div className="bg-white rounded-md overflow-hidden w-full min-h-[700px] relative">
-    {isPending && (
-      <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-        <Loader />
-      </div>
-    )}
-    <div className="p-3 opacity-80">{children}</div>
-  </div>
-</main>
+            <div className="bg-white rounded-md overflow-hidden w-full relative">
+              {isPending && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+                  <Loader />
+                </div>
+              )}
+              <div className="p-3 opacity-80">{children}</div>
+            </div>
+          </main>
         </div>
       </div>
       <Footer />
