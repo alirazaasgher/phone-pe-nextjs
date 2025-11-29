@@ -2,13 +2,14 @@
   "name": "phone-pe-nextjs",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
-  },
+ "scripts": {
+  "dev": "next dev",
+  "generate-sitemap": "node scripts/generate-sitemap.js",
+  "build": "npm run generate-sitemap && next build",
+  "start": "next start",
+  "lint": "biome check",
+  "format": "biome format --write"
+},
   "dependencies": {
     "@next/font": "^14.2.15",
     "clsx": "^2.1.1",

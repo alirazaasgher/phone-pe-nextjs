@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://mobile42.com/sitemap.xml
