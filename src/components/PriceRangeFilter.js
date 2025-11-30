@@ -1,32 +1,44 @@
 import React, { useState } from "react";
-{/* Price Range */ }
+{
+  /* Price Range */
+}
 // PriceRangeFilter Component
 const PriceRangeFilter = ({ value, handlePriceChange }) => {
-  const [minPrice, setMinPrice] = React.useState(value?.priceRange?.min || "");
-  const [maxPrice, setMaxPrice] = React.useState(value?.priceRange?.max || "");
+  const [minPrice, setMinPrice] = React.useState("");
+  const [maxPrice, setMaxPrice] = React.useState("");
 
+  React.useEffect(() => {
+    if (value?.priceRange) {
+      setMinPrice(value.priceRange.min ?? "");
+      setMaxPrice(value.priceRange.max ?? "");
+    }
+  }, [value]);
   const updateParent = (newMin, newMax) => {
-  const minNum = parseFloat(newMin);
-  const maxNum = parseFloat(newMax);
+    const minNum = parseFloat(newMin);
+    const maxNum = parseFloat(newMax);
 
-  // Only include min if it's a valid number
-  const updated = {};
-  if (!isNaN(minNum)) updated.min = minNum;
+    // Only include min if it's a valid number
+    const updated = {};
+    if (!isNaN(minNum)) updated.min = minNum;
 
-  // Only include max if it's a valid number
-  if (!isNaN(maxNum)) updated.max = maxNum;
+    // Only include max if it's a valid number
+    if (!isNaN(maxNum)) updated.max = maxNum;
 
-  // Optional: check if min <= max when both exist
-  if (updated.min !== undefined && updated.max !== undefined && updated.min > updated.max) {
-    // Invalid range, don't update
-    return;
-  }
+    // Optional: check if min <= max when both exist
+    if (
+      updated.min !== undefined &&
+      updated.max !== undefined &&
+      updated.min > updated.max
+    ) {
+      // Invalid range, don't update
+      return;
+    }
 
-  // Update parent if at least one value exists
-  if (Object.keys(updated).length > 0) {
-    handlePriceChange(updated);
-  }
-};
+    // Update parent if at least one value exists
+    if (Object.keys(updated).length > 0) {
+      handlePriceChange(updated);
+    }
+  };
 
   const handleMinChange = (e) => {
     const val = e.target.value;
@@ -42,7 +54,9 @@ const PriceRangeFilter = ({ value, handlePriceChange }) => {
 
   return (
     <div className="p-4 border rounded-xl bg-gray-50">
-      <p className="text-sm font-medium text-gray-800 mb-3">Price Range (PKR)</p>
+      <p className="text-sm font-medium text-gray-800 mb-3">
+        Price Range (PKR)
+      </p>
 
       <div className="flex items-center gap-3">
         {/* Min Price */}
@@ -74,6 +88,5 @@ const PriceRangeFilter = ({ value, handlePriceChange }) => {
     </div>
   );
 };
-
 
 export default PriceRangeFilter;

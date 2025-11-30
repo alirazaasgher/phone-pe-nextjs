@@ -1,3 +1,6 @@
+import BrandsData from "./BrandsData";
+import PriceCategoriesData from "./PriceCategoriesData";
+
 const SideBarData = [
   {
     id: 1,
@@ -400,78 +403,17 @@ const SideBarData = [
     order: 9,
     created_at: "2025-08-24T15:55:36.000000Z",
     updated_at: "2025-08-24T15:55:36.000000Z",
-    values: [
-      {
-        id: 1,
-        name: "apple",
-        value: "Apple",
-        logo: "apple_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 2,
-        name: "samsung",
-        value: "Samsung",
-        logo: "samsung_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 3,
-        name: "xiaomi",
-        value: "Xiaomi",
-        logo: "xiaomi_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 4,
-        name: "oneplus",
-        value: "OnePlus",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 5,
-        name: "vivo",
-        value: "Vivo",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 6,
-        name: "oppo",
-        value: "Oppo",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 7,
-        name: "realme",
-        value: "Realme",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 8,
-        name: "infinix",
-        value: "Infinix",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 9,
-        name: "tecno",
-        value: "Tecno",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-      {
-        id: 10,
-        name: "google",
-        value: "Google",
-        logo: "oneplus_logo.png",
-        created_at: "2025-08-24T13:18:30.000000Z",
-      },
-    ],
+    values: BrandsData,
+  },
+  {
+    id: 9,
+    name: "Price Categories",
+    slug: "Price Categories",
+    type: "select",
+    order: 9,
+    created_at: "2025-08-24T15:55:36.000000Z",
+    updated_at: "2025-08-24T15:55:36.000000Z",
+    values: PriceCategoriesData,
   },
 ];
 

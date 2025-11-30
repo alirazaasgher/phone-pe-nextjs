@@ -145,7 +145,7 @@ export default function VariantImageGallery({ phone }) {
             </div>
           )}
           {/* Navigation Buttons */}
-          {!isMobile && imagesToShow.length > 1 && (
+          {imagesToShow.length > 1 && (
             <>
               <NavigationButton
                 direction="left"

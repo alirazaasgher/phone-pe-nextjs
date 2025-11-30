@@ -1,64 +1,109 @@
 import { mobilePageData } from "../../services/phones";
 import ClientPhoneGrid from "@/components/ClientPhoneGrid";
 import SideBarData from "@/data/SideBarData";
+const parseFilters = (filters) => {
+  const parsed = {
+    brands: [],
+    ram: [],
+    storage: [],
+    batteryCapacity: [],
+    screenSize: [],
+    priceRange: [],
+  };
+
+  const ignoredCategories = [
+    "mid-range-phones",
+    "budget-phones",
+    "flagship-phones",
+  ];
+
+  filters.forEach((item) => {
+    if (!item) return;
+
+    item = item.toLowerCase().trim();
+
+    // Ignore irrelevant categories
+    if (ignoredCategories.includes(item)) return;
+
+    // Brands
+    if (
+      item.endsWith("-mobile-phones") ||
+      item.endsWith("-mobile") ||
+      item.endsWith("-phones")
+    ) {
+      const brands = item
+        .replace(/-(mobile-phones|mobile|phones)$/, "")
+        .split("-")
+        .map((b) => b.charAt(0).toUpperCase() + b.slice(1));
+      parsed.brands.push(...brands);
+      return;
+    }
+
+    // RAM
+    if (item.includes("ram")) {
+      parsed.ram.push(item.replace("gb-ram", ""));
+      return;
+    }
+
+    // Storage
+    if (item.includes("storage")) {
+      parsed.storage.push(item.replace("gb-storage", ""));
+      return;
+    }
+
+    // Battery
+    if (item.includes("battery")) {
+      parsed.batteryCapacity.push(item.replace("-battery", ""));
+      return;
+    }
+
+    // Screen Size: "4.5to5.0" or "1.0to4.5-screen-size"
+    if (item.includes("to")) {
+      if (item.includes("screen-size")) {
+        parsed.screenSize.push(item.replace("-screen-size", ""));
+        return;
+      }
+      // Price: 1500-to-20000
+      if (/^\d+-to-\d+$/.test(item)) {
+        parsed.priceRange.push(item.split("-to-").map(Number));
+        return;
+      }
+      // Price: 15000-20000
+      if (/^\d+-\d+$/.test(item)) {
+        parsed.priceRange.push(item.split("-").map(Number));
+        return;
+      }
+    }
+
+    // Price: price-from-10000
+    if (item.startsWith("price-from-")) {
+      parsed.priceRange.push([Number(item.replace("price-from-", ""))]);
+      return;
+    }
+
+    // Price: price-up-to-10000
+    if (item.startsWith("price-up-to-")) {
+      parsed.priceRange.push([null, Number(item.replace("price-up-to-", ""))]);
+      return;
+    }
+
+    // Price: single number
+    if (/^\d+$/.test(item)) {
+      parsed.priceRange.push([Number(item)]);
+      return;
+    }
+  });
+
+  return parsed;
+};
+
 // utils inside the same file
 export default async function Page({ params, searchParams }) {
   const awaitedParams = await params;
   const awaitedsearchParams = await searchParams;
   const sortValue = awaitedsearchParams.sort || "newest"; // fallback if not provided
   const filters = awaitedParams.filters || [];
-
-  // params.filters will be undefined if no filters in URL
-  const parsed = {
-    priceRange: null,
-    brands: [],
-    ram: [],
-    storage: [],
-    screenSizes: [],
-    batteryCapacity: [],
-  };
-
-  filters.forEach((f) => {
-    if (f.startsWith("price-from-")) {
-      // Only min
-      const min = Number(f.replace("price-from-", ""));
-      parsed.priceRange = [min, null];
-    }
-    else if (f.startsWith("price-up-to-")) {
-      // Only max
-      const max = Number(f.replace("price-up-to-", ""));
-      parsed.priceRange = [null, max];
-    }
-    else if (f.includes("-to-")) {
-      // Both min and max
-      const [min, max] = f.split("-to-").map(Number);
-      parsed.priceRange = [min, max];
-    } else if (f.endsWith("gb-ram")) {
-      // e.g., "6gb-ram" => [6]
-      const value = parseInt(f.replace("-ram", ""), 10);
-      if (!isNaN(value)) parsed.ram.push(value);
-    } else if (f.endsWith("gb-storage")) {
-      // e.g., "256gb-storage" => [256]
-      const value = parseInt(f.replace("-storage", ""), 10);
-      if (!isNaN(value)) parsed.storage.push(value);
-    } else if (f.includes("phones") || f.includes("mobile")) {
-      // e.g., "apple-phones" or "samsung-mobile" => ["Apple", "Samsung"]
-      const brandsArray = f
-        .replace(/-phones$/, "")
-        .replace(/-mobile$/, "")
-        .split("-")
-        .map((b) => b.charAt(0).toUpperCase() + b.slice(1));
-      parsed.brands.push(...brandsArray);
-    } else if (f.includes("screen-size")) {
-      const screenSize = f.replace("-screen-size", ""); // remove suffix
-      parsed.screenSizes = parsed.screenSizes || [];
-      parsed.screenSizes.push(screenSize); // e.g., "4.5to5.0"
-    } else if (f.includes("battery")) {
-      const battery = f.replace("-battery", ""); // remove suffix
-      parsed.batteryCapacity = parsed.batteryCapacity || [];
-      parsed.batteryCapacity.push(battery); // e.g., "3000mAh"
-    }
-  });
+  const parsed = parseFilters(filters);
   const phones = await mobilePageData(parsed, sortValue);
   const availableFilters = SideBarData.reduce((acc, item) => {
     acc[item.slug] = item.values || [];

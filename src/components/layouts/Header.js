@@ -31,7 +31,7 @@ export default function Header({ toggleSidebar }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 transition-all duration-500 ease-out ${
+      className={`fixed top-0 z-50 left-0 right-0 transition-all duration-500 ease-out ${
         isScrolled
           ? "bg-slate-950/90 backdrop-blur-2xl shadow-2xl border-b border-white/5"
           : "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600"

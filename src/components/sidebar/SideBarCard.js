@@ -10,7 +10,6 @@ const SideBarCard = ({
   selectedValues = [],
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-
   // Filter items based on search term
   const filteredContent = useMemo(() => {
     if (!searchTerm.trim()) return sideBarContent;
@@ -56,7 +55,7 @@ const SideBarCard = ({
                   className="h-3 w-3 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                 />
 
-                {item.value.includes("/") ? (
+                {item?.value?.includes("/") ? (
                   <div className="flex flex-col leading-tight">
                     {item.value.split("/").map((part, i) => (
                       <span key={i} className="text-xs">

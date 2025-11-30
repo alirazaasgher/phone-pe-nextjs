@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function BrandsPage() {
   const brands = [
     {
@@ -135,11 +137,11 @@ export default function BrandsPage() {
       {/* Mobile: 2 columns, Tablet: 3 columns, Desktop: 6 columns */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
         {brands.map((brand) => (
-          <a
+          <Link
             key={brand.name}
             href={brand.url}
             className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
-              hover:border-blue-400 
+              hover:border-blue-400
               ${brand.color}`}
           >
             {/* Brand Logo Container */}
@@ -167,7 +169,7 @@ export default function BrandsPage() {
               </span>
               <span className="text-xs sm:text-sm text-gray-400">models</span>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </>

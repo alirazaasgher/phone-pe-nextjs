@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import SideBarCard from "./sidebar/SideBarCard";
 import PriceRangeFilter from "./PriceRangeFilter";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
@@ -62,7 +62,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     return acc;
   }, {});
   const filtersArray = {
-    brands: sideBarMap["brands"],
+    brands: sideBarMap["brands"].slice(6, 16),
     ram: sideBarMap["ram"] || [],
     screenSize: sideBarMap["screen-size"] || [],
     refreshRate: sideBarMap["refresh-rate"] || [],
@@ -77,7 +77,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       // Your fetch or logic here
       const parts = pathname.split("/").filter(Boolean); // remove empty strings
       const brandsPart = parts.find((p) => p.includes("mobile-phones"));
-      const pricePart = parts.find((p) => p.startsWith("price-"));
+      const pricePart = parts.find(
+        (p) => p.startsWith("price-") || /\d+-to-\d+/.test(p)
+      );
+
       const ramPart = parts.find((p) => p.includes("gb") && p.includes("ram"));
       const storagePart = parts.find(
         (p) => p.includes("gb") && p.includes("storage")
@@ -86,12 +89,25 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       const batteryPart = parts.find((p) => p.includes("battery"));
       const chargingPart = parts.find((p) => p.includes("charging"));
       const networkPart = parts.find((p) => p.includes("network"));
+      const screenSizePart = parts.find((p) => p.includes("screen-size"));
       setSelected({
         brands: brandsPart
           ? brandsPart.replace("-mobile-phones", "").split("-")
           : [],
         priceRange: pricePart
-          ? pricePart.replace("price-", "").split("-to-")
+          ? (() => {
+              if (pricePart.startsWith("price-from-")) {
+                const min = Number(pricePart.replace("price-from-", ""));
+                return { min, max: null }; // only min
+              } else if (pricePart.startsWith("price-up-to-")) {
+                const max = Number(pricePart.replace("price-up-to-", ""));
+                return { min: null, max }; // only max
+              } else if (/\d+-to-\d+/.test(pricePart)) {
+                const [min, max] = pricePart.split("-to-").map(Number);
+                return { min, max }; // both min and max
+              }
+              return { min: null, max: null }; // fallback
+            })()
           : [],
         ram: ramPart ? ramPart.replace("-ram", "").split("-to-") : [],
         storage: storagePart
@@ -108,6 +124,9 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
           : [],
         networkConnectivity: networkPart
           ? networkPart.replace("-network", "").split("-to-")
+          : [],
+        screenSize: screenSizePart
+          ? screenSizePart.replace("-screen-size", "").split("-")
           : [],
       });
     }
@@ -206,29 +225,28 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         }
       }
     }
-
     // Price range building
     if (selected.priceRange) {
       let min = Number(selected.priceRange.min);
       let max = Number(selected.priceRange.max);
-
       // Case: Only Min provided
       if (!isNaN(min) && min >= 0 && (isNaN(max) || max === 0)) {
         pathSegments.push(`price-from-${min}`);
       }
 
       // Case: Only Max provided
-      if (!isNaN(max) && max > 0 && (isNaN(min) || min === 0)) {
-        if (max <= 15000) pathSegments.push("budget-smartphones");
-        else if (max <= 30000) pathSegments.push("mid-range-phones");
-        else if (max <= 50000) pathSegments.push("premium-mobiles");
+      if (!isNaN(max) && max > 0 && (isNaN(min) || min == 0)) {
+        if (max <= 20000) pathSegments.push("budget-smartphones");
+        else if (max <= 30000) pathSegments.push("best-value-phones");
+        else if (max <= 40000) pathSegments.push("popular-picks");
+        else if (max <= 50000) pathSegments.push("mid-range");
         else pathSegments.push("flagship-phones");
 
         pathSegments.push(`price-up-to-${max}`);
       }
 
       // Case: both provided
-      if (!isNaN(min) && min >= 0 && !isNaN(max) && max > 0 && min <= max) {
+      if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0 && min <= max) {
         if (max <= 15000) pathSegments.push("budget-smartphones");
         else if (max <= 30000) pathSegments.push("mid-range-phones");
         else if (max <= 50000) pathSegments.push("premium-mobiles");
@@ -287,7 +305,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const handlePriceChange = useCallback((range) => {
     setSelected((prev) => ({ ...prev, priceRange: range }));
   });
-
   const isSelected = Object.values(selected).some((v) => {
     if (Array.isArray(v)) return v.length > 0; // check arrays
     if (v && typeof v === "object") {
@@ -346,22 +363,22 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
-    transform transition-transform duration-300 overflow-y-auto
-    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-    md:translate-x-0 md:shadow-none md:pt-0
-    lg:static lg:flex lg:flex-col lg:h-[calc(95vh-3.5rem)]
-  `}
+          fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
+          transform transition-transform duration-300 overflow-y-auto
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0 md:shadow-none md:pt-0
+          lg:static lg:flex lg:flex-col lg:h-[calc(95vh-3.5rem)]
+        `}
       >
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          <input
+          {/* <input
             type="text"
             placeholder="Search mobiles..."
             className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             onChange={(e) => handleSearch(e.target.value)}
-          />
-          <details className="border-t pt-4 group" open>
+          /> */}
+          <details className="pt-4 group" open>
             <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
               <span className="flex items-center gap-2">
                 <Tag size={16} /> Brands

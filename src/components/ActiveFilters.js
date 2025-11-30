@@ -1,7 +1,12 @@
 // components/ActiveFilters.js (Client Component)
 "use client";
+import { useTransition } from "react";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+const formatNumber = (num) => {
+  if (num == null) return "";
+  return num; // e.g., 40000 → "40,000"
+};
 function getActiveTags(parsed, availableFilters) {
   const tags = [];
   const capitalize = (str) =>
@@ -26,24 +31,26 @@ function getActiveTags(parsed, availableFilters) {
   }
 
   // Price Range
-  if (Array.isArray(parsed.priceRange) && parsed.priceRange.length === 2) {
-    const [min, max] = parsed.priceRange;
+  // Ensure priceRange is an array of ranges
+  if (Array.isArray(parsed.priceRange)) {
+    parsed.priceRange.forEach((range) => {
+      if (!Array.isArray(range)) return;
 
-    if (min != null && max != null) {
-      // Both values exist
-      tags.push(`${min} - ${max}`);
-    } else if (min != null && (max == null || max === "")) {
-      // Only min exists
-      tags.push(`${min}`);
-    } else if (max != null && (min == null || min === "")) {
-      // Only max exists
-      tags.push(`${max}`);
-    }
+      const [min, max] = range;
+
+      if (min != null && max != null) {
+        tags.push(`${formatNumber(min)} - ${formatNumber(max)}`);
+      } else if (min != null) {
+        tags.push(`${formatNumber(min)}`);
+      } else if (max != null) {
+        tags.push(`${formatNumber(max)}`);
+      }
+    });
   }
 
   // Screen Size
-  if (Array.isArray(parsed.screenSizes)) {
-    parsed.screenSizes.forEach((range) => {
+  if (Array.isArray(parsed.screenSize)) {
+    parsed.screenSize.forEach((range) => {
       let tag = range;
 
       // Match "min-to-max" formats like "4.5to5.0" or "5.0to5.5"
@@ -104,7 +111,6 @@ function getActiveTags(parsed, availableFilters) {
 
 function tagToFilter(tag) {
   const cleanTag = tag.trim().toLowerCase();
-
   // Screen size range: e.g., "4.5to5.0 inch", "5.0-5.5 inch"
   if (/^\d+(\.\d+)?\s*(to|-)\s*\d+(\.\d+)?\s*inch$/i.test(cleanTag)) {
     const parts = cleanTag
@@ -156,6 +162,26 @@ function removeBrandFromFilter(filterString, brand) {
   const invalids = ["", "mobile-phones"];
   return invalids.includes(cleaned) ? "" : cleaned;
 }
+const isPriceFilter = (f) => {
+  if (!f) return false;
+
+  // Normalize multiple dashes to single dash
+  const cleanF = f.replace(/-+/g, "-");
+
+  // price-from-60000, price-up-to-60000, price-60000
+  if (/^price-(from|up-to|\d+)-?\d*$/.test(cleanF)) return true;
+
+  // range with 'to' → 40000-to-50000
+  if (/^\d+-to-\d+$/.test(cleanF)) return true;
+
+  // single dash numeric range → 15000-35000 or normalized triple dash
+  if (/^\d+-\d+$/.test(cleanF)) return true;
+
+  // single number → 50000
+  if (/^\d+$/.test(cleanF)) return true;
+
+  return false;
+};
 
 export default function ActiveFilters({
   filters,
@@ -163,22 +189,28 @@ export default function ActiveFilters({
   availableFilters,
   setLoading,
 }) {
+  const [isPending, startTransition] = useTransition();
   const activeTags = getActiveTags(parsed, availableFilters);
   const router = useRouter(activeTags, parsed);
   const removeFilter = (tag) => {
     setLoading(true);
 
-    const filterValue = tagToFilter(tag, filters); // normalize tag
-    console.log(filterValue);
-    console.log(filters);
+    const filterValue = tagToFilter(tag, filters);
+
     let updatedFilters = [...filters];
 
-    const isPriceFilter = (f) => /^price-/.test(f) || /^\d+(-to-\d+)?$/.test(f);
     const combinedBrand = filters.find((f) => f.includes("-mobile"));
-    const isPriceCategory = (f) =>
-      f.endsWith("-smartphones") ||
-      f.endsWith("-mobiles") ||
-      f.endsWith("-phones");
+    const priceCategories = [
+      "budget-smartphones",
+      "best-value-phones",
+      "popular-picks",
+      "mid-range",
+      "mid-range-phones",
+      "premium-mobiles",
+      "flagship-phones",
+    ];
+
+    const isPriceCategory = (f) => priceCategories.includes(f);
     // Remove price filters if the clicked tag is a price
     if (isPriceFilter(filterValue)) {
       updatedFilters = updatedFilters.filter((f) => !isPriceFilter(f));
@@ -189,7 +221,6 @@ export default function ActiveFilters({
     // Remove brand inside combined brands
     else if (combinedBrand && combinedBrand.includes(filterValue)) {
       const newBrandString = removeBrandFromFilter(combinedBrand, filterValue);
-
       updatedFilters = updatedFilters
         .map((f) => (f === combinedBrand ? newBrandString : f))
         .filter(Boolean); // Remove empty items
@@ -203,7 +234,12 @@ export default function ActiveFilters({
       ? `/mobiles/${updatedFilters.join("/")}`
       : `/mobiles`;
 
-    router.push(path);
+    startTransition(() => {
+      router
+        .push(path)
+        .catch(() => router.push("/mobiles"))
+        .finally(() => setLoading(false));
+    });
   };
 
   return (
