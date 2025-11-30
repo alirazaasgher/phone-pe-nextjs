@@ -139,7 +139,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-500 rounded-lg blur-sm opacity-0 group-hover:opacity-40 transition-opacity duration-200"></div>
     </div> */}
           {/* Quick View Button */}
-          <button
+          {/* <button
             onClick={(e) => {
               e.preventDefault();
               openModal(phone);
@@ -148,7 +148,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
             title="Quick View"
           >
             <Eye size={16} />
-          </button>
+          </button> */}
         </Link>
 
         {/* Product Details */}
@@ -233,7 +233,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                       </span>
                     </span>
 
-                    <span className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-md text-[10px] border border-blue-200">
+                    <span className="hidden 2xl:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-md text-[10px] border border-blue-200">
                       <Wifi className="w-3 h-3 text-blue-600" />
                       <span className="text-[9.5px] font-bold text-blue-700">
                         50W

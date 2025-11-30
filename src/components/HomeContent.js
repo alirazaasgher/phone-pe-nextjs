@@ -168,9 +168,9 @@ export default function HomeContent({ homePageResponse }) {
                     {priceCategorie.subtitle}
                   </p>
 
-                  <span className="font-mono text-[10px] text-gray-500 mt-0.5">
+                  {/* <span className="font-mono text-[10px] text-gray-500 mt-0.5">
                     {priceCategorie.count} models
-                  </span>
+                  </span> */}
                 </Link>
               );
             })}
@@ -218,9 +218,9 @@ export default function HomeContent({ homePageResponse }) {
                     {priceCategorie.subtitle}
                   </p>
 
-                  <span className="font-mono text-xs text-gray-500 mt-1">
+                  {/* <span className="font-mono text-xs text-gray-500 mt-1">
                     {priceCategorie.count} models
-                  </span>
+                  </span> */}
                 </Link>
               );
             })}

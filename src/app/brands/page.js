@@ -3,7 +3,7 @@ import BrandsData from "@/data/BrandsData";
 export const metadata = {
   title: "Mobile Brands: Compare Specs & Prices | Mobile42",
   description:
-    "Compare 50+ mobile brands including Samsung, Apple, Xiaomi, OnePlus & Vivo. Find detailed specs, latest prices, and expert reviews to choose your perfect phone.",
+    "Compare 15+ mobile brands including Samsung, Apple, Xiaomi, OnePlus & Vivo. Find detailed specs, latest prices, and expert reviews to choose your perfect phone.",
   openGraph: {
     title: "All Mobile Brands - Specs, Prices & Comparisons",
     description:
@@ -15,7 +15,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "All Mobile Brands | Mobile42",
-    description: "Compare specs and prices across 50+ mobile brands",
+    description: "Compare specs and prices across 15+ mobile brands",
   },
   alternates: {
     canonical: "https://mobile42.com/brands",
