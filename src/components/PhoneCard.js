@@ -65,6 +65,13 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
     setIsModalOpen(false);
     setTimeout(() => setSelectedPhone(null), 300);
   };
+
+  const iconMap = {
+    display: <Monitor size={14} className="text-purple-500" />,
+    main_camera: <Camera size={14} className="text-sky-500" />,
+    battery: <Battery size={14} className="text-green-500" />,
+    chipset: <Cpu size={15} className="text-orange-500" />,
+  };
   return (
     <>
       <div
@@ -106,7 +113,10 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
             <div className="relative inline-flex flex-col items-start group">
               {/* Storage Tag */}
               <div className="bg-gray-800  text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
-                {phone?.searchIndex?.ram}GB | {phone?.searchIndex?.storage}GB
+                {phone?.searchIndex?.ram}GB |{" "}
+                {phone?.searchIndex?.storage?.toUpperCase().includes("TB")
+                  ? phone?.searchIndex?.storage
+                  : `${phone?.searchIndex?.storage}GB`}
               </div>
 
               {/* Main Price Box */}
@@ -169,141 +179,48 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               </div>
             )}
           </div>
-          {/* Colors */}
-          {/* {phone.searchIndex?.available_colors?.length > 0 && (
-            <div className="hidden sm:flex items-center gap-2 pb-0.5">
-              <span className="text-xs text-gray-500 font-medium">Colors:</span>
-              <div className="flex gap-1">
-                {phone.searchIndex.available_colors.slice(0, 5).map((color, index) => (
-                  <span
-                    key={index}
-                    className="w-3.5 h-3.5 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform cursor-pointer"
-                    style={{ backgroundColor: color.hex }}
-                    title={color.name}
-                  />
-                ))}
-                {phone.searchIndex.available_colors.length > 5 && (
-                  <span className="text-xs text-gray-400 font-medium self-center">
-                    +{phone.searchIndex.available_colors.length - 5}
-                  </span>
-                )}
-              </div>
-            </div>
-          )} */}
 
           {/* Key Specs Row */}
           <div className="w-full">
-            {[
-              {
-                icon: <Camera size={14} className="text-sky-500" />,
-                name: "Camera",
-                value: (
-                  <span className="inline-flex items-center gap-1 text-[10px]">
-                    <span className="font-bold">200MP</span>
-                    <span className="text-gray-500 hidden md:inline">+</span>
-                    <span className="font-semibold hidden md:inline">16MP</span>
-                  </span>
-                ),
-                badge: "AI Enhanced",
-                badgeColor: "bg-sky-50 text-sky-700",
-                hideOnSmall: true,
-              },
-              {
-                icon: <Camera size={14} className="text-sky-500" />,
-                name: "Front Camera",
-                value: (
-                  <span className="inline-flex items-center gap-1 text-[10px]">
-                    <span className="font-bold">16MP</span>
-                  </span>
-                ),
-                hideOnSmall: true,
-              },
-              {
-                icon: <Battery size={14} className="text-green-500" />,
-                name: "Battery",
-                value: (
-                  <span className="inline-flex items-center gap-1">
-                    <span className="text-[10px] font-bold">5000mAh</span>
-
-                    {/* Charging specs with improved styling */}
-                    <span className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-orange-50 to-orange-100 rounded-md text-[10px] border border-orange-200">
-                      <Cable className="w-3 h-3 text-orange-600" />
-                      <span className="text-[9.5px] font-bold text-orange-700">
-                        120W
+            {phone?.searchIndex?.specs_grid.map((spec, i) => {
+              if (!spec.value) return null;
+              const hzMatch = spec.subvalue?.match(/(\d+Hz)/i);
+              const refreshRate = hzMatch ? hzMatch[1] : null;
+              return (
+                <div
+                  key={i}
+                  className={`group flex items-center justify-between lg:py-1
+                            shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-2 -mx-1 hidden sm:flex`}
+                >
+                  <div className="flex items-center gap-1 lg:gap-1.5">
+                    <span className="group-hover:scale-110 transition-transform duration-200">
+                      {iconMap[spec.key]}
+                    </span>
+                    <span className="text-gray-700 text-[10px] font-bold">
+                      {spec.key.toUpperCase()}
+                    </span>
+                    {spec.badge && (
+                      <span
+                        className={`hidden lg:inline-block px-1 py-0.5 rounded text-[8px] font-bold ${spec.badgeColor}`}
+                      >
+                        {spec.badge}
                       </span>
-                    </span>
-
-                    <span className="hidden 2xl:inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-md text-[10px] border border-blue-200">
-                      <Wifi className="w-3 h-3 text-blue-600" />
-                      <span className="text-[9.5px] font-bold text-blue-700">
-                        50W
-                      </span>
-                    </span>
-                  </span>
-                ),
-                badge: "",
-                badgeColor: "bg-green-50 text-green-700",
-                hideOnSmall: true,
-              },
-              {
-                icon: <Cpu size={15} className="text-orange-500" />,
-                name: "Chipset",
-                value: (
-                  <span className="inline-flex items-center gap-1">
-                    <span className="text-[10px] font-bold">
-                      Snapdragon 8 Gen 2
-                    </span>
-                    <span className="hidden md:inline text-[9px] text-gray-500">
-                      (4nm)
-                    </span>
-                  </span>
-                ),
-                badge: "",
-                badgeColor: "bg-orange-50 text-orange-700",
-                hideOnSmall: true,
-              },
-              {
-                icon: <Monitor size={14} className="text-purple-500" />,
-                name: "Display",
-                value: (
+                    )}
+                  </div>
                   <span className="inline-flex items-center gap-0.5">
-                    <span className="text-[10px] font-bold">6.79"</span>
-                    <span className="text-[9px] text-gray-600 hidden md:inline">
-                      AMOLED
+                    <span className="text-[9px] text-gray-600">
+                      {spec.value}
                     </span>
-                    <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
-                      120Hz
-                    </span>
+                    {/* Show only when spec.key is display and refreshRate exists */}
+                    {spec.key === "display" && refreshRate && (
+                      <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
+                        {refreshRate}
+                      </span>
+                    )}
                   </span>
-                ),
-                hideOnSmall: true,
-              },
-            ].map((spec, i) => (
-              <div
-                key={i}
-                className={`group flex items-center justify-between lg:py-1
-                            shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-2 -mx-1 ${
-                              spec.hideOnSmall ? "hidden sm:flex" : ""
-                            }`}
-              >
-                <div className="flex items-center gap-1 lg:gap-1.5">
-                  <span className="group-hover:scale-110 transition-transform duration-200">
-                    {spec.icon}
-                  </span>
-                  <span className="text-gray-700 text-[10px] font-bold">
-                    {spec.name}
-                  </span>
-                  {spec.badge && (
-                    <span
-                      className={`hidden lg:inline-block px-1 py-0.5 rounded text-[8px] font-bold ${spec.badgeColor}`}
-                    >
-                      {spec.badge}
-                    </span>
-                  )}
                 </div>
-                <span className="font-bold text-gray-900">{spec.value}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

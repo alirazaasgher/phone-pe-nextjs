@@ -392,7 +392,7 @@ export default function Details({ phoneDetails }) {
                   variants.length === 1 ? "1" : "2"
                 } gap-1 pr-2`}
               >
-                {variants.map((v, i, arr) => {
+                {phoneDetails?.variants.map((v, i, arr) => {
                   let colSpan = "col-span-1";
                   if (arr.length === 2) colSpan = "col-span-2";
                   if (arr.length === 3 && i === 2) colSpan = "col-span-2";
@@ -406,16 +406,16 @@ export default function Details({ phoneDetails }) {
                           <p className="text-sm font-semibold text-slate-900">
                             {v.ram}GB / {v.storage}
                           </p>
-                          <span className="inline-block mt-1 px-2.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">
+                          {/* <span className="inline-block mt-1 px-2.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">
                             {v.type}
-                          </span>
+                          </span> */}
                         </div>
                         <div className="text-right">
                           <p className="font-bold text-slate-900">
-                            ${v.priceUSD}
+                            ${v.usd_price}
                           </p>
                           <p className="text-xs text-slate-500">
-                            PKR {v.pricePKR.toLocaleString()}
+                            PKR {v.pkr_price.toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -544,23 +544,28 @@ export default function Details({ phoneDetails }) {
           </div>
 
           <div className="">
-            {[
-              { ram: "8GB + 128GB", price: "₹27,999", storage: "UFS 3.1" },
-              { ram: "12GB + 256GB", price: "₹31,499", storage: "UFS 4.0" },
-            ].map((v, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between text-xs bg-white/50 rounded-lg px-2 py-1 hover:bg-white transition-all"
-              >
-                <span className="text-gray-800 font-medium">{v.ram}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-500">{v.price}</span>
-                  <span className="bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md text-[10px] font-medium">
-                    {v.storage}
+            {
+              // [
+              //   { ram: "8GB + 128GB", price: "₹27,999", storage: "UFS 3.1" },
+              //   { ram: "12GB + 256GB", price: "₹31,499", storage: "UFS 4.0" },
+              // ]
+              phoneDetails?.variants.map((v, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between text-xs bg-white/50 rounded-lg px-2 py-1 hover:bg-white transition-all"
+                >
+                  <span className="text-gray-800 font-medium">
+                    {v.ram}GB + {v.storage}
                   </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500">PKR: {v.pkr_price}</span>
+                    {/* <span className="bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md text-[10px] font-medium">
+                      {v.storage}
+                    </span> */}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
 
           <p className="text-[10px] text-gray-500 italic mt-2">
