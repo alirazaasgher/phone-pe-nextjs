@@ -114,7 +114,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               {/* Storage Tag */}
               <div className="bg-gray-800  text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
                 {phone?.searchIndex?.ram}GB |{" "}
-                {phone?.searchIndex?.storage?.toUpperCase().includes("TB")
+                {phone?.searchIndex?.storage?.toString().toUpperCase().includes("TB")
                   ? phone?.searchIndex?.storage
                   : `${phone?.searchIndex?.storage}GB`}
               </div>
@@ -182,7 +182,7 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
 
           {/* Key Specs Row */}
           <div className="w-full">
-            {phone?.searchIndex?.specs_grid.map((spec, i) => {
+            {(phone?.searchIndex?.specs_grid ?? []).map((spec, i) => {
               if (!spec.value) return null;
               const hzMatch = spec.subvalue?.match(/(\d+Hz)/i);
               const refreshRate = hzMatch ? hzMatch[1] : null;

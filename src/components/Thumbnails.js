@@ -31,7 +31,8 @@ export default function Thumbnails({ colors, active, onClick }) {
                   />
                 </div>
 
-                <span className="absolute bottom-0 left-0 right-0 text-[10px] font-medium text-white bg-black/60 text-center py-[1px] opacity-100">
+                <span className={`absolute bottom-0 left-0 right-0 text-[9px] font-medium 
+                                 text-white bg-black/60 text-center py-[1px] opacity-100`}>
                   {c.name}
                 </span>
               </div>

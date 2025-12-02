@@ -56,17 +56,9 @@ import {
   MonitorSmartphone,
 } from "lucide-react";
 import VariantImageGallery from "@/components/VariantImageGallery";
-import PhoneCard from "@/components/PhoneCard";
 import mobiles from "../../data/homepage";
 import MobileSpeficaion from "@/components/MobileSpecfications";
-import ColorSelector from "@/components/ColorSelector";
 export default function Details({ phoneDetails }) {
-  const phones = mobiles?.data?.topNewMobiles || [];
-  const [startIndex, setStartIndex] = useState(0);
-  const itemsPerPage = 12;
-  const getCurrentItems = () => {
-    return phones.slice(startIndex, startIndex + itemsPerPage);
-  };
   const BatteryInfo = () => (
     <span className="inline-flex items-center gap-2">
       {/* Wired Charging */}
@@ -211,56 +203,56 @@ export default function Details({ phoneDetails }) {
     },
   ];
 
-  const colorMap = {
-    red: "bg-red-100",
-    purple: "bg-blue-50 border-blue-200",
-    sky: "bg-sky-100",
-    green: "bg-green-100",
-    slate: "bg-slate-100",
-    indigo: "bg-indigo-100",
+  const iconMap = {
+    display: { icon: Monitor, color: "bg-blue-100 text-blue-600" },
+    main_camera: { icon: Camera, color: "bg-sky-100 text-sky-600" },
+    battery: { icon: Battery, color: "bg-green-100 text-green-600" },
+    chipset: { icon: Cpu, color: "bg-yellow-100 text-yellow-600" },
   };
-  const highlightItems = [
-    {
-      label: '6.5" AMOLED',
-      value: "2800×1260",
-      icon: <Smartphone size={16} />,
-      color: "bg-blue-100 text-blue-600",
-    },
-    {
-      label: "5000 mAh",
-      value: (
-        <span className="inline-flex items-center gap-2">
-          <span className="inline-flex items-center">
-            <Cable className="w-3 h-3 mr-0.5 text-orange-600" />
-            <span className="font-bold text-orange-700">120W</span>
-          </span>
-          <span className="inline-flex items-center">
-            <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
-            <span className="font-bold text-blue-700">50W</span>
-          </span>
-          {/* <span className="inline-flex items-center">
-            <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
-            <span className="font-bold text-gray-800">10W</span>
-          </span> */}
-        </span>
-      ),
-      icon: <Battery size={16} />,
-      color: "bg-green-100 text-green-600",
-    },
-    {
-      label: "Camera",
-      value: "108MP + 12MP",
-      icon: <Camera size={16} />,
-      color: "bg-red-100 text-red-600",
-    },
+  // const highlightItems = [
+  //   {
+  //     label: '6.5" AMOLED',
+  //     value: "2800×1260",
+  //     icon: <Smartphone size={16} />,
+  //     color: "bg-blue-100 text-blue-600",
+  //   },
+  //   {
+  //     label: "5000 mAh",
+  //     value: (
+  //       <span className="inline-flex items-center gap-2">
+  //         <span className="inline-flex items-center">
+  //           <Cable className="w-3 h-3 mr-0.5 text-orange-600" />
+  //           <span className="font-bold text-orange-700">120W</span>
+  //         </span>
+  //         <span className="inline-flex items-center">
+  //           <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
+  //           <span className="font-bold text-blue-700">50W</span>
+  //         </span>
+  //         {/* <span className="inline-flex items-center">
+  //           <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
+  //           <span className="font-bold text-gray-800">10W</span>
+  //         </span> */}
+  //       </span>
+  //     ),
+  //     icon: <Battery size={16} />,
+  //     color: "bg-green-100 text-green-600",
+  //   },
+  //   {
+  //     label: "Camera",
+  //     value: "108MP + 12MP",
+  //     icon: <Camera size={16} />,
+  //     color: "bg-red-100 text-red-600",
+  //   },
 
-    {
-      label: "Snapdragon 8 Gen 2",
-      value: "Octa-core",
-      icon: <Cpu size={16} />,
-      color: "bg-yellow-100 text-yellow-600",
-    },
-  ];
+  //   {
+  //     label: "Snapdragon 8 Gen 2",
+  //     value: "Octa-core",
+  //     icon: <Cpu size={16} />,
+  //     color: "bg-yellow-100 text-yellow-600",
+  //   },
+  // ];
+  let widthClass = "w-[280px]"; // default
+  if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3) widthClass = "w-[280px] sm:w-[350px] 2xl:w-[450px]";
   return (
     <>
       <div className="hidden md:flex relative px-6 py-4 bg-white/60 backdrop-blur-xl border-b border-gray-200/60 items-center justify-between shadow-sm">
@@ -344,7 +336,7 @@ export default function Details({ phoneDetails }) {
             {/* Top Specs & Variants Section */}
             <div className="flex flex-col lg:flex-row gap-1 items-start">
               {/* Left: Top Specs List */}
-              <ul className="w-[280px] sm:w-[350px] 2xl:w-[450px]  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+              <ul className={`${widthClass}  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]`}>
                 {[
                   {
                     icon: <Calendar className="w-3 h-3 text-green-600" />,
@@ -369,9 +361,8 @@ export default function Details({ phoneDetails }) {
                 ].map((item, i) => (
                   <li
                     key={i}
-                    className={`flex items-center gap-2 py-0.5 px-1 ${
-                      i !== 0 ? "border-t border-gray-200/60" : ""
-                    } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                    className={`flex items-center gap-2 py-0.5 px-1 ${i !== 0 ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                   >
                     <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
                       {item.icon}
@@ -388,9 +379,8 @@ export default function Details({ phoneDetails }) {
 
               {/* Right: Variants */}
               <ul
-                className={`w-full lg:flex-1 grid grid-cols-${
-                  variants.length === 1 ? "1" : "2"
-                } gap-1 pr-2`}
+                className={`w-full lg:flex-1 grid grid-cols-${phoneDetails?.variants.length === 1 ? "1" : "2"
+                  } gap-1 pr-2`}
               >
                 {phoneDetails?.variants.map((v, i, arr) => {
                   let colSpan = "col-span-1";
@@ -404,7 +394,9 @@ export default function Details({ phoneDetails }) {
                       <div className="flex justify-between items-center">
                         <div>
                           <p className="text-sm font-semibold text-slate-900">
-                            {v.ram}GB / {v.storage}
+                            {v.ram}GB / {v?.storage?.toString().toUpperCase().includes("TB")
+                              ? v?.storage
+                              : `${v?.storage}GB`}
                           </p>
                           {/* <span className="inline-block mt-1 px-2.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">
                             {v.type}
@@ -422,11 +414,16 @@ export default function Details({ phoneDetails }) {
                     </div>
                   );
                 })}
-                {variants.length === 1 && (
-                  <p className="text-[10px] text-gray-500 italic">
-                    Dual SIM (Hybrid) • No SD card slot
-                  </p>
-                )}
+                <div className="col-span-full bg-gray-50 rounded-md">
+                  <div className="flex justify-between items-center w-full">
+                    <p className="text-[10px] text-gray-500 italic">
+                      Dual SIM (Hybrid) • No SD card slot
+                    </p>
+                    <span className="text-xs text-gray-400 italic block">
+                      Price may differ
+                    </span>
+                  </div>
+                </div>
               </ul>
             </div>
 
@@ -532,82 +529,120 @@ export default function Details({ phoneDetails }) {
         </div>
 
         {/* Variant Selector */}
-        <div className="md:hidden border-t border-gray-200">
+        <div className="md:hidden border-t border-gray-200 pt-3">
           {/* Header */}
-          <div className="flex items-center gap-1 mb-2">
-            <div className="bg-white p-1 rounded-xl shadow-sm">
-              <Package className="w-4 h-4 text-orange-500" />
+          <div className="flex items-center gap-2 mb-3">
+            <div className="bg-orange-100 p-2 rounded-full">
+              <Package className="w-5 h-5 text-orange-500" />
             </div>
             <h3 className="text-gray-900 text-sm font-semibold tracking-tight">
               Available Variants
             </h3>
           </div>
 
-          <div className="">
-            {
-              // [
-              //   { ram: "8GB + 128GB", price: "₹27,999", storage: "UFS 3.1" },
-              //   { ram: "12GB + 256GB", price: "₹31,499", storage: "UFS 4.0" },
-              // ]
-              phoneDetails?.variants.map((v, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between text-xs bg-white/50 rounded-lg px-2 py-1 hover:bg-white transition-all"
-                >
-                  <span className="text-gray-800 font-medium">
-                    {v.ram}GB + {v.storage}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-500">PKR: {v.pkr_price}</span>
-                    {/* <span className="bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-md text-[10px] font-medium">
-                      {v.storage}
-                    </span> */}
-                  </div>
-                </div>
-              ))
-            }
-          </div>
-
-          <p className="text-[10px] text-gray-500 italic mt-2">
-            Dual SIM (Hybrid) • No SD card slot
-          </p>
-        </div>
-        <div className="md:hidden mb-2">
-          <div className="grid grid-cols-2 gap-1">
-            {highlightItems.map((item) => (
+          {/* Variant Cards */}
+          <div className="grid grid-cols-2 gap-2">
+            {phoneDetails?.variants.map((v, i) => (
               <div
-                key={item.label}
-                className="group relative bg-white rounded-lg p-2 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-blue-200 overflow-hidden"
+                key={i}
+                className="bg-white rounded-xl shadow-sm px-3 py-3 hover:shadow-md transition-shadow cursor-pointer"
               >
-                {/* Decorative circle */}
-                <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-blue-50 -mr-8 -mt-8 opacity-20"></div>
+                {/* <MemoryStick className="w-4 h-4 text-orange-600" /> */}
+                {/* Variant Name */}
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-gray-900 font-medium">
+                    {v.ram}GB RAM
+                  </span>
 
-                {/* Content */}
-                <div className="relative z-10 flex items-center gap-2">
-                  {/* Icon with subtle background */}
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                      item.color.split(" ")[0]
-                    } bg-opacity-20 text-${item.color.split(" ")[1]}`}
-                  >
-                    {item.icon}
+                  {v.storage_type && (
+                    <span className="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md font-medium">
+                      {"UFC 3.1"}
+                    </span>
+                  )}
+                </div>
+
+                {/* Prices and badge */}
+                <div className="relative text-[11px] text-gray-500">
+                  <div className="flex flex-col">
+                    <span>PKR {v.pkr_price}</span>
+                    <span>USD {v.usd_price}</span>
                   </div>
 
-                  {/* Text */}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-0.5">
-                      {item.label}
-                    </div>
-                    <div className="text-xs font-bold text-gray-700">
-                      {item.value}
-                    </div>
-                  </div>
+                  {/* Badge at bottom-right of price */}
+                  {v.storage && (
+                    <span className="absolute bottom-0 right-0 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-sm whitespace-nowrap flex items-center gap-1">
+
+                      <HardDrive className="w-3 h-3" />
+
+                      {v?.storage?.toString().toUpperCase().includes("TB")
+                        ? `${v?.storage}`
+                        : `${v?.storage}GB`}
+                    </span>
+                  )}
+
                 </div>
               </div>
             ))}
           </div>
+
+
+          {/* Info */}
+          <p className="text-[10px] text-gray-500 italic mt-3">
+            Dual SIM (Hybrid) • No SD card slot
+          </p>
         </div>
-        <div className="w-full border-gray-200 overflow-hidden">
+
+        <div className="md:hidden mb-2">
+          <div className="grid grid-cols-2 gap-1">
+            {phoneDetails?.searchIndex?.specs_grid.map((item, i) => {
+              if (!item.value) return null;
+              const IconComponent = iconMap[item.key].icon;
+              const color = iconMap[item.key].color;
+              const str = item.subvalue || "";
+              // Match the resolution at the start (digits x digits)
+              const resolutionMatch = str.match(/(\d+\s*x\s*\d+)/i);
+              const resolution = resolutionMatch ? resolutionMatch[1] : null;
+              return (
+                <div
+                  key={i}
+                  className="group relative bg-white rounded-lg p-2 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-blue-200 overflow-hidden"
+                >
+                  {/* Decorative circle */}
+                  <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-blue-50 -mr-8 -mt-8 opacity-20"></div>
+
+                  {/* Content */}
+                  <div className="relative z-10 flex items-center gap-2">
+                    {/* Icon with subtle background */}
+                    <div
+                      className={`flex items-center justify-center w-10 h-10 rounded-full ${color.split(" ")[1]}
+                    bg-opacity-20 text-${color.split(" ")[1]}`}
+                    >
+                      <IconComponent size={16} />
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-0.5">
+                        {item.label}
+                      </div>
+                      <div className="text-xs font-bold text-gray-700">
+                        {item.value}
+                      </div>
+                      {/* Show only when spec.key is display and refreshRate exists */}
+                      {item.key === "display" && resolution && (
+                        <div className="text-xs font-bold text-gray-700">
+                          {resolution}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+
+            })}
+          </div>
+        </div>
+        <div className="w-full border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
             {/* LEFT SECTION — Specifications */}
             <div className="lg:col-span-9 border-gray-100">
@@ -619,204 +654,199 @@ export default function Details({ phoneDetails }) {
               <h3 className="text-base font-bold text-gray-900 mb-2 pb-1 border-b-2 border-blue-500">
                 Competitors for {phoneDetails.name || "OPPO Find X9"}
               </h3>
-
-              {/* Competitors List */}
-              <div className="max-h-[600px]">
-                {/* Competitor Card */}
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
-                  <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
-                    {/* Row 1 — Image & Name */}
-                    <div className="flex items-center gap-3 mb-1">
-                      <img
-                        src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
-                        alt="OPPO Find X9 Pro"
-                        className="w-16 h-20 object-contain rounded-md bg-gray-50 flex-shrink-0"
-                      />
-                      <div>
-                        <a
-                          href="/oppo-find-x9-pro-price-in-india"
-                          className="block text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
-                        >
-                          OPPO Find X9 Pro
-                        </a>
-                        <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-700 rounded-full">
-                          Upcoming
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Row 2 — Specs + Compare Button */}
-                    <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
-                      {/* Header */}
-                      <div className="text-[11px] font-medium text-gray-600 mt-2">
-                        Phone Comparison
-                      </div>
-
-                      {/* Comparison List */}
-                      <div className="w-full text-[11px] text-gray-700">
-                        {/* Camera */}
-                        {specs1.map((spec, i) => (
-                          <div
-                            key={i}
-                            className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
-                                                   spec.hideOnSmall
-                                                     ? "hidden sm:flex"
-                                                     : ""
-                                                 }`}
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <span className="flex items-center text-gray-500 truncate">
-                                {spec.icon}
-                              </span>
-                              <span className="text-gray-800 font-bold">
-                                {spec.name}
-                              </span>
-                            </div>
-                            <span className="font-bold text-gray-900">
-                              {spec.value}
-                            </span>
-                          </div>
-                        ))}
-
-                        {/* Divider */}
-                        <div className="border-t border-gray-100 mt-2 pt-1"></div>
-
-                        {/* Common Features */}
-                        <div className="text-[12px] font-semibold text-gray-800 mb-1">
-                          Common Features
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <span className="flex items-center text-gray-500 truncate">
-                            <MemoryStick className="text-blue-500 mr-1 w-4 h-4" />{" "}
-                            RAM
-                          </span>
-                          <span className="font-semibold text-gray-900 truncate ml-2">
-                            12 GB
-                          </span>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <span className="flex items-center text-gray-500 truncate">
-                            <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
-                            Memory
-                          </span>
-                          <span className="font-semibold text-gray-900 truncate ml-2">
-                            256 GB
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Compare Button */}
-                      <div className="flex justify-end mt-4">
-                        <a
-                          href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
-                          className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
-                        >
-                          Compare Now →
-                        </a>
-                      </div>
+              {/* Competitor Card */}
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
+                <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
+                  {/* Row 1 — Image & Name */}
+                  <div className="flex items-center gap-3 mb-1">
+                    <img
+                      src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
+                      alt="OPPO Find X9 Pro"
+                      className="w-16 h-20 object-contain rounded-md bg-gray-50 flex-shrink-0"
+                    />
+                    <div>
+                      <a
+                        href="/oppo-find-x9-pro-price-in-india"
+                        className="block text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                      >
+                        OPPO Find X9 Pro
+                      </a>
+                      <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-700 rounded-full">
+                        Upcoming
+                      </span>
                     </div>
                   </div>
 
-                  <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
-                    {/* Row 1 — Image & Name */}
-                    <div className="flex items-center gap-3 mb-1">
-                      <img
-                        src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
-                        alt="OPPO Find X9 Pro"
-                        className="w-16 h-20 object-contain rounded-md bg-gray-50 flex-shrink-0"
-                      />
-                      <div>
-                        <a
-                          href="/oppo-find-x9-pro-price-in-india"
-                          className="block text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                  {/* Row 2 — Specs + Compare Button */}
+                  <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
+                    {/* Header */}
+                    <div className="text-[11px] font-medium text-gray-600 mt-2">
+                      Phone Comparison
+                    </div>
+
+                    {/* Comparison List */}
+                    <div className="w-full text-[11px] text-gray-700">
+                      {/* Camera */}
+                      {specs1.map((spec, i) => (
+                        <div
+                          key={i}
+                          className={`group flex items-center justify-between py-1.5
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
+                              ? "hidden sm:flex"
+                              : ""
+                            }`}
                         >
-                          OPPO Find X9 Pro
-                        </a>
-                        <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-700 rounded-full">
-                          Upcoming
+                          <div className="flex items-center gap-1.5">
+                            <span className="flex items-center text-gray-500 truncate">
+                              {spec.icon}
+                            </span>
+                            <span className="text-gray-800 font-bold">
+                              {spec.name}
+                            </span>
+                          </div>
+                          <span className="font-bold text-gray-900">
+                            {spec.value}
+                          </span>
+                        </div>
+                      ))}
+
+                      {/* Divider */}
+                      <div className="border-t border-gray-100 mt-2 pt-1"></div>
+
+                      {/* Common Features */}
+                      <div className="text-[12px] font-semibold text-gray-800 mb-1">
+                        Common Features
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <MemoryStick className="text-blue-500 mr-1 w-4 h-4" />{" "}
+                          RAM
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">
+                          12 GB
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
+                          Memory
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">
+                          256 GB
                         </span>
                       </div>
                     </div>
 
-                    {/* Row 2 — Specs + Compare Button */}
-                    <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
-                      {/* Header */}
-                      <div className="text-[11px] font-medium text-gray-600 mt-2">
-                        Phone Comparison
-                      </div>
+                    {/* Compare Button */}
+                    <div className="flex justify-end mt-4">
+                      <a
+                        href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
+                        className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
+                      >
+                        Compare Now →
+                      </a>
+                    </div>
+                  </div>
+                </div>
 
-                      {/* Comparison List */}
-                      <div className="w-full text-[11px] text-gray-700">
-                        {/* Camera */}
-                        {specs1.map((spec, i) => (
-                          <div
-                            key={i}
-                            className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
-                                                   spec.hideOnSmall
-                                                     ? "hidden sm:flex"
-                                                     : ""
-                                                 }`}
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <span className="flex items-center text-gray-500 truncate">
-                                {spec.icon}
-                              </span>
-                              <span className="text-gray-800 font-bold">
-                                {spec.name}
-                              </span>
-                            </div>
-                            <span className="font-bold text-gray-900">
-                              {spec.value}
+                <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
+                  {/* Row 1 — Image & Name */}
+                  <div className="flex items-center gap-3 mb-1">
+                    <img
+                      src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
+                      alt="OPPO Find X9 Pro"
+                      className="w-16 h-20 object-contain rounded-md bg-gray-50 flex-shrink-0"
+                    />
+                    <div>
+                      <a
+                        href="/oppo-find-x9-pro-price-in-india"
+                        className="block text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                      >
+                        OPPO Find X9 Pro
+                      </a>
+                      <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-700 rounded-full">
+                        Upcoming
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Row 2 — Specs + Compare Button */}
+                  <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
+                    {/* Header */}
+                    <div className="text-[11px] font-medium text-gray-600 mt-2">
+                      Phone Comparison
+                    </div>
+
+                    {/* Comparison List */}
+                    <div className="w-full text-[11px] text-gray-700">
+                      {/* Camera */}
+                      {specs1.map((spec, i) => (
+                        <div
+                          key={i}
+                          className={`group flex items-center justify-between py-1.5
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
+                              ? "hidden sm:flex"
+                              : ""
+                            }`}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span className="flex items-center text-gray-500 truncate">
+                              {spec.icon}
+                            </span>
+                            <span className="text-gray-800 font-bold">
+                              {spec.name}
                             </span>
                           </div>
-                        ))}
-
-                        {/* Divider */}
-                        <div className="border-t border-gray-100 mt-2 pt-1"></div>
-
-                        {/* Common Features */}
-                        <div className="text-[12px] font-semibold text-gray-800 mb-1">
-                          Common Features
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <span className="flex items-center text-gray-500 truncate">
-                            <MemoryStick className="text-blue-500 mr-1 w-4 h-4" />{" "}
-                            RAM
-                          </span>
-                          <span className="font-semibold text-gray-900 truncate ml-2">
-                            12 GB
+                          <span className="font-bold text-gray-900">
+                            {spec.value}
                           </span>
                         </div>
+                      ))}
 
-                        <div className="flex justify-between items-center">
-                          <span className="flex items-center text-gray-500 truncate">
-                            <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
-                            Memory
-                          </span>
-                          <span className="font-semibold text-gray-900 truncate ml-2">
-                            256 GB
-                          </span>
-                        </div>
+                      {/* Divider */}
+                      <div className="border-t border-gray-100 mt-2 pt-1"></div>
+
+                      {/* Common Features */}
+                      <div className="text-[12px] font-semibold text-gray-800 mb-1">
+                        Common Features
                       </div>
 
-                      {/* Compare Button */}
-                      <div className="flex justify-end mt-4">
-                        <a
-                          href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
-                          className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
-                        >
-                          Compare Now →
-                        </a>
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <MemoryStick className="text-blue-500 mr-1 w-4 h-4" />{" "}
+                          RAM
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">
+                          12 GB
+                        </span>
                       </div>
+
+                      <div className="flex justify-between items-center">
+                        <span className="flex items-center text-gray-500 truncate">
+                          <HardDrive className="text-green-500  mr-1 w-4 h-4" />{" "}
+                          Memory
+                        </span>
+                        <span className="font-semibold text-gray-900 truncate ml-2">
+                          256 GB
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Compare Button */}
+                    <div className="flex justify-end mt-4">
+                      <a
+                        href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
+                        className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
+                      >
+                        Compare Now →
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

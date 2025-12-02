@@ -14,7 +14,7 @@ export default function SpecGroup({
   title,
   specs,
   isExpandable = false,
-  max_visible = 3,
+  max_visible,
   searchQuery,
 }) {
   const [parentOpen, setParentOpen] = useState(true);
@@ -22,8 +22,10 @@ export default function SpecGroup({
 
   // Memoize entries to prevent re-renders
   const entries = useMemo(() => Object.entries(specs || {}), [specs]);
-  const hasMore = entries.length > max_visible + 1;
 
+  const hasMore = max_visible
+    ? entries.length > max_visible
+    : false;
   // Category icons
   const icons = {
     display: Smartphone,
@@ -68,7 +70,7 @@ export default function SpecGroup({
         <table className="w-full border-collapse">
           <tbody>
             <tr className="hover:bg-gray-50 border-b border-gray-100 relative">
-              <th className="font-poppins w-36 text-left px-4 py-2 font-semibold text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
+              <th className="font-poppins w-36 text-left px-2 py-2 font-semibold text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-sky-600" />
                   <h3 className="font-poppins font-medium text-gray-900 text-[15px]">
@@ -79,7 +81,7 @@ export default function SpecGroup({
 
               {firstLabel && (
                 <>
-                  <td className="w-[28%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                  <td className="w-[28%] pr-2 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                     {highlightText(formatText(firstLabel))}
                   </td>
                   <td className="w-[72%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
@@ -110,7 +112,7 @@ export default function SpecGroup({
         {/* Category Header with collapse/expand icon */}
         <div
           className="flex items-center justify-between cursor-pointer"
-          onClick={() => setParentOpen(false)}
+          onClick={isExpandable ? () => setParentOpen(false) : undefined}
         >
           <div className="flex items-center gap-2">
             <Icon className="w-4 h-4 text-sky-600" />
@@ -127,8 +129,9 @@ export default function SpecGroup({
         <div className="w-full">
           <table className="min-w-full border-collapse text-sm">
             <tbody>
-              {entries.slice(0, max_visible).map(([label, value], i) => {
-                const showSubExpand = i === max_visible - 1 && hasMore;
+              {(max_visible ? entries.slice(0, max_visible) : entries).map(([label, value], i) => {
+                let showSubExpand =
+                  max_visible > 0 && i === max_visible - 1 && hasMore === true;
                 return (
                   <tr
                     key={i}
@@ -137,6 +140,7 @@ export default function SpecGroup({
                     <td className="w-[28%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
+
                     <td className="w-[72%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
                       {highlightText(value)}
                     </td>
@@ -157,6 +161,7 @@ export default function SpecGroup({
                   </tr>
                 );
               })}
+
 
               {/* Hidden / expandable rows */}
               {isOpen &&
