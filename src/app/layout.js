@@ -18,7 +18,7 @@ export const metadata = {
     "Discover the latest and upcoming mobile phones with detailed specs, prices, and reviews",
   keywords:
     "mobile phones, smartphones, latest mobiles, upcoming phones, phone specs, mobile reviews",
-    icons: {
+  icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
         className={`flex flex-col min-h-screen ${poppins.className} bg-gray-50`}
       >
         {/* Google Analytics Scripts */}
-        {/* <Script
+        <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         />
@@ -54,7 +54,7 @@ export default function RootLayout({ children }) {
             });
           `}
         </Script>
-        <AnalyticsTracker /> */}
+        <AnalyticsTracker />
 
         <ClientLayout>
           <div className="relative flex-1 sm:min-h-screen w-full">
