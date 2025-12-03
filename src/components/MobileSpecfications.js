@@ -7,7 +7,7 @@ export default function MobileSpeficaion({ phoneDetails }) {
   // 🔍 Filter across *all* sections and fields
   const filteredSpecs = UseFilteredSpecs(phoneDetails, searchQuery);
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {/* Search Bar */}
       <div className="border-t border-gray-200 bg-white py-2.5 px-1">
         <div className="flex items-center gap-2">

@@ -194,55 +194,25 @@ export default function Details({ phoneDetails }) {
   ];
 
   const iconMap = {
-    display: { icon: Monitor, color: "bg-blue-100 text-blue-600" },
-    main_camera: { icon: Camera, color: "bg-sky-100 text-sky-600" },
-    battery: { icon: Battery, color: "bg-green-100 text-green-600" },
-    chipset: { icon: Cpu, color: "bg-yellow-100 text-yellow-600" },
+    display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
+    main_camera: { icon: Camera, color: "bg-rose-100", text: "text-rose-600" },
+    battery: {
+      icon: Battery,
+      color: "bg-emerald-100",
+      text: "text-emerald-600",
+    },
+    chipset: { icon: Cpu, color: "bg-amber-100", text: "text-amber-600" },
+    wired: { icon: Cable, color: "text-orange-500", text: "text-orange-500" },
+    wireless: { icon: Wifi, color: "text-blue-600", text: "text-blue-600" },
+    reverse: {
+      icon: RotateCcw,
+      color: "text-orange-600",
+      text: "text-orange-600",
+    },
   };
-  // const highlightItems = [
-  //   {
-  //     label: '6.5" AMOLED',
-  //     value: "2800×1260",
-  //     icon: <Smartphone size={16} />,
-  //     color: "bg-blue-100 text-blue-600",
-  //   },
-  //   {
-  //     label: "5000 mAh",
-  //     value: (
-  //       <span className="inline-flex items-center gap-2">
-  //         <span className="inline-flex items-center">
-  //           <Cable className="w-3 h-3 mr-0.5 text-orange-600" />
-  //           <span className="font-bold text-orange-700">120W</span>
-  //         </span>
-  //         <span className="inline-flex items-center">
-  //           <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
-  //           <span className="font-bold text-blue-700">50W</span>
-  //         </span>
-  //         {/* <span className="inline-flex items-center">
-  //           <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
-  //           <span className="font-bold text-gray-800">10W</span>
-  //         </span> */}
-  //       </span>
-  //     ),
-  //     icon: <Battery size={16} />,
-  //     color: "bg-green-100 text-green-600",
-  //   },
-  //   {
-  //     label: "Camera",
-  //     value: "108MP + 12MP",
-  //     icon: <Camera size={16} />,
-  //     color: "bg-red-100 text-red-600",
-  //   },
-
-  //   {
-  //     label: "Snapdragon 8 Gen 2",
-  //     value: "Octa-core",
-  //     icon: <Cpu size={16} />,
-  //     color: "bg-yellow-100 text-yellow-600",
-  //   },
-  // ];
-  let widthClass = "w-[280px]"; // default
-  if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3) widthClass = "w-[280px] sm:w-[350px] 2xl:w-[450px]";
+  let widthClass = "w-[250px]"; // default
+  if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3)
+    widthClass = "w-[280px] sm:w-[350px] 2xl:w-[450px]";
   return (
     <>
       <div className="hidden md:flex relative px-6 py-4 bg-white/60 backdrop-blur-xl border-b border-gray-200/60 items-center justify-between shadow-sm">
@@ -317,7 +287,7 @@ export default function Details({ phoneDetails }) {
       </div>
 
       <div className="w-full">
-        <div className="lg:flex lg:flex-row items-center sm:items-start py-5 sm:py-3">
+        <div className="lg:flex lg:flex-row items-center sm:items-start py-2 sm:py-3">
           {/* Image Gallery */}
           <VariantImageGallery phone={phoneDetails} />
 
@@ -326,40 +296,45 @@ export default function Details({ phoneDetails }) {
             {/* Top Specs & Variants Section */}
             <div className="flex flex-col lg:flex-row gap-1">
               {/* Left: Top Specs List */}
-              <ul className={` hidden sm:inline ${widthClass}  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]`}>
+              <ul
+                className={` hidden sm:inline ${widthClass} leading-tight overflow-hidden bg-gradient-to-br from-white to-gray-50/50`}
+              >
                 {[
                   {
-                    icon: <Calendar className="w-3 h-3 text-green-600" />,
+                    icon: <Calendar className="w-4 h-4 text-green-600" />,
                     text: "Gorilla Glass Victus 2",
                     subText: "IP68 Water Resistant",
                   },
                   {
-                    icon: <Smartphone className="w-3 h-3 text-teal-600" />,
+                    icon: <Smartphone className="w-4 h-4 text-teal-600" />,
                     text: "206g • 8mm Thickness",
                     subText: "Titanium Frame",
                   },
                   {
-                    icon: <Shield className="w-3.5 h-3.5 text-indigo-500" />,
+                    icon: <Shield className="w-4 h-4 text-indigo-500" />,
                     text: "Android 16 • HyperOS 3",
                     subText: "4-Year OS & 5-Year Security",
                   },
                   {
-                    icon: <Cpu className="w-3.5 h-3.5 text-orange-600" />,
+                    icon: <Cpu className="w-4 h-4 text-orange-600" />,
                     text: "Snapdragon 8 Gen 3 (4nm)",
                     subText: "Octa-core",
                   },
                 ].map((item, i) => (
                   <li
                     key={i}
-                    className={`flex items-center gap-2 py-0.5 px-1 ${i !== 0 ? "border-t border-gray-200/60" : ""
-                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                    className={`flex items-center gap-1 py-1 px-1 ${
+                      i !== 0 ? "border-t border-gray-200/60" : ""
+                    } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                   >
                     <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
                       {item.icon}
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm text-gray-700">{item.text}</span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[12px] font-inter">
+                        {item.text}
+                      </span>
+                      <span className="text-[11px] font-sans text-gray-500">
                         {item.subText}
                       </span>
                     </div>
@@ -370,205 +345,112 @@ export default function Details({ phoneDetails }) {
                 <Variants variants={phoneDetails?.variants} />
               </div>
             </div>
-            {/* <ul
-                className={`w-full lg:flex-1 grid grid-cols-${phoneDetails?.variants.length === 1 ? "1" : "2"
-                  } gap-1 pr-2`}
-              >
-                {phoneDetails?.variants.map((v, i, arr) => {
-                  let colSpan = "col-span-1";
-                  if (arr.length === 2) colSpan = "col-span-2";
-                  if (arr.length === 3 && i === 2) colSpan = "col-span-2";
-                  return (
-                    <div
-                      key={i}
-                      className={`p-4 border border-slate-200 rounded-md bg-white shadow-sm hover:shadow transition ${colSpan}`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-900">
-                            {v.ram}GB / {v?.storage?.toString().toUpperCase().includes("TB")
-                              ? v?.storage
-                              : `${v?.storage}GB`}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-slate-900">
-                            ${v.usd_price}
-                          </p>
-                          <p className="text-xs text-slate-500">
-                            PKR {v.pkr_price.toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="col-span-full bg-gray-50 rounded-md">
-                  <div className="flex justify-between items-center w-full">
-                    <p className="text-[10px] text-gray-500 italic">
-                      Dual SIM (Hybrid) • No SD card slot
-                    </p>
-                    <span className="text-xs text-gray-400 italic block">
-                      Price may differ
-                    </span>
-                  </div>
-                </div>
-              </ul> */}
-            {/* Specs Grid Below */}
-            <ul className="hidden sm:grid grid-cols-2 sm:grid-cols-3 gap-1 pt-1 pr-2">
-              {/* [
-                {
-                  icon: (
-                    <MonitorSmartphone className="w-6 h-6 text-green-600" />
-                  ),
-                  value: '6.59" AMOLED',
-                  subvalue: "2800×1260 • 144Hz • 2000 nits",
-                },
-                {
-                  icon: <Camera className="w-6 h-6 text-teal-600" />,
-                  value: "200MP + 8MP Ultra-Wide",
-                  subvalue: "OIS • 8K Video",
-                },
-                {
-                  icon: <Battery className="w-6 h-6 text-orange-600" />,
-                  value: "5000mAh Battery",
-                  subvalue: (
-                    <span className="inline-flex items-center gap-2">
-                      <span className="inline-flex items-center">
-                        <Cable className="w-3 h-3 mr-0.5 text-orange-600" />
-                        120W
-                      </span>
-                      <span className="inline-flex items-center">
-                        <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
-                        50W
-                      </span>
-                      <span className="inline-flex items-center">
-                        <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
-                        10W
-                      </span>
-                    </span>
-                  ),
-                },
-              ] */}
+            <div className="md:hidden flex items-center justify-between border-b border-gray-100 bg-white py-2">
+              {/* LEFT SECTION */}
+              <div className="flex flex-col">
+                <h1 className="text-xl font-semibold text-gray-900 leading-tight">
+                  {phoneDetails.name}
+                </h1>
+                <span className="text-[11px] text-gray-500 mt-0.5">
+                  Released: {phoneDetails.release_date || "TBA"}
+                </span>
+              </div>
+
+              {/* RIGHT SECTION */}
+              <div className="flex items-center gap-1.5">
+                {/* Social Icons */}
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                  <Facebook className="w-4 h-4" />
+                </button>
+
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                  <Twitter className="w-4 h-4" />
+                </button>
+
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                  <MessageCircle className="w-4 h-4" />
+                </button>
+
+                {/* Share Button */}
+                <button
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: phoneDetails.name,
+                        text: `Check out the ${phoneDetails.name}!`,
+                        url: window.location.href,
+                      });
+                    } else {
+                      navigator.clipboard.writeText(window.location.href);
+                      alert("Link copied");
+                    }
+                  }}
+                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-900 hover:text-white transition"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-1">
               {phoneDetails?.searchIndex?.specs_grid.map((item, i) => {
-                if (!item.value || item?.hide_on_details_page) return null;
+                if (!item.value) return null;
                 const IconComponent = iconMap[item.key].icon;
-                return(
-                <li
-                  key={i}
-                  className="flex flex-col items-start gap-1 p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 shadow-[0_2px_6px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:border-gray-300/80 transition-all duration-300 cursor-pointer group"
-                >
-                  <div className="text-center group-hover:scale-110 transition-transform duration-200">
-                    <IconComponent size={16} />
-                  </div>
-                  <span className="text-[14px]">
-                    {item.value}
-                  </span>
-                  <span className="text-[13px] text-gray-500 font-inter">
-                    {item.subvalue}
-                  </span>
-                </li>
-)})}
-            </ul>
-          </div>
-        </div>
-        <div className="md:hidden flex items-center justify-between border-b border-gray-100 bg-white sticky top-0">
-          {/* LEFT SECTION */}
-          <div className="flex flex-col">
-            <h1 className="text-xl font-semibold text-gray-900 leading-tight">
-              {phoneDetails.name}
-            </h1>
-            <span className="text-[11px] text-gray-500 mt-0.5">
-              Released: {phoneDetails.release_date || "TBA"}
-            </span>
-          </div>
-
-          {/* RIGHT SECTION */}
-          <div className="flex items-center gap-1.5">
-            {/* Social Icons */}
-            <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
-              <Facebook className="w-4 h-4" />
-            </button>
-
-            <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
-              <Twitter className="w-4 h-4" />
-            </button>
-
-            <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
-              <MessageCircle className="w-4 h-4" />
-            </button>
-
-            {/* Share Button */}
-            <button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: phoneDetails.name,
-                    text: `Check out the ${phoneDetails.name}!`,
-                    url: window.location.href,
-                  });
-                } else {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert("Link copied");
-                }
-              }}
-              className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-900 hover:text-white transition"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Variant Selector */}
-        {/* <Variants variants={phoneDetails?.variants} /> */}
-        <div className="md:hidden mb-2">
-          <div className="grid grid-cols-2 gap-1">
-            {phoneDetails?.searchIndex?.specs_grid.map((item, i) => {
-              if (!item.value) return null;
-              const IconComponent = iconMap[item.key].icon;
-              const color = iconMap[item.key].color;
-              const str = item.subvalue || "";
-              // Match the resolution at the start (digits x digits)
-              const resolutionMatch = str.match(/(\d+\s*x\s*\d+)/i);
-              const resolution = resolutionMatch ? resolutionMatch[1] : null;
-              return (
-                <div
-                  key={i}
-                  className="group relative bg-white rounded-lg p-2 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-blue-200 overflow-hidden"
-                >
-                  {/* Decorative circle */}
-                  <div className="absolute top-0 right-0 w-16 h-16 rounded-full bg-blue-50 -mr-8 -mt-8 opacity-20"></div>
-
-                  {/* Content */}
-                  <div className="relative z-10 flex items-center gap-2">
-                    {/* Icon with subtle background */}
-                    <div
-                      className={`flex items-center justify-center w-10 h-10 rounded-full ${color.split(" ")[1]}
-                                bg-opacity-20 text-${color.split(" ")[1]}`}
-                    >
-                      <IconComponent size={16} />
+                const textColor = iconMap[item.key].text;
+                const backgroundColor = iconMap[item.key].color;
+                return (
+                  <li
+                    key={i}
+                    className={`${backgroundColor} ${
+                      item.key === "chipset" ? "hidden" : "flex"
+                    } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
+                  >
+                    <div className="text-center group-hover:scale-110 transition-transform duration-200">
+                      <IconComponent size={20} className={`${textColor}`} />
                     </div>
+                    {item.key !== "battery" && (
+                      <>
+                        <span className="font-inter text-[12px]">
+                          {item.value}
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-sans">
+                          {item.subvalue}
+                        </span>
+                      </>
+                    )}
 
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-0.5">
-                        {item.label}
-                      </div>
-                      <div className="text-xs font-bold text-gray-700">
-                        {item.value}
-                      </div>
-                      {/* Show only when spec.key is display and refreshRate exists */}
-                      {item.key === "display" && resolution && (
-                        <div className="text-xs font-bold text-gray-700">
-                          {resolution}
+                    {item.key === "battery" && (
+                      <>
+                        <span className="font-inter text-[12px]">
+                          {item.value}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {" "}
+                          {/* parent flex container */}
+                          {Object.entries(item.subvalue).map(([key, value]) => {
+                            const IconComponent = iconMap[key].icon;
+                            const textColor = iconMap[key].color;
+                            return (
+                              <span
+                                key={key}
+                                className="flex items-center gap-1" // horizontal layout
+                              >
+                                <IconComponent
+                                  size={13}
+                                  className={`${textColor}`}
+                                />
+                                <span className="text-[10px] font-bold text-gray-800">
+                                  {value}
+                                </span>
+                              </span>
+                            );
+                          })}
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-
-            })}
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
         <div className="w-full border-gray-200">
@@ -620,10 +502,11 @@ export default function Details({ phoneDetails }) {
                         <div
                           key={i}
                           className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
-                              ? "hidden sm:flex"
-                              : ""
-                            }`}
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
+                                                   spec.hideOnSmall
+                                                     ? "hidden sm:flex"
+                                                     : ""
+                                                 }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <span className="flex items-center text-gray-500 truncate">
@@ -715,10 +598,11 @@ export default function Details({ phoneDetails }) {
                         <div
                           key={i}
                           className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
-                              ? "hidden sm:flex"
-                              : ""
-                            }`}
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
+                                                   spec.hideOnSmall
+                                                     ? "hidden sm:flex"
+                                                     : ""
+                                                 }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <span className="flex items-center text-gray-500 truncate">
@@ -775,7 +659,6 @@ export default function Details({ phoneDetails }) {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

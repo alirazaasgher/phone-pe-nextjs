@@ -31,29 +31,13 @@ const poppins = Poppins({
 import { motion, AnimatePresence } from "framer-motion";
 import QuickViewDrawer from "@/components/QuickViewDrawer";
 import { useState } from "react";
-const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
+const PhoneCard = ({ phone }) => {
   const [open, setOpen] = useState(false);
   const isNew = phone.is_new;
   const isUpcoming = phone.is_upcoming;
   const isPopular = phone.is_popular;
   const [selectedPhone, setSelectedPhone] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const isCompared = comparedPhones.some((p) => p.id === phone.id);
-  const getTagColor = (tag) => {
-    if (tag.includes("5G") || tag.includes("WiFi"))
-      return "bg-green-100 text-green-700";
-    if (tag.includes("Snapdragon") || tag.includes("Bionic"))
-      return "bg-purple-100 text-purple-700";
-    if (tag.includes("MP") || tag.includes("Camera"))
-      return "bg-blue-100 text-blue-700";
-    if (tag.includes("GB") || tag.includes("TB"))
-      return "bg-gray-100 text-gray-700";
-    if (tag.includes("Pro") || tag.includes("Max"))
-      return "bg-indigo-100 text-indigo-700";
-    return "bg-blue-100 text-blue-700"; // default
-  };
-
   const openModal = (phone) => {
     setIsHoverEnabled(false);
     setSelectedPhone(phone);
@@ -71,6 +55,11 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
     main_camera: <Camera size={14} className="text-sky-500" />,
     battery: <Battery size={14} className="text-green-500" />,
     chipset: <Cpu size={15} className="text-orange-500" />,
+    wired: <Cable size={15} className="w-3 h-3 mr-0.5 text-orange-500" />,
+    wireless: <Wifi className="w-3 h-3 mr-0.5  text-blue-600" />,
+    reverse: (
+      <RotateCcw className="w-3 h-3 mr-0.5 text-orange-600 text-gray-600" />
+    ),
   };
   return (
     <>
@@ -114,7 +103,10 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
               {/* Storage Tag */}
               <div className="bg-gray-800  text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
                 {phone?.searchIndex?.ram}GB |{" "}
-                {phone?.searchIndex?.storage?.toString().toUpperCase().includes("TB")
+                {phone?.searchIndex?.storage
+                  ?.toString()
+                  .toUpperCase()
+                  .includes("TB")
                   ? phone?.searchIndex?.storage
                   : `${phone?.searchIndex?.storage}GB`}
               </div>
@@ -183,8 +175,11 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
           {/* Key Specs Row */}
           <div className="w-full">
             {(phone?.searchIndex?.specs_grid ?? []).map((spec, i) => {
+              let hzMatch = null;
               if (!spec.value) return null;
-              const hzMatch = spec.subvalue?.match(/(\d+Hz)/i);
+              if (typeof spec?.subvalue === "string") {
+                hzMatch = spec.subvalue.match(/(\d+Hz)/i);
+              }
               const refreshRate = hzMatch ? hzMatch[1] : null;
               return (
                 <div
@@ -208,14 +203,35 @@ const PhoneCard = ({ phone, handleCompare, comparedPhones = [] }) => {
                     )}
                   </div>
                   <span className="inline-flex items-center gap-0.5">
-                    <span className="text-[9px] text-gray-600">
-                      {spec.value}
-                    </span>
+                    {spec.key !== "battery" && (
+                      <span className="text-[9px] text-gray-600">
+                        {spec.value}
+                      </span>
+                    )}
+
                     {/* Show only when spec.key is display and refreshRate exists */}
                     {spec.key === "display" && refreshRate && (
                       <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
                         {refreshRate}
                       </span>
+                    )}
+                    {spec.key === "battery" && (
+                      <>
+                        <span className="text-[9px] ">{spec.value}</span>
+                        {Object.entries(spec.subvalue).map(([key, value]) => (
+                          <span
+                            key={key}
+                            className={`flex items-center  ${
+                              key === "reverse" ? "hidden 2xl:flex" : "flex"
+                            }`}
+                          >
+                            {iconMap[key]}
+                            <span className="text-[9px] font-bold text-gray-800">
+                              {value}
+                            </span>
+                          </span>
+                        ))}
+                      </>
                     )}
                   </span>
                 </div>

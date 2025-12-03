@@ -23,9 +23,7 @@ export default function SpecGroup({
   // Memoize entries to prevent re-renders
   const entries = useMemo(() => Object.entries(specs || {}), [specs]);
 
-  const hasMore = max_visible
-    ? entries.length > max_visible
-    : false;
+  const hasMore = max_visible ? entries.length > max_visible : false;
   // Category icons
   const icons = {
     display: Smartphone,
@@ -73,7 +71,7 @@ export default function SpecGroup({
               <th className="font-poppins w-36 text-left px-2 py-2 font-semibold text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-sky-600" />
-                  <h3 className="font-poppins font-medium text-gray-900 text-[15px]">
+                  <h3 className="font-poppins font-medium text-gray-1000 text-[12px]">
                     {formatText(title)}
                   </h3>
                 </div>
@@ -81,11 +79,19 @@ export default function SpecGroup({
 
               {firstLabel && (
                 <>
-                  <td className="w-[28%] pr-2 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                  <td className="w-[10%]  sm:w-[10%] pr-2 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                     {highlightText(formatText(firstLabel))}
                   </td>
-                  <td className="w-[72%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-                    {highlightText(firstValue)}
+                  <td className="w-[44%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
+                    {firstValue.includes("·")
+                      ? firstValue
+                          .split("·")
+                          .map((part, index) => (
+                            <div key={index}>
+                              {part.trim() && `· ${highlightText(part.trim())}`}
+                            </div>
+                          ))
+                      : highlightText(firstValue)}
                   </td>
                 </>
               )}
@@ -129,46 +135,51 @@ export default function SpecGroup({
         <div className="w-full">
           <table className="min-w-full border-collapse text-sm">
             <tbody>
-              {(max_visible ? entries.slice(0, max_visible) : entries).map(([label, value], i) => {
-                let showSubExpand =
-                  max_visible > 0 && i === max_visible - 1 && hasMore === true;
-                return (
-                  <tr
-                    key={i}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
-                  >
-                    <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
-                      {highlightText(formatText(label))}
-                    </td>
-
-                <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-  {value.includes('·')
-    ? value.split('·').map((part, index) => (
-        <div key={index}>
-          {part.trim() && `· ${highlightText(part.trim())}`}
-        </div>
-      ))
-    : highlightText(value)
-  }
-</td>
-
-                    {/* Sub-expand icon */}
-                    {showSubExpand && (
-                      <td
-                        className="absolute right-3 top-2 cursor-pointer"
-                        onClick={() => setIsOpen(!isOpen)}
-                      >
-                        {isOpen ? (
-                          <ChevronUp className="w-4 h-4 text-gray-500 hover:text-sky-600" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-gray-500 hover:text-sky-600" />
-                        )}
+              {(max_visible ? entries.slice(0, max_visible) : entries).map(
+                ([label, value], i) => {
+                  let showSubExpand =
+                    max_visible > 0 &&
+                    i === max_visible - 1 &&
+                    hasMore === true;
+                  return (
+                    <tr
+                      key={i}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
+                    >
+                      <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                        {highlightText(formatText(label))}
                       </td>
-                    )}
-                  </tr>
-                );
-              })}
 
+                      <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
+                        {value.includes("·")
+                          ? value
+                              .split("·")
+                              .map((part, index) => (
+                                <div key={index}>
+                                  {part.trim() &&
+                                    `· ${highlightText(part.trim())}`}
+                                </div>
+                              ))
+                          : highlightText(value)}
+                      </td>
+
+                      {/* Sub-expand icon */}
+                      {showSubExpand && (
+                        <td
+                          className="absolute right-3 top-2 cursor-pointer"
+                          onClick={() => setIsOpen(!isOpen)}
+                        >
+                          {isOpen ? (
+                            <ChevronUp className="w-4 h-4 text-gray-500 hover:text-sky-600" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-gray-500 hover:text-sky-600" />
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  );
+                }
+              )}
 
               {/* Hidden / expandable rows */}
               {isOpen &&
