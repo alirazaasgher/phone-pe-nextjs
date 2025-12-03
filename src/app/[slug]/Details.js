@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React from "react";
 import {
   Shield,
   Smartphone,
@@ -56,8 +56,8 @@ import {
   MonitorSmartphone,
 } from "lucide-react";
 import VariantImageGallery from "@/components/VariantImageGallery";
-import mobiles from "../../data/homepage";
 import MobileSpeficaion from "@/components/MobileSpecfications";
+import Variants from "@/components/common/Variants";
 export default function Details({ phoneDetails }) {
   const BatteryInfo = () => (
     <span className="inline-flex items-center gap-2">
@@ -193,16 +193,6 @@ export default function Details({ phoneDetails }) {
     },
   ];
 
-  const variants = [
-    {
-      ram: "4",
-      storage: "256GB",
-      type: "SSD",
-      priceUSD: 799,
-      pricePKR: 350000,
-    },
-  ];
-
   const iconMap = {
     display: { icon: Monitor, color: "bg-blue-100 text-blue-600" },
     main_camera: { icon: Camera, color: "bg-sky-100 text-sky-600" },
@@ -327,16 +317,16 @@ export default function Details({ phoneDetails }) {
       </div>
 
       <div className="w-full">
-        <div className="flex flex-col lg:flex-row items-center sm:items-start py-5 sm:py-3">
+        <div className="lg:flex lg:flex-row items-center sm:items-start py-5 sm:py-3">
           {/* Image Gallery */}
           <VariantImageGallery phone={phoneDetails} />
 
           {/* Right Specs */}
-          <div className="flex-1 flex flex-col gap-1 hidden sm:inline">
+          <div className="flex-1 flex flex-col gap-1">
             {/* Top Specs & Variants Section */}
-            <div className="flex flex-col lg:flex-row gap-1 items-start">
+            <div className="flex flex-col lg:flex-row gap-1">
               {/* Left: Top Specs List */}
-              <ul className={`${widthClass}  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]`}>
+              <ul className={` hidden sm:inline ${widthClass}  text-[14px] leading-tight border border-gray-200/80 rounded-md overflow-hidden bg-gradient-to-br from-white to-gray-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]`}>
                 {[
                   {
                     icon: <Calendar className="w-3 h-3 text-green-600" />,
@@ -376,9 +366,11 @@ export default function Details({ phoneDetails }) {
                   </li>
                 ))}
               </ul>
-
-              {/* Right: Variants */}
-              <ul
+              <div className="flex-1 w-full">
+                <Variants variants={phoneDetails?.variants} />
+              </div>
+            </div>
+            {/* <ul
                 className={`w-full lg:flex-1 grid grid-cols-${phoneDetails?.variants.length === 1 ? "1" : "2"
                   } gap-1 pr-2`}
               >
@@ -398,9 +390,6 @@ export default function Details({ phoneDetails }) {
                               ? v?.storage
                               : `${v?.storage}GB`}
                           </p>
-                          {/* <span className="inline-block mt-1 px-2.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md">
-                            {v.type}
-                          </span> */}
                         </div>
                         <div className="text-right">
                           <p className="font-bold text-slate-900">
@@ -424,12 +413,10 @@ export default function Details({ phoneDetails }) {
                     </span>
                   </div>
                 </div>
-              </ul>
-            </div>
-
+              </ul> */}
             {/* Specs Grid Below */}
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-1 pt-1 pr-2">
-              {[
+            <ul className="hidden sm:grid grid-cols-2 sm:grid-cols-3 gap-1 pt-1 pr-2">
+              {/* [
                 {
                   icon: (
                     <MonitorSmartphone className="w-6 h-6 text-green-600" />
@@ -462,22 +449,26 @@ export default function Details({ phoneDetails }) {
                     </span>
                   ),
                 },
-              ].map((item, i) => (
+              ] */}
+              {phoneDetails?.searchIndex?.specs_grid.map((item, i) => {
+                if (!item.value || item?.hide_on_details_page) return null;
+                const IconComponent = iconMap[item.key].icon;
+                return(
                 <li
                   key={i}
                   className="flex flex-col items-start gap-1 p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 shadow-[0_2px_6px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_10px_rgba(0,0,0,0.08)] hover:border-gray-300/80 transition-all duration-300 cursor-pointer group"
                 >
                   <div className="text-center group-hover:scale-110 transition-transform duration-200">
-                    {item.icon}
+                    <IconComponent size={16} />
                   </div>
-                  <span className="text-[14px] font-roboto-condensedt">
+                  <span className="text-[14px]">
                     {item.value}
                   </span>
                   <span className="text-[13px] text-gray-500 font-inter">
                     {item.subvalue}
                   </span>
                 </li>
-              ))}
+)})}
             </ul>
           </div>
         </div>
@@ -529,69 +520,7 @@ export default function Details({ phoneDetails }) {
         </div>
 
         {/* Variant Selector */}
-        <div className="md:hidden border-t border-gray-200 pt-3">
-          {/* Header */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="bg-orange-100 p-2 rounded-full">
-              <Package className="w-5 h-5 text-orange-500" />
-            </div>
-            <h3 className="text-gray-900 text-sm font-semibold tracking-tight">
-              Available Variants
-            </h3>
-          </div>
-
-          {/* Variant Cards */}
-          <div className="grid grid-cols-2 gap-2">
-            {phoneDetails?.variants.map((v, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl shadow-sm px-3 py-3 hover:shadow-md transition-shadow cursor-pointer"
-              >
-                {/* <MemoryStick className="w-4 h-4 text-orange-600" /> */}
-                {/* Variant Name */}
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-gray-900 font-medium">
-                    {v.ram}GB RAM
-                  </span>
-
-                  {v.storage_type && (
-                    <span className="text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md font-medium">
-                      {"UFC 3.1"}
-                    </span>
-                  )}
-                </div>
-
-                {/* Prices and badge */}
-                <div className="relative text-[11px] text-gray-500">
-                  <div className="flex flex-col">
-                    <span>PKR {v.pkr_price}</span>
-                    <span>USD {v.usd_price}</span>
-                  </div>
-
-                  {/* Badge at bottom-right of price */}
-                  {v.storage && (
-                    <span className="absolute bottom-0 right-0 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-sm whitespace-nowrap flex items-center gap-1">
-
-                      <HardDrive className="w-3 h-3" />
-
-                      {v?.storage?.toString().toUpperCase().includes("TB")
-                        ? `${v?.storage}`
-                        : `${v?.storage}GB`}
-                    </span>
-                  )}
-
-                </div>
-              </div>
-            ))}
-          </div>
-
-
-          {/* Info */}
-          <p className="text-[10px] text-gray-500 italic mt-3">
-            Dual SIM (Hybrid) • No SD card slot
-          </p>
-        </div>
-
+        {/* <Variants variants={phoneDetails?.variants} /> */}
         <div className="md:hidden mb-2">
           <div className="grid grid-cols-2 gap-1">
             {phoneDetails?.searchIndex?.specs_grid.map((item, i) => {
@@ -615,7 +544,7 @@ export default function Details({ phoneDetails }) {
                     {/* Icon with subtle background */}
                     <div
                       className={`flex items-center justify-center w-10 h-10 rounded-full ${color.split(" ")[1]}
-                    bg-opacity-20 text-${color.split(" ")[1]}`}
+                                bg-opacity-20 text-${color.split(" ")[1]}`}
                     >
                       <IconComponent size={16} />
                     </div>

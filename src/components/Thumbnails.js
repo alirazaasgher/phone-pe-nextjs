@@ -14,11 +14,10 @@ export default function Thumbnails({ colors, active, onClick }) {
             >
               <div
                 className={`relative rounded-lg border-2 overflow-hidden transition-all duration-300 transform
-            ${
-              i === active && hasImage
-                ? "border-blue-500 shadow-lg scale-105"
-                : "border-gray-200 hover:border-gray-400 hover:scale-105"
-            }`}
+            ${i === active && hasImage
+                    ? "border-blue-500 shadow-lg scale-105"
+                    : "border-gray-200 hover:border-gray-400 hover:scale-105"
+                  }`}
                 style={{ width: "56px", height: "56px" }}
               >
                 <div className="flex items-center justify-center w-full h-full p-1">
@@ -31,10 +30,10 @@ export default function Thumbnails({ colors, active, onClick }) {
                   />
                 </div>
 
-                <span className={`absolute bottom-0 left-0 right-0 text-[9px] font-medium 
+                {/* <span className={`absolute bottom-0 left-0 right-0 text-[9px] font-medium 
                                  text-white bg-black/60 text-center py-[1px] opacity-100`}>
                   {c.name}
-                </span>
+                </span> */}
               </div>
             </button>
           </li>

@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
-export default function ColorSelector({ colors, selectedColor, onSelect }) {
-    return (
-         <div className="text-center">
-      <div className="flex items-center justify-center">
-        <span className="text-xs font-semibold text-gray-600 mt-2 sm:mt-1.5">{selectedColor}</span>
-      </div>
-      <div className="flex justify-center gap-3 mt-2 sm:mt-2">
+export default function ColorSelector({ selectedColor}) {
+  console.log(selectedColor)
+  return (
+    <div className="flex items-center justify-center mt-2">
+      <div className="px-2 py-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 shadow-sm">
+    <span className="text-xs font-medium text-gray-600">Selected Color: </span>
+    <span className="text-xs font-bold text-gray-900">{selectedColor}</span>
+  </div>
+      {/* <div className="flex justify-center gap-3 mt-2 sm:mt-2">
         {colors.map((color) => {
           const isActive = selectedColor === color.name;
           return (
@@ -31,7 +33,7 @@ export default function ColorSelector({ colors, selectedColor, onSelect }) {
             </button>
           );
         })}
-      </div>
+      </div> */}
     </div>
-    );
+  );
 }

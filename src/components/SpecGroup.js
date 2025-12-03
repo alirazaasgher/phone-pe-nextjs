@@ -137,13 +137,20 @@ export default function SpecGroup({
                     key={i}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
                   >
-                    <td className="w-[28%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                    <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
 
-                    <td className="w-[72%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-                      {highlightText(value)}
-                    </td>
+                <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
+  {value.includes('·')
+    ? value.split('·').map((part, index) => (
+        <div key={index}>
+          {part.trim() && `· ${highlightText(part.trim())}`}
+        </div>
+      ))
+    : highlightText(value)
+  }
+</td>
 
                     {/* Sub-expand icon */}
                     {showSubExpand && (
@@ -170,10 +177,10 @@ export default function SpecGroup({
                     key={i}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-all"
                   >
-                    <td className="w-[25%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                    <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
-                    <td className="w-[75%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
+                    <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
                       {highlightText(value)}
                     </td>
                   </tr>

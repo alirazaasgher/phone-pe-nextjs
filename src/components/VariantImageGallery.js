@@ -48,77 +48,6 @@ export default function VariantImageGallery({ phone }) {
 
   return (
     <>
-      {/* 🖼️ Main Image */}
-      {/* <div
-  className="
-    flex flex-row-reverse md:flex-col
-    items-start md:items-center
-    justify-start md:justify-center
-    w-full md:max-w-md
-  "
->
-  <div className="relative w-full aspect-[1/1] overflow-hidden group">
-    <AnimatePresence>
-      <motion.img
-        key={`${selectedColor}-${currentImageIndex}`}
-        src={activeSrc}
-        alt={`${selectedColor} phone - Image ${currentImageIndex + 1}`}
-        className="w-full h-full object-contain cursor-zoom-in z-10 relative"
-        initial={
-          isFirstRender.current
-            ? false
-            : { opacity: 0, x: direction > 0 ? 80 : -80 }
-        }
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        onClick={() => setZoomed(true)}
-      />
-    </AnimatePresence>
-
-    {imagesToShow.length > 1 && (
-      <>
-        <NavigationButton
-          direction="left"
-          onClick={prevImage}
-          disabled={currentImageIndex === 0}
-        />
-        <NavigationButton
-          direction="right"
-          onClick={nextImage}
-          disabled={currentImageIndex === imagesToShow.length - 1}
-        />
-      </>
-    )}
-  </div>
-
-  {imagesToShow.length > 1 && (
-    <div
-      className="
-        flex flex-col md:flex-row
-        items-start md:items-center
-        justify-start md:justify-center
-        gap-2 md:gap-3
-      "
-    >
-      <Thumbnails
-        images={imagesToShow}
-        active={currentImageIndex}
-        onClick={(index) => {
-          setDirection(index > currentImageIndex ? 1 : -1);
-          setCurrentImageIndex(index);
-        }}
-      />
-    </div>
-  )}
-    <ColorSelector
-                    colors={phone.colors}
-                    selectedColor={selectedColor}
-                    onSelect={setSelectedColor}
-                />
-</div> */}
-      {/* Image Dots */}
-
       <div className="flex-shrink-0 flex flex-col justify-center items-center h-full">
         <div className="relative w-[220px] h-[260px] lg:w-[200px] lg:h-[200px] flex justify-center items-center bg-white overflow-visible group">
           <AnimatePresence mode="wait">
@@ -166,7 +95,10 @@ export default function VariantImageGallery({ phone }) {
             </>
           )}
         </div>
+        <ColorSelector
+          selectedColor={selectedColor}
 
+        />
         {/* Thumbnails below the main image */}
         <div className="w-full">
           <Thumbnails
@@ -181,11 +113,7 @@ export default function VariantImageGallery({ phone }) {
           />
         </div>
       </div>
-      {/* <ColorSelector
-          colors={phone.colors}
-          selectedColor={selectedColor}
-          onSelect={setSelectedColor}
-        /> */}
+
 
       {/* Zoom Modal */}
       {zoomed && (
