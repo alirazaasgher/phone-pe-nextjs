@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, Search, Bell, X, Smartphone } from "lucide-react";
+import { Menu, Smartphone } from "lucide-react";
 import mobiles from "@/data/mobiles";
 import useSearch from "@/app/hooks/useSearch";
 import { useRouter } from "next/navigation";
@@ -41,15 +41,16 @@ export default function Header({ toggleSidebar }) {
         <div className="flex items-center justify-between px-4 md:px-6 h-16 md:h-16">
           {/* Left Section - Logo + Mobile Menu */}
           <div className="flex items-center gap-3 md:gap-4">
-            <button
-              onClick={toggleSidebar}
-              className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 md:hidden transition-all duration-300 active:scale-95"
-            >
-              <Menu
-                className="text-white transition-transform group-hover:rotate-180 duration-300"
-                size={20}
-              />
-            </button>
+     <button
+  onClick={toggleSidebar}
+  aria-label="Toggle sidebar"
+  className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 md:hidden transition-all duration-300 active:scale-95"
+>
+  <Menu
+    className="text-white transition-transform group-hover:rotate-180 duration-300"
+    size={20}
+  />
+</button>
 
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="relative">

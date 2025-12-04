@@ -25,7 +25,7 @@ export default function Variants({ variants }) {
               </div>
 
               {/* Prices and badge */}
-              <div className="relative text-[11px] text-gray-500">
+              <div className="relative text-[11px] text-gray-800">
                 <div className="flex flex-col">
                   <span>PKR {v.pkr_price}</span>
                   <span>USD {v.usd_price}</span>
@@ -33,7 +33,7 @@ export default function Variants({ variants }) {
 
                 {/* Badge at bottom-right of price */}
                 {v.storage && (
-                  <span className="absolute bottom-0 right-0 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-sm whitespace-nowrap flex items-center gap-1">
+                  <span className="absolute bottom-0 right-0 bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[10px] font-semibold shadow-sm whitespace-nowrap flex items-center gap-1">
                     <HardDrive className="w-3 h-3" />
                     {v?.storage?.toString().toUpperCase().includes("TB")
                       ? `${v?.storage}`

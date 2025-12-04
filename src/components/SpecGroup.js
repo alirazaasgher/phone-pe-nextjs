@@ -68,12 +68,12 @@ export default function SpecGroup({
         <table className="w-full border-collapse">
           <tbody>
             <tr className="hover:bg-gray-50 border-b border-gray-100 relative">
-              <th className="font-poppins w-36 text-left px-2 py-2 font-semibold text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
+              <th className="font-poppins w-36 text-left px-2 py-2 font-medium text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-sky-600" />
-                  <h3 className="font-poppins font-medium text-gray-1000 text-[12px]">
+                  <span className="font-poppins font-medium text-gray-1000 text-[12px]">
                     {formatText(title)}
-                  </h3>
+                  </span>
                 </div>
               </th>
 
@@ -122,9 +122,9 @@ export default function SpecGroup({
         >
           <div className="flex items-center gap-2">
             <Icon className="w-4 h-4 text-sky-600" />
-            <h3 className="font-poppins font-medium text-gray-900 text-[15px] lg:text-[14px]">
+            <span className="font-poppins font-medium text-gray-900 text-[15px] lg:text-[14px]">
               {formatText(title)}
-            </h3>
+            </span>
           </div>
           {isExpandable ? (
             <ChevronUp className="w-4 h-4 text-gray-500 hover:text-sky-600" />

@@ -2,14 +2,51 @@
 export function buildPhoneMetadata(phone) {
   if (!phone) return { title: "Phone Not Found" };
 
+  const title = `${phone.brand.name} ${phone.name} - Full Specs, Price & Review`;
+  const description = `Explore ${phone.brand.name} ${phone.name} complete specifications, features, price, camera, battery, display, and user reviews. Get all details before you buy.`;
+
   return {
-    title: `${phone.name} - Specs, Price, Features`,
-    description: `Check full specifications, features, and price of ${phone.brand.name} ${phone.name}.`,
+    title: title,
+    description: description,
+    keywords: [
+      phone.name,
+      phone.brand.name,
+      `${phone.brand.name} ${phone.name} specs`,
+      `${phone.brand.name} ${phone.name} price`,
+      'smartphone specifications',
+      'mobile phone review'
+    ],
     openGraph: {
-      title: `${phone.brand} ${phone.name}`,
-      description: `${phone.brand} ${phone.name} features and specs.`,
-      url: `https://example.com/${phone.slug}`,
+      title: title,
+      description: description,
+      url: `https://mobile42.com/phones/${phone.slug}`,
+      siteName: 'YourSiteName',
+      images: [{
+        url: phone.image_url,
+        width: 1200,
+        height: 630,
+        alt: `${phone.brand.name} ${phone.name}`,
+      }],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
       images: [phone.image_url],
+    },
+    alternates: {
+      canonical: `https://mobile42.com//phones/${phone.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }

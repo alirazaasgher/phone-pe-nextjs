@@ -52,6 +52,7 @@ const SideBarCard = ({
                   type="checkbox"
                   checked={active}
                   readOnly
+                  aria-label={item.value}
                   className="h-3 w-3 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                 />
 

@@ -50,16 +50,16 @@ export default function Footer() {
               Follow Us
             </h3>
             <div className="flex space-x-4">
-              <Link href="https://facebook.com" className="hover:text-white">
+              <Link  aria-label="Facebook" href="https://facebook.com" className="hover:text-white">
                 <Facebook size={20} />
               </Link>
-              <Link href="https://twitter.com" className="hover:text-white">
+              <Link aria-label="Twitter" href="https://twitter.com" className="hover:text-white">
                 <Twitter size={20} />
               </Link>
-              <Link href="https://instagram.com" className="hover:text-white">
+              <Link aria-label="Instagram" href="https://instagram.com" className="hover:text-white">
                 <Instagram size={20} />
               </Link>
-              <Link href="https://youtube.com" className="hover:text-white">
+              <Link aria-label="Youtube" href="https://youtube.com" className="hover:text-white">
                 <Youtube size={20} />
               </Link>
             </div>

@@ -77,7 +77,6 @@ const PhoneCard = ({ phone }) => {
     overflow-hidden
   `}
       >
-        {/* Product Image */}
         <Link
           href={`/${phone.slug}`}
           className="relative group bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
@@ -92,9 +91,6 @@ const PhoneCard = ({ phone }) => {
               />
             </div>
           </div>
-
-          {/* Hover Overlay */}
-          {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Specs and Price */}
@@ -126,31 +122,6 @@ const PhoneCard = ({ phone }) => {
               </div>
             </div>
           </div>
-
-          {/* Before Tag (bottom right) */}
-          {/* <div className="absolute bottom-1 left-3 right-0 bg-white rounded-md shadow-md border border-gray-200 px-1 text-[8px] text-gray-500">
-      Before <span className="line-through text-red-500">₱69,999</span>
-    </div> */}
-
-          {/* Price Tag */}
-          {/* <div className="relative group">
-      <span className="relative z-10 flex items-center gap-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-500 text-white text-[10px] lg:text-[12px] font-bold px-2 py-1 lg:px-2.5 lg:py-1.5 rounded-lg shadow-lg">
-        <span className="text-[8px] lg:text-[9px] font-medium opacity-90">Rs.</span>
-        <span className="tracking-tight">{phone.searchIndex.min_price.toLocaleString()}</span>
-      </span>
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-500 rounded-lg blur-sm opacity-0 group-hover:opacity-40 transition-opacity duration-200"></div>
-    </div> */}
-          {/* Quick View Button */}
-          {/* <button
-            onClick={(e) => {
-              e.preventDefault();
-              openModal(phone);
-            }}
-            className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-gray-700 border border-gray-200 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-blue-600 hover:text-white hover:border-blue-600 shadow-lg"
-            title="Quick View"
-          >
-            <Eye size={16} />
-          </button> */}
         </Link>
 
         {/* Product Details */}
@@ -209,7 +180,6 @@ const PhoneCard = ({ phone }) => {
                       </span>
                     )}
 
-                    {/* Show only when spec.key is display and refreshRate exists */}
                     {spec.key === "display" && refreshRate && (
                       <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
                         {refreshRate}
@@ -240,234 +210,6 @@ const PhoneCard = ({ phone }) => {
           </div>
         </div>
       </div>
-
-      {/* <QuickViewDrawer phone={phone} open={open} setOpen={setOpen} /> */}
-      {/* Premium Modal */}
-      <AnimatePresence>
-        {isModalOpen && selectedPhone && (
-          <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            onClick={closeModal} // Close when clicking backdrop
-          >
-            <motion.div
-              key="modal"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative flex flex-col"
-              onClick={(e) => e.stopPropagation()} // Prevent inside click close
-            >
-              {/* Header */}
-              <div className="sticky top-0 flex justify-between items-center px-6 py-4 border-b bg-white/90 backdrop-blur z-10">
-                <div>
-                  <h2 className="text-2xl font-extrabold text-gray-900">
-                    {selectedPhone.name}
-                  </h2>
-                  <p className="text-gray-500">{selectedPhone.brand}</p>
-                </div>
-                <button
-                  onClick={closeModal}
-                  className="rounded-full p-2 hover:bg-red-100 transition group"
-                  aria-label="Close modal"
-                >
-                  <X className="w-6 h-6 text-gray-500 group-hover:text-red-500 transition-transform group-hover:rotate-90" />
-                </button>
-              </div>
-
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto px-6 py-6 grid lg:grid-cols-2 gap-6">
-                {/* Left Side: Image + Colors */}
-                <div className="space-y-6">
-                  {/* Image with price tag */}
-                  <div className="relative group">
-                    <div className="rounded-2xl bg-gradient-to-br from-indigo-50 via-white to-purple-50 shadow-lg overflow-hidden border border-gray-200/50 backdrop-blur-sm">
-                      <img
-                        src={selectedPhone.image_url}
-                        alt={`${selectedPhone.name} - ${selectedPhone.brand}`}
-                        className="w-full h-[22rem] object-contain transition-all duration-300 group-hover:scale-105 cursor-zoom-in p-6"
-                        loading="lazy"
-                      />
-                    </div>
-
-                    {/* Price Badge */}
-                    <div className="absolute top-4 right-4 flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-500 text-white px-5 py-2.5 rounded-full shadow-lg font-bold text-base backdrop-blur-sm border border-green-400/20 hover:shadow-xl transition-all hover:scale-105">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>{selectedPhone.price}</span>
-                    </div>
-
-                    {/* Brand Badge */}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-gray-800 px-4 py-2 rounded-full shadow-md border border-gray-200/50 font-semibold text-sm">
-                      {selectedPhone.brand}
-                    </div>
-
-                    {/* Zoom hint on hover */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                      <div className="bg-black/80 text-white px-5 py-2.5 rounded-full text-sm font-semibold backdrop-blur-md flex items-center gap-2">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
-                          />
-                        </svg>
-                        Click to zoom
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Colors Section */}
-                  <div className="bg-white rounded-xl p-5 border border-gray-200/50 shadow-sm">
-                    <h4 className="text-sm font-bold text-gray-800 mb-4 flex items-center justify-center">
-                      <span className="w-1.5 h-5 bg-gradient-to-b from-indigo-600 to-purple-600 rounded-full mr-2.5"></span>
-                      Available Colors
-                      <span className="ml-2.5 text-xs font-normal text-gray-500">
-                        {selectedPhone.colors.length}{" "}
-                        {selectedPhone.colors.length === 1
-                          ? "option"
-                          : "options"}
-                      </span>
-                    </h4>
-                    <div className="flex flex-wrap gap-4 justify-center">
-                      {selectedPhone.colors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-col items-center gap-2 group cursor-pointer"
-                        >
-                          <div className="relative">
-                            <button
-                              className="relative w-12 h-12 rounded-full border-2 border-gray-300 shadow-md ring-2 ring-transparent hover:ring-indigo-500 hover:ring-offset-2 hover:scale-110 transition-all duration-200 hover:shadow-xl active:scale-95"
-                              style={{
-                                backgroundColor:
-                                  color.toLowerCase() === "white"
-                                    ? "#ffffff"
-                                    : color.toLowerCase() === "black"
-                                    ? "#1a1a1a"
-                                    : color.toLowerCase(),
-                              }}
-                              title={color}
-                              aria-label={`${color} color option`}
-                            >
-                              {/* Shine effect */}
-                              <span className="absolute inset-0 rounded-full bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
-
-                              {/* Check icon for white color visibility */}
-                              {color.toLowerCase() === "white" && (
-                                <span className="absolute inset-0 flex items-center justify-center">
-                                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                </span>
-                              )}
-                            </button>
-
-                            {/* Selection indicator placeholder */}
-                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-indigo-600 rounded-full border-2 border-white shadow-md opacity-0 group-hover:opacity-0 transition-opacity flex items-center justify-center">
-                              <svg
-                                className="w-3 h-3 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-
-                          <span className="text-xs text-gray-700 font-medium capitalize group-hover:text-indigo-600 transition-colors">
-                            {color}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Side: Specs + Features */}
-                <div className="space-y-6">
-                  {/* Specs */}
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                      <Smartphone className="w-5 h-5 mr-2 text-indigo-600" />
-                      Specifications
-                    </h3>
-                    <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl p-5 border border-gray-200/50">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {Object.entries(selectedPhone.specs).map(
-                          ([key, value]) => (
-                            <div
-                              key={key}
-                              className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:shadow-sm transition-shadow duration-200"
-                            >
-                              <span className="text-sm text-gray-600 capitalize font-medium">
-                                {key.replace(/_/g, " ")}
-                              </span>
-                              <span className="text-sm font-bold text-gray-900 ml-3 text-right">
-                                {value}
-                              </span>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                      <Shield className="w-5 h-5 mr-2 text-purple-600" />
-                      Key Features
-                    </h3>
-                    <ul className="space-y-2">
-                      {selectedPhone.features.map((feature, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center space-x-2 bg-gradient-to-r from-purple-50 to-indigo-50 p-3 rounded-lg hover:from-purple-100 hover:to-indigo-100 transition"
-                        >
-                          <span className="text-green-600">✓</span>
-                          <span className="text-gray-800">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="sticky bottom-0 px-6 py-4 border-t bg-white flex flex-col sm:flex-row gap-3">
-                <button className="flex-1 py-3 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-semibold transition">
-                  View Full Details
-                </button>
-                <button className="flex-1 py-3 px-6 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition">
-                  Add to Compare
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

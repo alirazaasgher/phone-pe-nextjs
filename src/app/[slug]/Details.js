@@ -59,27 +59,6 @@ import VariantImageGallery from "@/components/VariantImageGallery";
 import MobileSpeficaion from "@/components/MobileSpecfications";
 import Variants from "@/components/common/Variants";
 export default function Details({ phoneDetails }) {
-  const BatteryInfo = () => (
-    <span className="inline-flex items-center gap-2">
-      {/* Wired Charging */}
-      <span className="inline-flex items-center">
-        <Cable className="w-3 h-3 mr-0.5 text-orange-600" />
-        <span className="font-bold text-orange-700">120W</span>
-      </span>
-
-      {/* Wireless Charging */}
-      <span className="inline-flex items-center">
-        <Wifi className="w-3 h-3 mr-0.5 text-blue-600" />
-        <span className="font-bold text-blue-700">50W</span>
-      </span>
-
-      {/* Reverse Charging */}
-      <span className="inline-flex items-center">
-        <RotateCcw className="w-3 h-3 mr-0.5 text-gray-600" />
-        <span className="font-bold text-gray-800">10W</span>
-      </span>
-    </span>
-  );
   const specs1 = [
     {
       icon: <Camera size={16} className="text-sky-500" />,
@@ -210,7 +189,7 @@ export default function Details({ phoneDetails }) {
       text: "text-orange-600",
     },
   };
-  let widthClass = "w-[250px]"; // default
+  let widthClass = "w-[250px] 2xl:w-[350px]"; // default
   if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3)
     widthClass = "w-[280px] sm:w-[350px] 2xl:w-[450px]";
   return (
@@ -323,9 +302,8 @@ export default function Details({ phoneDetails }) {
                 ].map((item, i) => (
                   <li
                     key={i}
-                    className={`flex items-center gap-1 py-1 px-1 ${
-                      i !== 0 ? "border-t border-gray-200/60" : ""
-                    } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                    className={`flex items-center gap-1 py-1 px-1 ${i !== 0 ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                   >
                     <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
                       {item.icon}
@@ -359,20 +337,27 @@ export default function Details({ phoneDetails }) {
               {/* RIGHT SECTION */}
               <div className="flex items-center gap-1.5">
                 {/* Social Icons */}
-                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                aria-label="Facebook"
+                >
                   <Facebook className="w-4 h-4" />
                 </button>
 
-                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                aria-label="Twitter"
+                >
                   <Twitter className="w-4 h-4" />
                 </button>
 
-                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition">
+                <button className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                aria-label="Whatsapp"
+                >
                   <MessageCircle className="w-4 h-4" />
                 </button>
 
                 {/* Share Button */}
                 <button
+                aria-label="Share"
                   onClick={() => {
                     if (navigator.share) {
                       navigator.share({
@@ -400,9 +385,8 @@ export default function Details({ phoneDetails }) {
                 return (
                   <li
                     key={i}
-                    className={`${backgroundColor} ${
-                      item.key === "chipset" ? "hidden" : "flex"
-                    } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
+                    className={`${backgroundColor} ${item.key === "chipset" ? "flex lg:hidden" : "flex"
+                      } flex flex-col items-start p-4 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
                   >
                     <div className="text-center group-hover:scale-110 transition-transform duration-200">
                       <IconComponent size={20} className={`${textColor}`} />
@@ -424,26 +408,28 @@ export default function Details({ phoneDetails }) {
                           {item.value}
                         </span>
                         <div className="flex items-center gap-2">
-                          {" "}
-                          {/* parent flex container */}
-                          {Object.entries(item.subvalue).map(([key, value]) => {
-                            const IconComponent = iconMap[key].icon;
-                            const textColor = iconMap[key].color;
-                            return (
-                              <span
-                                key={key}
-                                className="flex items-center gap-1" // horizontal layout
-                              >
-                                <IconComponent
-                                  size={13}
-                                  className={`${textColor}`}
-                                />
-                                <span className="text-[10px] font-bold text-gray-800">
-                                  {value}
+                          {typeof item.subvalue === "object" && !Array.isArray(item.subvalue) ? (
+                            // 👉 Case: subvalue is an object → loop
+                            Object.entries(item.subvalue).map(([key, value]) => {
+                              const IconComponent = iconMap[key]?.icon;
+                              const textColor = iconMap[key]?.color;
+
+                              return (
+                                <span key={key} className="flex items-center gap-1">
+                                  {IconComponent && (
+                                    <IconComponent size={13} className={textColor} />
+                                  )}
+                                  <span className="text-[10px] font-bold text-gray-800">
+                                    {value}
+                                  </span>
                                 </span>
-                              </span>
-                            );
-                          })}
+                              );
+                            })
+                          ) : (
+                            <span className="text-[10px] font-bold text-gray-800">
+                              {item.subvalue}
+                            </span>
+                          )}
                         </div>
                       </>
                     )}
@@ -461,14 +447,14 @@ export default function Details({ phoneDetails }) {
             </div>
 
             {/* RIGHT SECTION — Competitors */}
-            <div className="lg:col-span-3 p-2 bg-gradient-to-b from-gray-50 to-white border border-gray-100">
+            {/* <div className="lg:col-span-3 p-2 bg-gradient-to-b from-gray-50 to-white border border-gray-100">
               <h3 className="text-base font-bold text-gray-900 mb-2 pb-1 border-b-2 border-blue-500">
                 Competitors for {phoneDetails.name || "OPPO Find X9"}
               </h3>
-              {/* Competitor Card */}
+              
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
                 <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
-                  {/* Row 1 — Image & Name */}
+                  
                   <div className="flex items-center gap-3 mb-1">
                     <img
                       src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
@@ -488,25 +474,24 @@ export default function Details({ phoneDetails }) {
                     </div>
                   </div>
 
-                  {/* Row 2 — Specs + Compare Button */}
+                 
                   <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
-                    {/* Header */}
+                   
                     <div className="text-[11px] font-medium text-gray-600 mt-2">
                       Phone Comparison
                     </div>
 
-                    {/* Comparison List */}
+                   
                     <div className="w-full text-[11px] text-gray-700">
-                      {/* Camera */}
+                  
                       {specs1.map((spec, i) => (
                         <div
                           key={i}
                           className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
-                                                   spec.hideOnSmall
-                                                     ? "hidden sm:flex"
-                                                     : ""
-                                                 }`}
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
+                              ? "hidden sm:flex"
+                              : ""
+                            }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <span className="flex items-center text-gray-500 truncate">
@@ -522,10 +507,10 @@ export default function Details({ phoneDetails }) {
                         </div>
                       ))}
 
-                      {/* Divider */}
+                      
                       <div className="border-t border-gray-100 mt-2 pt-1"></div>
 
-                      {/* Common Features */}
+                      
                       <div className="text-[12px] font-semibold text-gray-800 mb-1">
                         Common Features
                       </div>
@@ -551,7 +536,7 @@ export default function Details({ phoneDetails }) {
                       </div>
                     </div>
 
-                    {/* Compare Button */}
+                    
                     <div className="flex justify-end mt-4">
                       <a
                         href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
@@ -564,7 +549,7 @@ export default function Details({ phoneDetails }) {
                 </div>
 
                 <div className="group border  bg-white rounded-lg p-2 shadow-md border-blue-400 transition-all duration-300">
-                  {/* Row 1 — Image & Name */}
+               
                   <div className="flex items-center gap-3 mb-1">
                     <img
                       src="https://www.91-img.com/pictures/170930-v7-oppo-find-x9-pro-mobile-phone-medium-1.jpg?tr=q-70"
@@ -584,25 +569,24 @@ export default function Details({ phoneDetails }) {
                     </div>
                   </div>
 
-                  {/* Row 2 — Specs + Compare Button */}
+                 
                   <div className="max-w-sm border-t border-gray-700 mx-auto bg-white overflow-hidden">
-                    {/* Header */}
+                    
                     <div className="text-[11px] font-medium text-gray-600 mt-2">
                       Phone Comparison
                     </div>
 
-                    {/* Comparison List */}
+                   
                     <div className="w-full text-[11px] text-gray-700">
-                      {/* Camera */}
+                     
                       {specs1.map((spec, i) => (
                         <div
                           key={i}
                           className={`group flex items-center justify-between py-1.5
-                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${
-                                                   spec.hideOnSmall
-                                                     ? "hidden sm:flex"
-                                                     : ""
-                                                 }`}
+                                                 shadow-sm rounded-lg border-gray-100 last:border-none hover:bg-gray-50 transition-colors duration-200 rounded-sm px-1 -mx-1 ${spec.hideOnSmall
+                              ? "hidden sm:flex"
+                              : ""
+                            }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <span className="flex items-center text-gray-500 truncate">
@@ -618,10 +602,10 @@ export default function Details({ phoneDetails }) {
                         </div>
                       ))}
 
-                      {/* Divider */}
+                     
                       <div className="border-t border-gray-100 mt-2 pt-1"></div>
 
-                      {/* Common Features */}
+                      
                       <div className="text-[12px] font-semibold text-gray-800 mb-1">
                         Common Features
                       </div>
@@ -647,7 +631,7 @@ export default function Details({ phoneDetails }) {
                       </div>
                     </div>
 
-                    {/* Compare Button */}
+                   
                     <div className="flex justify-end mt-4">
                       <a
                         href="/compare/OPPO/Find+X9+Pro/vs/OPPO/Find+X9.html"
@@ -659,7 +643,7 @@ export default function Details({ phoneDetails }) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

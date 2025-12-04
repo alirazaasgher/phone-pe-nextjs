@@ -37,44 +37,42 @@ export default function BrandsPage() {
         </p>
       </div>
 
-      {/* Mobile: 2 columns, Tablet: 3 columns, Desktop: 6 columns */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
-        {BrandsData.map((brand) => (
-          <Link
-            key={brand.name}
-            href={brand.url}
-            className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
-              hover:border-blue-400
-              ${brand.color}`}
-          >
-            {/* Brand Logo Container */}
-            <div
-              className="relative w-14 h-14 sm:w-16 sm:h-16 mb-3 sm:mb-4 flex items-center justify-center
-              bg-white rounded-xl shadow-sm"
-            >
-              <img
-                src={brand.logo}
-                alt={brand.name}
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-                loading="lazy"
-              />
-            </div>
+      <section aria-labelledby="brands-heading">
+  <h2 id="brands-heading" className="sr-only">
+    Brands
+  </h2>
 
-            {/* Brand Name */}
-            <h3 className="text-sm sm:text-base font-bold text-gray-900 text-center mb-1">
-              {brand.name}
-            </h3>
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
+    {BrandsData.map((brand) => (
+      <Link
+        key={brand.name}
+        href={brand.url}
+        aria-label={`Visit ${brand.name} brand page`}
+        className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
+          hover:border-blue-400
+          ${brand.color}`}
+      >
+        {/* Brand Logo Container */}
+        <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-3 sm:mb-4 flex items-center justify-center bg-white rounded-xl shadow-sm">
+          <img
+            src={brand.logo}
+            alt={`${brand.name} Logo`}
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
+            loading="lazy"
+          />
+        </div>
 
-            {/* Model Count */}
-            <div className="flex items-center gap-1">
-              {/* <span className="text-xs sm:text-sm font-medium text-gray-500 group-hover:text-blue-500 transition-colors">
-                {brand.count}
-              </span> */}
-              {/* <span className="text-xs sm:text-sm text-gray-400">models</span> */}
-            </div>
-          </Link>
-        ))}
-      </div>
+        {/* Brand Name */}
+        <span className="text-sm sm:text-base font-bold text-gray-900 text-center mb-1">
+          {brand.name}
+        </span>
+      </Link>
+    ))}
+  </div>
+</section>
+
+     
+
     </>
   );
 }

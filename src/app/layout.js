@@ -1,16 +1,15 @@
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
 import ClientLayout from "./ClientLayout";
-import Script from "next/script";
 import AnalyticsTracker from "./AnalyticsTracker"; // we'll create this next
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
 });
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
 });
 export const metadata = {
   title: "Mobile42 - Latest & Upcoming Mobile Phones",
@@ -27,9 +26,6 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  minimumScale: 1,
-  maximumScale: 1,
-  userScalable: false, // optional
 };
 const GA_MEASUREMENT_ID = "G-KRGHF7G70Y"; // Replace with your GA4 ID
 
