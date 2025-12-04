@@ -46,9 +46,9 @@ export default function Variants({ variants }) {
         </div>
         <div className="col-span-full bg-gray-50 rounded-md mt-0.5">
           <div className="flex justify-between items-center w-full">
-            <p className="text-[10px] text-gray-500 italic">
+            {/* <p className="text-[10px] text-gray-500 italic">
               Dual SIM (Hybrid) • No SD card slot
-            </p>
+            </p> */}
             <span className="text-[10px] text-gray-500 italic">
               Price may differ
             </span>

@@ -187,20 +187,25 @@ const PhoneCard = ({ phone }) => {
                     )}
                     {spec.key === "battery" && (
                       <>
-                        <span className="text-[9px] ">{spec.value}</span>
-                        {Object.entries(spec.subvalue).map(([key, value]) => (
-                          <span
-                            key={key}
-                            className={`flex items-center  ${
-                              key === "reverse" ? "hidden 2xl:flex" : "flex"
-                            }`}
-                          >
-                            {iconMap[key]}
-                            <span className="text-[9px] font-bold text-gray-800">
-                              {value}
+                        <span className="text-[9px] text-gray-600">
+                          {spec.value}
+                        </span>
+                        {Object.entries(spec.subvalue).map(([key, value]) => {
+                          if (!value) return null;
+                          return (
+                            <span
+                              key={key}
+                              className={`flex items-center  ${
+                                key === "reverse" ? "hidden 2xl:flex" : "flex"
+                              }`}
+                            >
+                              {iconMap[key]}
+                              <span className="text-[9px] text-gray-600">
+                                {value}
+                              </span>
                             </span>
-                          </span>
-                        ))}
+                          );
+                        })}
                       </>
                     )}
                   </span>
