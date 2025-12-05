@@ -18,8 +18,8 @@ export const metadata = {
   keywords:
     "mobile phones, smartphones, latest mobiles, upcoming phones, phone specs, mobile reviews",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/favicon.ico?v=1",
+    apple: "/apple-touch-icon.png?v=1",
   },
 };
 
