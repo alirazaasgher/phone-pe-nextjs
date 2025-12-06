@@ -2,23 +2,23 @@
   "name": "phone-pe-nextjs",
   "version": "0.1.0",
   "private": true,
- "scripts": {
-  "dev": "next dev",
-  "generate-sitemap": "node scripts/generate-sitemap.js",
-  "build": "npm run generate-sitemap && next build",
-  "start": "next start",
-  "lint": "biome check",
-  "format": "biome format --write"
-},
+  "scripts": {
+    "dev": "next dev",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "build": "npm run generate-sitemap && next build",
+    "start": "next start",
+    "lint": "biome check",
+    "format": "biome format --write"
+  },
   "dependencies": {
     "@next/font": "^14.2.15",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "fuse.js": "^7.1.0",
     "lucide-react": "^0.541.0",
-    "next": "15.5.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "next": "^15.1.9",
+    "react": "^19.1.2",
+    "react-dom": "^19.1.2",
     "react-icons": "^5.5.0",
     "react-medium-image-zoom": "^5.4.0",
     "react-select": "^5.10.2"
