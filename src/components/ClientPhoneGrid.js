@@ -47,7 +47,7 @@ export default function ClientPhoneGrid({
       {loading ? (
         <Loader />
       ) : (
-        <>
+        <div className="p-1">
           <div className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3">
               <nav className="flex items-center text-xs sm:text-sm text-gray-600 font-medium space-x-1 sm:space-x-2">
@@ -85,7 +85,7 @@ export default function ClientPhoneGrid({
               <EmptyState message="No phones found." />
             </div>
           )}
-        </>
+        </div>
       )}
     </>
   );

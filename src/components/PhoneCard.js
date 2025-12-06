@@ -42,7 +42,6 @@ const PhoneCard = ({ phone }) => {
   const isUpcoming = status === "rumored" || status === "upcoming";
 
   const noPrice = !price || price == 0;
-  console.log(noPrice);
   const showPrice = isUpcoming && noPrice ? "Coming Soon" : price || "NA";
   const openModal = (phone) => {
     setIsHoverEnabled(false);
@@ -114,7 +113,7 @@ const PhoneCard = ({ phone }) => {
               </div>
 
               {/* Main Price Box */}
-              <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[65px] lg:w-[95px] flex items-center">
+              <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[90px] lg:w-[95px] flex items-center">
                 <div className="flex items-baseline gap-0.5 w-full">
                   {!noPrice && (
                     <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
@@ -123,8 +122,8 @@ const PhoneCard = ({ phone }) => {
                   )}
 
                   <span
-                    className={`text-${noPrice ? "[7.5px]" : "[9px]"} lg:text-${
-                      noPrice ? "[12px]" : "[15px]"
+                    className={`${noPrice ? "text-[11px]" : "text-[12px]"} ${
+                      noPrice ? "lg:text-[12px]" : "lg:text-[13px]"
                     } font-bold text-gray-900`}
                   >
                     {showPrice}
@@ -155,7 +154,7 @@ const PhoneCard = ({ phone }) => {
           </div>
 
           {/* Key Specs Row */}
-          <div className="w-full">
+          {/* <div className="w-full">
             {(phone?.searchIndex?.specs_grid ?? []).map((spec, i) => {
               let hzMatch = null;
               if (!spec.value) return null;
@@ -192,7 +191,7 @@ const PhoneCard = ({ phone }) => {
                     )}
 
                     {spec.key === "display" && refreshRate && (
-                      <span className="text-[9px] px-1 py-0.5 bg-purple-50 text-purple-700 rounded">
+                      <span className="text-[9px]  py-0.5 bg-purple-50 text-purple-700 rounded">
                         {refreshRate}
                       </span>
                     )}
@@ -223,7 +222,7 @@ const PhoneCard = ({ phone }) => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
       </div>
     </>

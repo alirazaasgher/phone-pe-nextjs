@@ -267,22 +267,44 @@ export default function HomeContent({ homePageResponse }) {
           <PhonePages phones={phones} />
 
           {/* Tablet / Desktop grid */}
-          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
             {phones.map((phone) => (
               <PhoneCard key={phone.id} phone={phone} />
             ))}
           </div>
         </div>
 
+        <div className="flex justify-between items-center mt-3 mb-3">
+          <h2
+            className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
+          >
+            Upcoming Mobiles
+          </h2>
+          {phones.length > 6 && (
+            <a
+              href="/mobiles/newly-launched"
+              className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
+            >
+              View All
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </a>
+          )}
+        </div>
+
         {upComingMobiles.length > 0 && (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <h2
-                className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
-              >
-                Upcoming Mobiles
-              </h2>
-            </div>
             <div className="">
               {/* Navigation Arrows */}
               {upComingMobiles.length > itemsPerPage && (
@@ -316,8 +338,7 @@ export default function HomeContent({ homePageResponse }) {
               )}
 
               <PhonePages phones={upComingMobiles} />
-
-              <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
                 {upComingMobiles.map((phone) => (
                   <PhoneCard key={phone.id} phone={phone} />
                 ))}
