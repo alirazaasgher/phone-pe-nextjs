@@ -30,7 +30,8 @@ export default function VariantImageGallery({ phone }) {
     const colorObj = phone.colors[selectedColorIndex];
     return colorObj?.images || [];
   }, [selectedColorIndex, phone.colors]);
-  const activeSrc = selectedColorImages[currentImageIndex]?.url || null;
+  const activeSrc =
+    selectedColorImages[currentImageIndex]?.url || phone.primary_image;
 
   const nextImage = useCallback(() => {
     if (currentImageIndex < imagesToShow.length - 1) {
@@ -95,10 +96,10 @@ export default function VariantImageGallery({ phone }) {
             </>
           )}
         </div>
-        <ColorSelector
-          selectedColor={selectedColor}
+        {imagesToShow.length > 1 && (
+          <ColorSelector selectedColor={selectedColor} />
+        )}
 
-        />
         {/* Thumbnails below the main image */}
         <div className="w-full">
           <Thumbnails
@@ -113,7 +114,6 @@ export default function VariantImageGallery({ phone }) {
           />
         </div>
       </div>
-
 
       {/* Zoom Modal */}
       {zoomed && (

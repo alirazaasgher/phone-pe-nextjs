@@ -22,6 +22,9 @@ export const metadata = {
     icon: "/favicon.ico?v=1",
     apple: "/apple-touch-icon.png?v=1",
   },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export const viewport = {

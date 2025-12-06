@@ -1,15 +1,6 @@
 "use client";
-// import { useState } from "react";
 import {
   Smartphone,
-  TrendingUp,
-  DollarSign,
-  Sparkles,
-  Wifi,
-  Apple,
-  Square,
-  Circle,
-  Star as StarIcon,
   ChevronLeft,
   ChevronRight,
   Diamond,
@@ -21,18 +12,13 @@ import {
 import PhoneCard from "./PhoneCard";
 import { Inter, Poppins } from "next/font/google";
 import BrandsData from "@/data/BrandsData";
-// Module-scope declaration
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-import { useRef, useState, useEffect } from "react";
 import PriceCategoriesData from "@/data/PriceCategoriesData";
 import Link from "next/link";
+import PhonePages from "./common/PhonePages";
 export default function HomeContent({ homePageResponse }) {
   // ✅ Brands with icons
 
@@ -40,15 +26,6 @@ export default function HomeContent({ homePageResponse }) {
   const upComingMobiles = homePageResponse?.upcoming_mobiles || [];
   const popularMobiles = homePageResponse?.popular_mobiles || [];
   const itemsPerPage = 3;
-  const itemsRef = useRef([]);
-  const [pageIndex, setPageIndex] = useState(0);
-
-  // Split phones into pages (2 cards per page)
-  const pages = [];
-  for (let i = 0; i < phones.length; i += 2) {
-    pages.push(phones.slice(i, i + 2));
-  }
-  const scrollContainerRef = useRef(null);
   if (phones.length === 0) {
     return (
       <p className="text-center text-gray-500 py-8">No new mobiles available</p>
@@ -287,49 +264,7 @@ export default function HomeContent({ homePageResponse }) {
               </button> */}
             </>
           )}
-          <div
-            ref={scrollContainerRef}
-            className="sm:hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-2"
-            onScroll={(e) => {
-              const scrollLeft = e.currentTarget.scrollLeft;
-              const containerWidth = e.currentTarget.offsetWidth;
-              const newIndex = Math.round(scrollLeft / containerWidth);
-              setPageIndex(newIndex);
-            }}
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {pages.map((pageCards, page) => (
-              <div
-                key={page}
-                data-index={page}
-                ref={(el) => (itemsRef.current[page] = el)}
-                className="snap-center w-full flex-shrink-0 flex"
-              >
-                {pageCards.map((phone, idx) => (
-                  <div
-                    key={phone.id}
-                    className={`w-1/2 ${idx === 0 ? "pr-1" : "pl-1"}`}
-                  >
-                    <PhoneCard phone={phone} />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* Modern Indicator */}
-          {pages.length > 2 && (
-            <div className="flex justify-center gap-1 mt-2 sm:hidden">
-              {pages.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-1 rounded-full transition-all duration-150 ${
-                    pageIndex === index ? "w-6 bg-blue-600" : "w-2 bg-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+          <PhonePages phones={phones} />
 
           {/* Tablet / Desktop grid */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
@@ -347,29 +282,8 @@ export default function HomeContent({ homePageResponse }) {
               >
                 Upcoming Mobiles
               </h2>
-              {upComingMobiles.length > 6 && (
-                <a
-                  href="/mobiles/newly-launched"
-                  className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
-                >
-                  View All
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              )}
             </div>
-            <div className="relative">
+            <div className="">
               {/* Navigation Arrows */}
               {upComingMobiles.length > itemsPerPage && (
                 <>
@@ -401,31 +315,18 @@ export default function HomeContent({ homePageResponse }) {
                 </>
               )}
 
-              <div className="relative">
-                <div
-                  className="
-      flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-      sm:grid sm:grid-cols-2 lg:grid-cols-3
-    "
-                >
-                  {upComingMobiles.map((upComingMobiles) => (
-                    <PhoneCard
-                      key={upComingMobiles.id}
-                      phone={upComingMobiles}
-                    />
-                  ))}
-                </div>
+              <PhonePages phones={upComingMobiles} />
 
-                {/* Scroll hint */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-l from-white/90 to-transparent pointer-events-none px-2 py-1 text-sm text-gray-500 font-medium sm:hidden">
-                  Swipe →
-                </div>
+              <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
+                {upComingMobiles.map((phone) => (
+                  <PhoneCard key={phone.id} phone={phone} />
+                ))}
               </div>
             </div>
           </>
         )}
 
-        {upComingMobiles.length > 0 && (
+        {popularMobiles.length > 0 && (
           <>
             <div className="flex justify-between items-center mb-6">
               <h2

@@ -34,10 +34,16 @@ import { useState } from "react";
 const PhoneCard = ({ phone }) => {
   const [open, setOpen] = useState(false);
   const isNew = phone.is_new;
-  const isUpcoming = phone.is_upcoming;
   const isPopular = phone.is_popular;
   const [selectedPhone, setSelectedPhone] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const price = phone?.searchIndex?.min_price;
+  const status = phone?.status?.toLowerCase();
+  const isUpcoming = status === "rumored" || status === "upcoming";
+
+  const noPrice = !price || price == 0;
+  console.log(noPrice);
+  const showPrice = isUpcoming && noPrice ? "Coming Soon" : price || "NA";
   const openModal = (phone) => {
     setIsHoverEnabled(false);
     setSelectedPhone(phone);
@@ -110,13 +116,18 @@ const PhoneCard = ({ phone }) => {
               {/* Main Price Box */}
               <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[65px] lg:w-[95px] flex items-center">
                 <div className="flex items-baseline gap-0.5 w-full">
-                  <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
-                    Rs.
-                  </span>
-                  <span className="text-[9px] lg:text-[15px] font-bold text-gray-900">
-                    {phone?.searchIndex?.min_price
-                      ? phone?.searchIndex?.min_price
-                      : "67,999"}
+                  {!noPrice && (
+                    <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+                      Rs.
+                    </span>
+                  )}
+
+                  <span
+                    className={`text-${noPrice ? "[7.5px]" : "[9px]"} lg:text-${
+                      noPrice ? "[12px]" : "[15px]"
+                    } font-bold text-gray-900`}
+                  >
+                    {showPrice}
                   </span>
                 </div>
               </div>
@@ -163,7 +174,7 @@ const PhoneCard = ({ phone }) => {
                       {iconMap[spec.key]}
                     </span>
                     <span className="text-gray-700 text-[10px] font-bold">
-                      {spec.key.toUpperCase()}
+                      {spec.key.toUpperCase().split("_")[0]}
                     </span>
                     {spec.badge && (
                       <span
