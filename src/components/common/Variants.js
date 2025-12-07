@@ -1,14 +1,18 @@
 import { HardDrive, Package } from "lucide-react";
 export default function Variants({ variants }) {
+  const colClass = variants.length <= 2 ? "grid-cols-1" : "grid-cols-2";
+  const isThree = variants.length === 3;
   return (
     <>
       <div className="border-gray-200">
         {/* Variant Cards */}
-        <div className="grid grid-cols-2 gap-2">
+        <div className={`grid ${colClass} gap-2`}>
           {variants.map((v, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl shadow-sm px-3 py-3 hover:shadow-md transition-shadow cursor-pointer"
+              className={`bg-white rounded-xl shadow-sm px-3 py-3 hover:shadow-md transition-shadow cursor-pointer ${
+                isThree && i === 2 ? "col-span-2" : ""
+              }`}
             >
               {/* <MemoryStick className="w-4 h-4 text-orange-600" /> */}
               {/* Variant Name */}
@@ -27,8 +31,12 @@ export default function Variants({ variants }) {
               {/* Prices and badge */}
               <div className="relative text-[11px] text-gray-800">
                 <div className="flex flex-col">
-                  <span>PKR {v.pkr_price}</span>
-                  <span>USD {v.usd_price}</span>
+                  <span>
+                    PKR {v.pkr_price && v.pkr_price > "0" ? v.pkr_price : "TBA"}
+                  </span>
+                  <span>
+                    USD {v.usd_price && v.usd_price > "0" ? v.usd_price : "TBA"}
+                  </span>
                 </div>
 
                 {/* Badge at bottom-right of price */}
@@ -49,8 +57,8 @@ export default function Variants({ variants }) {
             {/* <p className="text-[10px] text-gray-500 italic">
               Dual SIM (Hybrid) • No SD card slot
             </p> */}
-            <span className="text-[10px] text-gray-500 italic">
-              Price may differ
+            <span className="text-[10px] text-gray-600 italic bg-gray-100 px-2 py-1 rounded-md mt-1 inline-block">
+              Prices may vary by region
             </span>
           </div>
         </div>

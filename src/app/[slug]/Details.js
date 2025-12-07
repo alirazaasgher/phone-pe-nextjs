@@ -188,6 +188,26 @@ export default function Details({ phoneDetails }) {
       color: "text-orange-600",
       text: "text-orange-600",
     },
+    released_data: {
+      icon: Calendar,
+      color: "text-blue-600",
+      text: "text-blue-800",
+    },
+    glass_protection: {
+      icon: Layers,
+      color: "text-purple-600",
+      text: "text-purple-800",
+    },
+    os: {
+      icon: Shield,
+      color: "text-green-600",
+      text: "text-green-800",
+    },
+    front_camera: {
+      icon: Camera,
+      color: "text-rose-600",
+      text: "text-rose-800",
+    },
   };
   let widthClass = "w-[250px] 2xl:w-[350px]"; // default
   if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3)
@@ -277,49 +297,33 @@ export default function Details({ phoneDetails }) {
               {/* Left: Top Specs List */}
               <ul
                 // sm:inline
-                className={` hidden ${widthClass} leading-tight overflow-hidden bg-gradient-to-br from-white to-gray-50/50`}
+                className={` hidden sm:inline ${widthClass} leading-tight overflow-hidden bg-gradient-to-br from-white to-gray-50/50`}
               >
-                {[
-                  {
-                    icon: <Calendar className="w-4 h-4 text-green-600" />,
-                    text: "Gorilla Glass Victus 2",
-                    subText: "IP68 Water Resistant",
-                  },
-                  {
-                    icon: <Smartphone className="w-4 h-4 text-teal-600" />,
-                    text: "206g • 8mm Thickness",
-                    subText: "Titanium Frame",
-                  },
-                  {
-                    icon: <Shield className="w-4 h-4 text-indigo-500" />,
-                    text: "Android 16 • HyperOS 3",
-                    subText: "4-Year OS & 5-Year Security",
-                  },
-                  {
-                    icon: <Cpu className="w-4 h-4 text-orange-600" />,
-                    text: "Snapdragon 8 Gen 3 (4nm)",
-                    subText: "Octa-core",
-                  },
-                ].map((item, i) => (
-                  <li
-                    key={i}
-                    className={`flex items-center gap-1 py-1 px-1 ${
-                      i !== 0 ? "border-t border-gray-200/60" : ""
-                    } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
-                  >
-                    <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
-                      {item.icon}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[12px] font-inter">
-                        {item.text}
-                      </span>
-                      <span className="text-[11px] font-sans text-gray-500">
-                        {item.subText}
-                      </span>
-                    </div>
-                  </li>
-                ))}
+                {phoneDetails?.searchIndex?.top_specs.map((item, i) => {
+                  if (!item.text) return null;
+                  const IconComponent = iconMap[item.key].icon;
+                  const textColor = iconMap[item.key].text;
+                  return (
+                    <li
+                      key={i}
+                      className={` flex items-center gap-1 py-1 px-1 ${
+                        i !== 0 ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                    >
+                      <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
+                        <IconComponent size={20} className={`${textColor}`} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[12px] font-inter">
+                          {item.text}
+                        </span>
+                        <span className="text-[11px] font-sans text-gray-500">
+                          {item.subText}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
               <div className="flex-1 w-full">
                 <Variants variants={phoneDetails?.variants} />
@@ -458,7 +462,7 @@ export default function Details({ phoneDetails }) {
         <div className="w-full border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
             {/* LEFT SECTION — Specifications */}
-            <div className="lg:col-span-9 border-gray-100">
+            <div className="lg:col-span-12 border-gray-100">
               <MobileSpeficaion phoneDetails={phoneDetails} />
             </div>
 
