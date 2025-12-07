@@ -2,7 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const BASE_URL = "https://mobile42.com";
+const BASE_URL = "https://www.mobile42.com";
 
 const pages = [
   { path: "", priority: "1.0", changefreq: "daily" }, // Homepage
