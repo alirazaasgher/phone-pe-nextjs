@@ -2,13 +2,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const BASE_URL = "http://mobile42.com"; // change it
+const BASE_URL = "https://mobile42.com";
 
 const pages = [
-  "", //
-  "mobiles",
-  "brands",
-  "compare",
+  { path: "", priority: "1.0", changefreq: "daily" }, // Homepage
+  { path: "mobiles", priority: "0.9", changefreq: "daily" }, // Main section
+  { path: "brands", priority: "0.8", changefreq: "daily" }, // Main section
+  { path: "compare", priority: "0.7", changefreq: "weekly" }, // Tool page
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -17,10 +17,10 @@ ${pages
   .map(
     (page) => `
   <url>
-    <loc>${BASE_URL}/${page}</loc>
+    <loc>${BASE_URL}/${page.path}</loc>
     <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
   </url>`
   )
   .join("")}
