@@ -12,7 +12,7 @@ const poppins = Poppins({
   weight: ["400", "500"],
 });
 export const metadata = {
-  metadataBase: new URL("https://mobile42.com"),
+  metadataBase: new URL("https://www.mobile42.com"),
   title: "Mobile42 - Latest & Upcoming Mobile Phones",
   description:
     "Discover the latest and upcoming mobile phones with detailed specs, prices, and reviews",

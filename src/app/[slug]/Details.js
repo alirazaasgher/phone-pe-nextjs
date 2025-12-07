@@ -391,7 +391,7 @@ export default function Details({ phoneDetails }) {
                   <li
                     key={i}
                     className={`${backgroundColor} ${
-                      item.key === "chipset" ? "flex lg:hidden" : "flex"
+                      item.key === "main_camera" ? "flex lg:hidden" : "flex"
                     } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
                   >
                     <div className="text-center group-hover:scale-110 transition-transform duration-200">
