@@ -21,8 +21,6 @@ import MobileSpeficaion from "@/components/MobileSpecfications";
 import Variants from "@/components/common/Variants";
 import MobileCompetitors from "@/components/common/MobileCompetitors";
 export default function Details({ phoneDetails }) {
-
-
   const iconMap = {
     display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
     main_camera: { icon: Camera, color: "bg-rose-100", text: "text-rose-600" },
@@ -73,8 +71,7 @@ export default function Details({ phoneDetails }) {
               {phoneDetails.name}
             </span>
           </h1>
-          <p className="text-xs text-gray-600 mt-2 flex items-center gap-2">
-          </p>
+          <p className="text-xs text-gray-600 mt-2 flex items-center gap-2"></p>
         </div>
 
         {/* Right Side */}
@@ -145,8 +142,9 @@ export default function Details({ phoneDetails }) {
                   return (
                     <li
                       key={i}
-                      className={` flex items-center gap-1 py-1 px-1 ${i !== 0 ? "border-t border-gray-200/60" : ""
-                        } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                      className={` flex items-center gap-1 py-1 px-1 ${
+                        i !== 0 ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                     >
                       <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
                         <IconComponent size={20} className={`${textColor}`} />
@@ -232,8 +230,9 @@ export default function Details({ phoneDetails }) {
                 return (
                   <li
                     key={i}
-                    className={`${backgroundColor} ${item.key === "main_camera" ? "flex lg:hidden" : "flex"
-                      } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
+                    className={`${backgroundColor} ${
+                      item.key === "main_camera" ? "flex lg:hidden" : "flex"
+                    } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
                   >
                     <div className="text-center group-hover:scale-110 transition-transform duration-200">
                       <IconComponent size={20} className={`${textColor}`} />
@@ -256,7 +255,7 @@ export default function Details({ phoneDetails }) {
                         </span>
                         <div className="flex items-center gap-2">
                           {typeof item.subvalue === "object" &&
-                            !Array.isArray(item.subvalue) ? (
+                          !Array.isArray(item.subvalue) ? (
                             // 👉 Case: subvalue is an object → loop
                             Object.entries(item.subvalue).map(
                               ([key, value]) => {
@@ -299,10 +298,21 @@ export default function Details({ phoneDetails }) {
         <div className="w-full border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
             {/* LEFT SECTION — Specifications */}
-            <div className="lg:col-span-9 border-gray-100">
+            <div
+              className={`${
+                phoneDetails.competitors?.length <= 0
+                  ? "lg:col-span-12"
+                  : "lg:col-span-9"
+              } border-gray-100`}
+            >
               <MobileSpeficaion phoneDetails={phoneDetails} />
             </div>
-            <MobileCompetitors phoneDetails={phoneDetails} iconMap = {iconMap}/>
+            {phoneDetails.competitors?.length > 0 && (
+              <MobileCompetitors
+                phoneDetails={phoneDetails}
+                iconMap={iconMap}
+              />
+            )}
           </div>
         </div>
       </div>
