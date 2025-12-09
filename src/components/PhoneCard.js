@@ -91,7 +91,7 @@ const PhoneCard = ({ phone }) => {
               <img
                 src={phone.primary_image || "images/default_placeholder.webp"}
                 alt={phone.name}
-                loading="lazy"
+                fetchPriority="high"
                 className="object-contain mix-blend-multiply max-w-[150px] max-h-[150px] lg:max-w-[200px] lg:max-h-[200px] p-3 sm:p-6"
               />
             </div>

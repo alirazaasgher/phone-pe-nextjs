@@ -1,8 +1,9 @@
 // next.config.mjs
 
 /** @type {import('next').NextConfig} */
-/** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true, // helps catch potential issues in development
+
   images: {
     remotePatterns: [
       {
@@ -18,6 +19,15 @@ const nextConfig = {
         pathname: "/storage/**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+  },
+
+  experimental: {
+    optimizeCss: true, // automatically extracts critical CSS for faster LCP
+  },
+
+  compiler: {
+    styledComponents: false, // if using styled-components, enable this
   },
 };
 
