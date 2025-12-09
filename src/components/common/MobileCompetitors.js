@@ -107,11 +107,11 @@ export default function MobileCompetitors({ phoneDetails, iconMap }) {
                 <span className="flex items-center py-1 px-1 shadow-sm rounded-lg border border-gray-100 text-[9px] gap-2">
                   <DollarSign size={13} className="text-orange-500" />
                   <span className="text-blue-600 font-semibold">
-                    {phoneDetails?.searchIndex?.min_price || "-"}
+                    {phoneDetails?.searchIndex?.min_price_usd || "-"}
                   </span>
                   <span className="text-gray-400">vs</span>
                   <span className="text-red-600 font-semibold">
-                    {item?.searchIndex?.min_price || "-"}
+                    {item?.searchIndex?.min_price_usd || "-"}
                   </span>
                 </span>
               </div>

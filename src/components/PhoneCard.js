@@ -41,8 +41,22 @@ const PhoneCard = ({ phone }) => {
   const status = phone?.status?.toLowerCase();
   const isUpcoming = status === "rumored" || status === "upcoming";
 
-  const noPrice = !price || price == 0;
-  const showPrice = isUpcoming && noPrice ? "Coming Soon" : price || "NA";
+  const noPrice = !price || price === 0;
+
+  // Determine the display price and currency
+  let displayPrice = "";
+  let currencySymbol = "";
+
+  if (isUpcoming && noPrice) {
+    displayPrice = "Coming Soon";
+  } else if (price) {
+    displayPrice = price;
+    currencySymbol = "Rs."; // PKR
+  } else if (phone?.searchIndex?.min_price_usd) {
+    displayPrice = phone.searchIndex.min_price_usd;
+    currencySymbol = "$"; // USD
+  }
+  console.log(currencySymbol);
   const openModal = (phone) => {
     setIsHoverEnabled(false);
     setSelectedPhone(phone);
@@ -66,6 +80,9 @@ const PhoneCard = ({ phone }) => {
       <RotateCcw className="w-3 h-3 mr-0.5 text-orange-600 text-gray-600" />
     ),
   };
+  const widthClass =
+    currencySymbol === "$" ? "w-[55px] lg:w-[70px]" : "w-[90px] lg:w-[95px]";
+
   return (
     <>
       <div
@@ -113,20 +130,20 @@ const PhoneCard = ({ phone }) => {
               </div>
 
               {/* Main Price Box */}
-              <div className="bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 w-[90px] lg:w-[95px] flex items-center">
+              <div
+                className={`bg-gray-100 border border-gray-300  shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 ${widthClass} flex items-center`}
+              >
                 <div className="flex items-baseline gap-0.5 w-full">
-                  {!noPrice && (
-                    <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
-                      Rs.
-                    </span>
-                  )}
+                  <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+                    {currencySymbol}
+                  </span>
 
                   <span
                     className={`${noPrice ? "text-[11px]" : "text-[12px]"} ${
                       noPrice ? "lg:text-[12px]" : "lg:text-[13px]"
                     } font-bold text-gray-900`}
                   >
-                    {showPrice}
+                    {displayPrice}
                   </span>
                 </div>
               </div>
