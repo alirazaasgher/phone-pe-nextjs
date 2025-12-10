@@ -268,8 +268,8 @@ export default function HomeContent({ homePageResponse }) {
 
           {/* Tablet / Desktop grid */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {phones.map((phone) => (
-              <PhoneCard key={phone.id} phone={phone} />
+            {phones.map((phone,index) => (
+              <PhoneCard key={phone.id} phone={phone} isPriority={index < 6}/>
             ))}
           </div>
         </div>
@@ -339,8 +339,8 @@ export default function HomeContent({ homePageResponse }) {
 
               <PhonePages phones={upComingMobiles} />
               <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-                {upComingMobiles.map((phone) => (
-                  <PhoneCard key={phone.id} phone={phone} />
+                {upComingMobiles.map((phone,index) => (
+                  <PhoneCard key={phone.id} phone={phone} isPriority={index < 6}/>
                 ))}
               </div>
             </div>

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 export default function ColorSelector({ selectedColor}) {
-  console.log(selectedColor)
   return (
     <div className="flex items-center justify-center mt-2">
       <div className="px-2 py-1 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 shadow-sm">

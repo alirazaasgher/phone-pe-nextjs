@@ -3,8 +3,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true, // helps catch potential issues in development
-
+ // 'your-cloudfront-domain.cloudfront.net', // Replace with your actual CloudFront domain
+      // 'your-lightsail-domain.com',
   images: {
+    domains: [
+      'cdn.mobile42.com',
+      '127.0.0.1',                              // local dev
+      'localhost',     // Replace with your Lightsail domain if needed
+    ],
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 150, 200, 256, 384],
+    minimumCacheTTL: 31536000, // 1 year cache
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "http",
@@ -18,8 +31,19 @@ const nextConfig = {
         port: "8000",
         pathname: "/storage/**",
       },
+      {
+        protocol: 'https',
+        hostname: '127.0.0.1',
+        port: '8000',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'localhost',
+        port: '8000',
+        pathname: '/storage/**',
+      },
     ],
-    formats: ["image/avif", "image/webp"],
   },
 
   experimental: {

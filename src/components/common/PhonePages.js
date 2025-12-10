@@ -1,7 +1,9 @@
 "use client";
 import { useState, useRef } from "react";
 import PhoneCard from "../PhoneCard";
-export default function PhonePages({ phones }) {
+import MobileCompetitors from "./MobileCompetitors";
+import { X } from "lucide-react";
+export default function PhonePages({ phones,phoneDetails,fromCompetitor = false,iconMap= false}) {
   const [pageIndex, setPageIndex] = useState(0);
   const pages = [];
   for (let i = 0; i < phones.length; i += 2) {
@@ -34,7 +36,7 @@ export default function PhonePages({ phones }) {
                 key={phone.id}
                 className={`w-1/2 ${idx === 0 ? "pr-1" : "pl-1"}`}
               >
-                <PhoneCard phone={phone} />
+                {fromCompetitor ? <MobileCompetitors competitorPhone={phone} phoneDetails = {phoneDetails} iconMap = {iconMap}/> : <PhoneCard phone={phone} />}
               </div>
             ))}
           </div>
