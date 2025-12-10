@@ -10,7 +10,9 @@ export async function getPhoneById(id) {
 
 export async function getPhoneBySlug(slug) {
   // call your DB or external API directly
-  const res = await fetch(`https://api.mobile42.com/api/phones/${slug}`);
+  const res = await fetch(`https://api.mobile42.com/api/phones/${slug}`, {
+    next: { revalidate: 86400 }, // Cache for 1 hour
+  });
   if (!res.ok) return null;
   const json = await res.json();
   return json.data; // return phone object
