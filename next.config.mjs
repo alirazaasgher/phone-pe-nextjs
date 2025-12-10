@@ -7,6 +7,7 @@ const nextConfig = {
       // 'your-lightsail-domain.com',
   images: {
     domains: [
+      'api.mobile42.com',
       'cdn.mobile42.com',
       '127.0.0.1',                              // local dev
       'localhost',     // Replace with your Lightsail domain if needed
