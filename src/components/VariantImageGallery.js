@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { ZoomIn } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  useSpring,
+} from "framer-motion";
 import "react-medium-image-zoom/dist/styles.css";
 import ZoomModal from "./ZoomModel";
 import NavigationButton from "./NavigationButton ";
@@ -33,8 +39,6 @@ export default function VariantImageGallery({ phone }) {
   }, [selectedColorIndex, phone.colors]);
   const activeSrc =
     selectedColorImages[currentImageIndex]?.url || phone.primary_image;
-  // Swipe detection
-  const [isDragging, setIsDragging] = useState(false);
   const nextImage = useCallback(() => {
     if (currentImageIndex < imagesToShow.length - 1) {
       setDirection(1);
@@ -58,19 +62,6 @@ export default function VariantImageGallery({ phone }) {
     },
     [phone.colors]
   );
-  const navigate = useCallback(
-    (newDirection) => {
-      if (newDirection === 1 && currentImageIndex < imagesToShow.length - 1) {
-        setDirection(1);
-        setCurrentImageIndex((prev) => prev + 1);
-      } else if (newDirection === -1 && currentImageIndex > 0) {
-        setDirection(-1);
-        setCurrentImageIndex((prev) => prev - 1);
-      }
-    },
-    [currentImageIndex, imagesToShow.length]
-  );
-  // Smooth drag end with velocity-based navigation
 
   return (
     <>
@@ -80,8 +71,6 @@ export default function VariantImageGallery({ phone }) {
             <motion.div
               key={`${selectedColor}-${currentImageIndex}`}
               className="max-w-full max-h-full cursor-pointer select-none relative w-full h-full"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragStart={() => setIsDragging(true)}
               // Smooth entry/exit animations
               custom={direction}
               initial={isFirstRender.current ? false : true}
@@ -127,45 +116,6 @@ export default function VariantImageGallery({ phone }) {
                 disabled={currentImageIndex === imagesToShow.length - 1}
               />
             </>
-          )}
-
-          {imagesToShow.length > 1 && (
-            <motion.div
-              className="md:hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isFirstRender.current ? [0, 1, 1, 0] : 0 }}
-              transition={{ duration: 2, times: [0, 0.3, 0.7, 1] }}
-            >
-              <div className="flex items-center gap-2 bg-black/70 text-white text-sm px-4 py-2 rounded-full">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
-                  />
-                </svg>
-                <span>Swipe</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </div>
-            </motion.div>
           )}
         </div>
         {imagesToShow.length > 1 && (

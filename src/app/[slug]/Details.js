@@ -342,7 +342,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 </>
               </div>
             )}
-            <div className="col-span-full flex justify-between items-center">
+            <div className="hidden col-span-full sm:grid flex justify-between items-center">
               {similarMobiles.length > 0 && (
                 <h2 className="p-2 text-sm font-bold text-gray-800">
                   Similar Mobiles
