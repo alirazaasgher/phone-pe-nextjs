@@ -13,7 +13,7 @@ export async function GET() {
     { length: totalPages },
     (_, i) => `
   <sitemap>
-    <loc>${baseUrl}/sitemap/phones/${i + 1}</loc>
+    <loc>${baseUrl}/sitemap/phones/${i + 1}.xml</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
   </sitemap>`
   ).join("");
