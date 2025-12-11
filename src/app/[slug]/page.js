@@ -9,14 +9,15 @@ export default async function DetailsPage({ params }) {
     notFound(); // Better than returning JSX for 404
   }
 
-  return <Details phoneDetails={phone} />;
+  return (
+    <Details phoneDetails={phone.data} similarMobiles={phone.similarMobiles} />
+  );
 }
 
 // Add metadata generation for better SEO
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const phone = await getPhoneBySlug(slug);
-
+  const phone = await getPhoneBySlug(slug).data;
   if (!phone) {
     return {
       title: "Phone Not Found",
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const metadata = buildPhoneMetadata(phone);
+  const metadata = buildPhoneMetadata(phone.data);
 
   return {
     title: metadata.title,
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      url: `https://www.mobile42.com/phones/${phone.slug}`,
+      url: `https://www.mobile42.com/${phone.slug}`,
       siteName: "Mobile42",
       images: [
         {
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }) {
       images: [phone.primary_image],
     },
     alternates: {
-      canonical: `https://www.mobile42.com/phones/${phone.slug}`,
+      canonical: `https://www.mobile42.com/${phone.slug}`,
     },
     robots: {
       index: true,

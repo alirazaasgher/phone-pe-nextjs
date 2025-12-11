@@ -15,7 +15,7 @@ export async function getPhoneBySlug(slug) {
   });
   if (!res.ok) return null;
   const json = await res.json();
-  return json.data; // return phone object
+  return json; // return phone object
 }
 
 export async function homePageData() {

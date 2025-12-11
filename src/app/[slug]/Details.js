@@ -21,7 +21,8 @@ import MobileSpeficaion from "@/components/MobileSpecfications";
 import Variants from "@/components/common/Variants";
 import MobileCompetitors from "@/components/common/MobileCompetitors";
 import PhonePages from "@/components/common/PhonePages";
-export default function Details({ phoneDetails }) {
+import PhoneCard from "@/components/PhoneCard";
+export default function Details({ phoneDetails, similarMobiles }) {
   const iconMap = {
     display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
     main_camera: { icon: Camera, color: "bg-rose-100", text: "text-rose-600" },
@@ -143,8 +144,9 @@ export default function Details({ phoneDetails }) {
                   return (
                     <li
                       key={i}
-                      className={` flex items-center gap-1 py-1 px-1 ${i !== 0 ? "border-t border-gray-200/60" : ""
-                        } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                      className={` flex items-center gap-1 py-1 px-1 ${
+                        i !== 0 ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                     >
                       <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 transition-transform duration-200">
                         <IconComponent size={20} className={`${textColor}`} />
@@ -230,8 +232,9 @@ export default function Details({ phoneDetails }) {
                 return (
                   <li
                     key={i}
-                    className={`${backgroundColor} ${item.key === "main_camera" ? "flex lg:hidden" : "flex"
-                      } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
+                    className={`${backgroundColor} ${
+                      item.key === "main_camera" ? "flex lg:hidden" : "flex"
+                    } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
                   >
                     <div className="text-center group-hover:scale-110 transition-transform duration-200">
                       <IconComponent size={20} className={`${textColor}`} />
@@ -254,7 +257,7 @@ export default function Details({ phoneDetails }) {
                         </span>
                         <div className="flex items-center gap-2">
                           {typeof item.subvalue === "object" &&
-                            !Array.isArray(item.subvalue) ? (
+                          !Array.isArray(item.subvalue) ? (
                             // 👉 Case: subvalue is an object → loop
                             Object.entries(item.subvalue).map(
                               ([key, value]) => {
@@ -298,10 +301,11 @@ export default function Details({ phoneDetails }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
             {/* LEFT SECTION — Specifications */}
             <div
-              className={`${phoneDetails.competitors?.length <= 0
-                ? "lg:col-span-12"
-                : "lg:col-span-9"
-                } border-gray-100`}
+              className={`${
+                phoneDetails.competitors?.length <= 0
+                  ? "lg:col-span-12"
+                  : "lg:col-span-9"
+              } border-gray-100`}
             >
               <MobileSpeficaion phoneDetails={phoneDetails} />
             </div>
@@ -310,29 +314,65 @@ export default function Details({ phoneDetails }) {
                 <h3 className="sm:hidden text-base font-bold text-gray-900 pb-1 border-b-2 border-blue-500">
                   Competitors for {phoneDetails.name}
                 </h3>
-                <PhonePages phones={phoneDetails?.competitors} phoneDetails={phoneDetails} fromCompetitor={true} iconMap={iconMap} />
+                <PhonePages
+                  phones={phoneDetails?.competitors}
+                  phoneDetails={phoneDetails}
+                  fromCompetitor={true}
+                  iconMap={iconMap}
+                />
               </>
             )}
-            <div className="hidden lg:block lg:col-span-3 p-2 bg-gradient-to-b from-gray-50 to-white border border-gray-100">
-              {phoneDetails.competitors?.length > 0 && (
+            {phoneDetails.competitors?.length > 0 && (
+              <div className="hidden lg:block lg:col-span-3 p-2 bg-gradient-to-b from-gray-50 to-white border border-gray-100">
                 <>
                   <h3 className="text-base font-bold text-gray-900 pb-4 border-b-2 border-blue-500">
                     Competitors for {phoneDetails.name}
                   </h3>
 
                   {phoneDetails.competitors.map((competitor, index) => (
-                     <div key={index} className="flex flex-col mt-1">
-                    <MobileCompetitors
-                      key={competitor.slug}
-                      competitorPhone={competitor}
-                      phoneDetails={phoneDetails}
-                      iconMap={iconMap}
-                    />
+                    <div key={index} className="flex flex-col mt-1">
+                      <MobileCompetitors
+                        key={competitor.slug}
+                        competitorPhone={competitor}
+                        phoneDetails={phoneDetails}
+                        iconMap={iconMap}
+                      />
                     </div>
                   ))}
                 </>
+              </div>
+            )}
+            <div className="col-span-full flex justify-between items-center">
+              {similarMobiles.length > 0 && (
+                <h2 className="p-2 text-sm font-bold text-gray-800">
+                  Similar Mobiles
+                </h2>
               )}
+
+              {similarMobiles.length > 6 && <a>View All</a>}
             </div>
+            <div className="p-2 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
+              {similarMobiles.map((phone, index) => (
+                <PhoneCard
+                  key={phone.id}
+                  phone={phone}
+                  isPriority={index < 6}
+                />
+              ))}
+            </div>
+            {similarMobiles?.length > 0 && (
+              <>
+                <h3 className="p-2 sm:hidden text-xs font-bold text-gray-900 pb-1 border-b-2 border-blue-500">
+                  Similar Mobiles
+                </h3>
+                <PhonePages
+                  phones={similarMobiles}
+                  phoneDetails={phoneDetails}
+                  fromCompetitor={false}
+                  iconMap={iconMap}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

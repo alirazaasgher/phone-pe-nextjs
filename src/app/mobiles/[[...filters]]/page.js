@@ -114,15 +114,15 @@ export default async function Page({ params, searchParams }) {
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
     .join(", ");
 
-  const baseUrl = "https://www.mobile42.com/phones";
-  const canonicalUrl = filters.length ? `${baseUrl}/${filters.join("/")}` : baseUrl;
+  const baseUrl = "https://www.mobile42.com/mobiles";
+  const canonicalUrl = filters.length
+    ? `${baseUrl}/${filters.join("/")}`
+    : baseUrl;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: readableFilters
-      ? `${readableFilters}`
-      : "Latest Mobile Phones",
+    name: readableFilters ? `${readableFilters}` : "Latest Mobile Phones",
     description: readableFilters
       ? `Compare ${readableFilters} by price, specs, and features`
       : "Compare the latest mobile phones worldwide",
@@ -163,7 +163,6 @@ export default async function Page({ params, searchParams }) {
         availableFilters={availableFilters}
       />
     </>
-
   );
 }
 
@@ -172,12 +171,10 @@ export function generateMetadata({ params }) {
 
   // Convert filters to readable text
   const readableFilters = filters
-    .map((f) =>
-      f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-    )
+    .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
     .join(", ");
 
-  const baseUrl = "https://www.mobile42.com/phones";
+  const baseUrl = "https://www.mobile42.com/mobiles";
 
   const canonicalUrl = filters.length
     ? `${baseUrl}/${filters.join("/")}`
@@ -197,8 +194,8 @@ export function generateMetadata({ params }) {
   // Generate dynamic OG image URL
   const ogImageUrl = readableFilters
     ? `https://www.mobile42.com/api/og?filters=${encodeURIComponent(
-      readableFilters
-    )}`
+        readableFilters
+      )}`
     : "https://www.mobile42.com/og-image-default.jpg";
 
   // Generate keywords
@@ -219,8 +216,8 @@ export function generateMetadata({ params }) {
       googleBot: {
         index: true,
         follow: true,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
     openGraph: {
@@ -232,7 +229,9 @@ export function generateMetadata({ params }) {
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: readableFilters ? `${readableFilters} mobile phones comparison` : "Mobile phones comparison",
+          alt: readableFilters
+            ? `${readableFilters} mobile phones comparison`
+            : "Mobile phones comparison",
         },
       ],
       siteName: "Mobile42",
@@ -249,4 +248,3 @@ export function generateMetadata({ params }) {
     },
   };
 }
-
