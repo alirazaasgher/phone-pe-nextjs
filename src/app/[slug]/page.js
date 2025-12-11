@@ -17,7 +17,9 @@ export default async function DetailsPage({ params }) {
 // Add metadata generation for better SEO
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const phone = await getPhoneBySlug(slug).data;
+
+  let phone = await getPhoneBySlug(slug);
+  phone = phone.data;
   if (!phone) {
     return {
       title: "Phone Not Found",
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const metadata = buildPhoneMetadata(phone.data);
+  const metadata = buildPhoneMetadata(phone);
 
   return {
     title: metadata.title,
