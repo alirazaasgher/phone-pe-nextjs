@@ -24,10 +24,10 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2">
-              <li><Link href="/top" className="hover:text-white">Top Phones</Link></li>
-              <li><Link href="/upcoming" className="hover:text-white">Upcoming</Link></li>
-              <li><Link href="/popular" className="hover:text-white">Popular</Link></li>
-              <li><Link href="/compare" className="hover:text-white">Compare</Link></li>
+              <li><Link href="/mobiles?sort=newest" className="hover:text-white">New</Link></li>
+              <li><Link href="/mobiles?sort=upcoming" className="hover:text-white">Upcoming</Link></li>
+              {/* <li><Link href="/popular" className="hover:text-white">Popular</Link></li>
+              <li><Link href="/compare" className="hover:text-white">Compare</Link></li> */}
             </ul>
           </div>
 

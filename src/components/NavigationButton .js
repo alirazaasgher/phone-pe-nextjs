@@ -25,7 +25,7 @@ export default function NavigationButton({ direction, disabled, onClick }) {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`absolute top-1/2 -translate-y-1/2 z-30 bg-white/95 backdrop-blur-sm
+      className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-30 bg-white/95 backdrop-blur-sm
         p-2.5 md:p-2 rounded-full shadow-xl border border-gray-200 transition-all duration-300
         ${isLeft ? "-left-4 md:-left-1" : "-right-1 md:-right-1"}
         ${disabled ? "opacity-0 pointer-events-none" : "active:scale-95"}

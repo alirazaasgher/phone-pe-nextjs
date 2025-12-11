@@ -12,6 +12,7 @@ import SideBarCard from "./sidebar/SideBarCard";
 import PriceRangeFilter from "./PriceRangeFilter";
 import { usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
+import Link from "next/link";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   const [expandedSections, setExpandedSections] = useState([]);
@@ -96,18 +97,18 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
           : [],
         priceRange: pricePart
           ? (() => {
-              if (pricePart.startsWith("price-from-")) {
-                const min = Number(pricePart.replace("price-from-", ""));
-                return { min, max: null }; // only min
-              } else if (pricePart.startsWith("price-up-to-")) {
-                const max = Number(pricePart.replace("price-up-to-", ""));
-                return { min: null, max }; // only max
-              } else if (/\d+-to-\d+/.test(pricePart)) {
-                const [min, max] = pricePart.split("-to-").map(Number);
-                return { min, max }; // both min and max
-              }
-              return { min: null, max: null }; // fallback
-            })()
+            if (pricePart.startsWith("price-from-")) {
+              const min = Number(pricePart.replace("price-from-", ""));
+              return { min, max: null }; // only min
+            } else if (pricePart.startsWith("price-up-to-")) {
+              const max = Number(pricePart.replace("price-up-to-", ""));
+              return { min: null, max }; // only max
+            } else if (/\d+-to-\d+/.test(pricePart)) {
+              const [min, max] = pricePart.split("-to-").map(Number);
+              return { min, max }; // both min and max
+            }
+            return { min: null, max: null }; // fallback
+          })()
           : [],
         ram: ramPart ? ramPart.replace("-ram", "").split("-to-") : [],
         storage: storagePart
@@ -449,20 +450,32 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         </div>
 
         {/* Sticky Apply Button */}
-        <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg">
+        <div className="sticky bottom-0 w-full p-4 bg-white border-t border-gray-200 shadow-lg space-y-2">
+          {/* Advanced Filters Link - Top Row */}
+          {/* <div className="flex justify-end">
+            <Link
+              href="/advanced-filter"
+              className="text-xs px-2 py-2 rounded-lg border border-orange-600 text-orange-600 font-medium hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200 shadow-sm"
+            >
+              Advanced Filters
+            </Link>
+          </div> */}
+
+
+          {/* Apply Filters Button - Full Width */}
           <button
             onClick={handleApply}
             disabled={!isSelected}
             className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200
-              ${
-                isSelected
-                  ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+      ${isSelected
+                ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
           >
             Apply Filters
           </button>
         </div>
+
       </div>
     </>
   );

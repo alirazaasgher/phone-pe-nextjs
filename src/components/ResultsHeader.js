@@ -103,9 +103,10 @@ export default function ResultsHeader({ totalResults = 0, filteredResults = 0, t
               value={searchParams.get("sort") || "newest"}
             >
               <option value="newest">🆕 Newest</option>
+              <option value="upcoming">📅 Upcoming</option>
               <option value="price_low_high">⬇ Price: Low to High</option>
               <option value="price_high_low">⬆ Price: High to Low</option>
-              <option value="popular">⭐ Most Popular</option>
+              {/* <option value="popular">⭐ Most Popular</option> */}
             </select>
 
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">

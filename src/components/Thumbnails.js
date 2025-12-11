@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Thumbnails({ colors, active, onClick }) {
   return (
     <ul className="flex items-center justify-center gap-1 mt-2 flex-wrap">
@@ -21,12 +23,15 @@ export default function Thumbnails({ colors, active, onClick }) {
                 style={{ width: "56px", height: "56px" }}
               >
                 <div className="flex items-center justify-center w-full h-full p-1">
-                  <img
+                  <Image
                     src={
                       c.images?.[0]?.url || "images/default_placeholder.webp"
                     }
                     alt={c.name}
-                    className="object-contain max-h-full max-w-full"
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                    loading="lazy"
                   />
                 </div>
 

@@ -109,54 +109,144 @@ export default async function Page({ params, searchParams }) {
     acc[item.slug] = item.values || [];
     return acc;
   }, {});
-  return (
-    <ClientPhoneGrid
-      phones={phones}
-      filters={filters}
-      parsed={parsed}
-      availableFilters={availableFilters}
-    />
-  );
-}
 
-export async function generateMetadata({ params, searchParams }) {
-  const awaitedParams = await params;
-  const filters = awaitedParams.filters || [];
-
-  // Parse filters readable for metadata
-  const titleFilters = filters
+  const readableFilters = filters
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
     .join(", ");
 
-  const title =
-    "Latest Mobiles - Compare Specs & Prices in Pakistan | Mobile42";
+  const baseUrl = "https://www.mobile42.com/phones";
+  const canonicalUrl = filters.length ? `${baseUrl}/${filters.join("/")}` : baseUrl;
 
-  const description = titleFilters
-    ? `Compare ${titleFilters} mobile phones at the best prices in Pakistan. View specs, RAM, storage, battery, display, and performance details to choose the best phone for your needs.`
-    : "Explore and compare latest mobile phones in Pakistan. Filter by RAM, storage, camera, battery and price to find the best phone for your needs.";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: readableFilters
+      ? `${readableFilters}`
+      : "Latest Mobile Phones",
+    description: readableFilters
+      ? `Compare ${readableFilters} by price, specs, and features`
+      : "Compare the latest mobile phones worldwide",
+    url: canonicalUrl,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Mobile42",
+      url: "https://www.mobile42.com",
+    },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.mobile42.com",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Phones",
+          item: canonicalUrl,
+        },
+      ],
+    },
+  };
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ClientPhoneGrid
+        phones={phones}
+        filters={filters}
+        parsed={parsed}
+        availableFilters={availableFilters}
+      />
+    </>
+
+  );
+}
+
+export function generateMetadata({ params }) {
+  const filters = Array.isArray(params?.filters) ? params.filters : [];
+
+  // Convert filters to readable text
+  const readableFilters = filters
+    .map((f) =>
+      f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    )
+    .join(", ");
+
+  const baseUrl = "https://www.mobile42.com/phones";
+
+  const canonicalUrl = filters.length
+    ? `${baseUrl}/${filters.join("/")}`
+    : baseUrl;
+
+  const baseTitle =
+    "Latest Mobile Phones - Compare Specs, Features & Prices | Mobile42";
+
+  const title = readableFilters
+    ? `${readableFilters} Mobile Phones - Compare Specs, Features & Prices | Mobile42`
+    : baseTitle;
+
+  const description = readableFilters
+    ? `Compare ${readableFilters} mobile phones by price, specs, performance, battery, camera, and display. Find the best phone that matches your needs.`
+    : "Explore and compare the latest mobile phones worldwide. Filter by price, RAM, storage, camera, battery, and features to find the best phone for your needs.";
+
+  // Generate dynamic OG image URL
+  const ogImageUrl = readableFilters
+    ? `https://www.mobile42.com/api/og?filters=${encodeURIComponent(
+      readableFilters
+    )}`
+    : "https://www.mobile42.com/og-image-default.jpg";
+
+  // Generate keywords
+  const keywords = readableFilters
+    ? `${readableFilters} phones, mobile comparison, phone specs, ${readableFilters} price`
+    : "mobile phones, smartphone comparison, phone specs, mobile prices, latest phones";
 
   return {
     title,
     description,
+    keywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
     openGraph: {
       title,
       description,
-      url: `https://mobile42.com/phones`,
+      url: canonicalUrl,
       images: [
         {
-          url: "https://mobile42.com/og-image-default.jpg",
+          url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: "Mobile comparison",
+          alt: readableFilters ? `${readableFilters} mobile phones comparison` : "Mobile phones comparison",
         },
       ],
       siteName: "Mobile42",
+      type: "website",
+      locale: "en_US",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://mobile42.com/og-image-default.jpg"],
+      images: [ogImageUrl],
+      site: "@mobile42", // Add your Twitter handle
+      creator: "@mobile42",
     },
   };
 }
+

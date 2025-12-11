@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import PhoneCard from "../PhoneCard";
 import MobileCompetitors from "./MobileCompetitors";
 import { X } from "lucide-react";
@@ -11,17 +11,42 @@ export default function PhonePages({ phones,phoneDetails,fromCompetitor = false,
   }
   const itemsRef = useRef([]);
   const scrollContainerRef = useRef(null);
+
+ useEffect(() => {
+    if (!scrollContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.dataset.index);
+            setPageIndex(index);
+          }
+        });
+      },
+      {
+        root: scrollContainerRef.current,
+        threshold: 0.6, // 60% visible = active panel
+      }
+    );
+
+    itemsRef.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [pages]);
   return (
     <>
       <div
         ref={scrollContainerRef}
         className="sm:hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-2"
-        onScroll={(e) => {
-          const scrollLeft = e.currentTarget.scrollLeft;
-          const containerWidth = e.currentTarget.offsetWidth;
-          const newIndex = Math.round(scrollLeft / containerWidth);
-          setPageIndex(newIndex);
-        }}
+        // onScroll={(e) => {
+        //   const scrollLeft = e.currentTarget.scrollLeft;
+        //   const containerWidth = e.currentTarget.offsetWidth;
+        //   const newIndex = Math.round(scrollLeft / containerWidth);
+        //   setPageIndex(newIndex);
+        // }}
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {pages.map((pageCards, page) => (

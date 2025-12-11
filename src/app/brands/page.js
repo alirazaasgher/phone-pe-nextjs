@@ -9,7 +9,7 @@ export const metadata = {
     description:
       "Explore popular mobile brands with detailed specs and price comparisons.",
     type: "website",
-    url: "https://mobile42.com/brands",
+    url: "https://www.mobile42.com/brands",
     images: [{ url: "/og-brands.jpg", width: 1200, height: 630 }],
   },
   twitter: {
@@ -18,7 +18,7 @@ export const metadata = {
     description: "Compare specs and prices across 15+ mobile brands",
   },
   alternates: {
-    canonical: "https://mobile42.com/brands",
+    canonical: "https://www.mobile42.com/brands",
   },
   icons: {
     icon: "/favicon.ico",

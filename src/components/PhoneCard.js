@@ -77,7 +77,8 @@ const PhoneCard = ({ phone,isPriority }) => {
               alt={phone.name}
               fill
               sizes="(max-width: 1024px) 150px, 200px"
-              className="object-contain mix-blend-multiply p-3 sm:p-6"
+              className="object-contain p-3 sm:p-6"
+              fetchPriority={isPriority ? "high" : "auto"}
               priority={isPriority}
               quality={85}
             />

@@ -19,6 +19,7 @@ const poppins = Poppins({
 import PriceCategoriesData from "@/data/PriceCategoriesData";
 import Link from "next/link";
 import PhonePages from "./common/PhonePages";
+import Image from "next/image";
 export default function HomeContent({ homePageResponse }) {
   // ✅ Brands with icons
 
@@ -34,6 +35,9 @@ export default function HomeContent({ homePageResponse }) {
 
   return (
     <>
+      <h1 className="sr-only">
+        Mobile42 - Latest & Upcoming Mobile Phones
+      </h1>
       <div className="p-1">
         {/* 📌 Brands */}
         <div className="">
@@ -49,12 +53,15 @@ export default function HomeContent({ homePageResponse }) {
                 href={`${brand.url}`}
                 className={`flex-shrink-0 w-24 p-3 flex flex-col items-center rounded-xl shadow-sm hover:shadow-md transition-transform transform hover:scale-105 ${brand.color}`}
               >
-                <div className="w-10 h-10 mb-1 flex items-center justify-center rounded-full group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
-                  <img
+                <div className="relative w-10 h-10 mb-2">
+                  <Image
                     src={brand.logo}
                     alt={brand.value}
-                    className="w-9 h-9 object-contain"
+                    fill              // fills the container
+                    className="object-contain" // preserves aspect ratio
                     loading="lazy"
+                    quality={75}
+                    sizes="80px"
                   />
                 </div>
                 <p className="text-xs font-semibold text-gray-800 group-hover:text-blue-600 text-center truncate w-full">
@@ -80,22 +87,27 @@ export default function HomeContent({ homePageResponse }) {
               hover:border-blue-400
               ${brand.color}`}
               >
-                <div className="w-10 h-10 sm:w-10 sm:h-10 mb-1 lg:mb-3 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-gradient-to-br group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
-                  <img
+                <div className="relative w-10 h-10">
+                  <Image
                     src={brand.logo}
                     alt={brand.value}
-                    className="w-6 h-6 lg:w-10 lg:h-10 object-contain"
+                    fill
+                    className="object-contain"
                     loading="lazy"
+                    quality={75}
+                    sizes="80px"
                   />
                 </div>
                 <p className="font-sans text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
                   {brand.value}
                 </p>
-                {/* <span className="font-mono text-xs text-gray-500 lg:mt-1">
+              </Link>
+
+
+            ))}
+            {/* <span className="font-mono text-xs text-gray-500 lg:mt-1">
                   {brand.count} models
                 </span> */}
-              </Link>
-            ))}
           </div>
           <div className="flex justify-between items-center mt-2 mb-3">
             <h3
@@ -268,8 +280,8 @@ export default function HomeContent({ homePageResponse }) {
 
           {/* Tablet / Desktop grid */}
           <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {phones.map((phone,index) => (
-              <PhoneCard key={phone.id} phone={phone} isPriority={index < 6}/>
+            {phones.map((phone, index) => (
+              <PhoneCard key={phone.id} phone={phone} isPriority={index < 6} />
             ))}
           </div>
         </div>
@@ -339,8 +351,8 @@ export default function HomeContent({ homePageResponse }) {
 
               <PhonePages phones={upComingMobiles} />
               <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-                {upComingMobiles.map((phone,index) => (
-                  <PhoneCard key={phone.id} phone={phone} isPriority={index < 6}/>
+                {upComingMobiles.map((phone, index) => (
+                  <PhoneCard key={phone.id} phone={phone} isPriority={index < 6} />
                 ))}
               </div>
             </div>

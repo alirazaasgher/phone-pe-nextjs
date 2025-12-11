@@ -2,9 +2,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // helps catch potential issues in development
- // 'your-cloudfront-domain.cloudfront.net', // Replace with your actual CloudFront domain
-      // 'your-lightsail-domain.com',
+  reactStrictMode: true,
   images: {
     domains: [
       'api.mobile42.com',
