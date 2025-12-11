@@ -13,7 +13,7 @@ const BrandsData = [
     name: "apple",
     value: "Apple",
     url: "/mobiles/apple-mobile-phones",
-    logo: "/images/brands/apple/apple-seeklogo.png",
+    logo: "/images/Brands/Apple/apple-seeklogo.png",
     color: "bg-gray-50",
     count: 220,
   },
