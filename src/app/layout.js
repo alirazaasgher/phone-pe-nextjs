@@ -50,7 +50,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mobile42 – Latest & Upcoming Mobile Phones",
+    title: "Mobile42 - Latest & Upcoming Mobile Phones",
     description:
       "Discover the latest and upcoming mobile phones with detailed specs, comparisons, and reviews.",
     images: ["https://www.mobile42.com/og-image.jpg"],

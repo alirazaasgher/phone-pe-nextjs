@@ -5,10 +5,10 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      "api.mobile42.com",
-      "cdn.mobile42.com",
-      "127.0.0.1", // local dev
-      "localhost", // Replace with your Lightsail domain if needed
+      'api.mobile42.com',
+      'cdn.mobile42.com',
+      '127.0.0.1',                              // local dev
+      'localhost',     // Replace with your Lightsail domain if needed
     ],
     formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
