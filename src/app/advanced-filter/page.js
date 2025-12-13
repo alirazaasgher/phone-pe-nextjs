@@ -30,15 +30,24 @@ export default function AdvancedFilters() {
     <div className="flex flex-col min-h-screen">
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         {AdvancedFilter.map((section) => (
-          <div key={section.section || section.id} className="pb-6 border-b border-gray-200 last:border-0">
-            <h2 className="text-base font-semibold text-gray-900 mb-4">
+          <div
+            key={section.section || section.id}
+            className="pb-6 border-b border-gray-200 last:border-0"
+          >
+            <h2
+              className="text-base font-semibold text-gray-900 mb-4 tracking-wide relative pb-2
+after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-10 after:h-[2px] after:bg-blue-600"
+            >
               {section.section}
             </h2>
 
-            <div className={`grid grid-cols-1 gap-3 ${section.columns === 2
-              ? 'md:grid-cols-2'
-              : 'md:grid-cols-2 lg:grid-cols-3'
-              }`}>
+            <div
+              className={`grid grid-cols-1 gap-3 ${
+                section.columns === 2
+                  ? "md:grid-cols-2"
+                  : "md:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
               {section.filters.map((filter) => {
                 if (filter.type === "checkbox") {
                   return filter.values.map((val) => (
@@ -62,7 +71,6 @@ export default function AdvancedFilters() {
                     />
                   );
                 }
-                
 
                 if (filter.type === "range-slider") {
                   return null;
@@ -77,10 +85,11 @@ export default function AdvancedFilters() {
 
       {showApplyButton && (
         <div
-          className={`fixed bottom-5 right-5 flex items-center gap-2 transition-all duration-300 z-50 ${showApplyButton
+          className={`fixed bottom-5 right-5 flex items-center gap-2 transition-all duration-300 z-50 ${
+            showApplyButton
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-2 pointer-events-none"
-            }`}
+          }`}
         >
           <button
             onClick={handleReset}
@@ -96,7 +105,6 @@ export default function AdvancedFilters() {
             Apply
           </button>
         </div>
-
       )}
     </div>
   );

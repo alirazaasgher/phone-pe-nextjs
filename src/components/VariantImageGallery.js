@@ -118,7 +118,7 @@ export default function VariantImageGallery({ phone }) {
             </>
           )}
         </div>
-        {imagesToShow.length > 1 && (
+        {imagesToShow.length > 0 && (
           <ColorSelector selectedColor={selectedColor} />
         )}
 

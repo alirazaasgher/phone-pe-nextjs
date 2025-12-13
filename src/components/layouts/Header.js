@@ -41,16 +41,16 @@ export default function Header({ toggleSidebar }) {
         <div className="flex items-center justify-between px-4 md:px-6 h-16 md:h-16">
           {/* Left Section - Logo + Mobile Menu */}
           <div className="flex items-center gap-3 md:gap-4">
-     <button
-  onClick={toggleSidebar}
-  aria-label="Toggle sidebar"
-  className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 md:hidden transition-all duration-300 active:scale-95"
->
-  <Menu
-    className="text-white transition-transform group-hover:rotate-180 duration-300"
-    size={20}
-  />
-</button>
+            <button
+              onClick={toggleSidebar}
+              aria-label="Toggle sidebar"
+              className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 md:hidden transition-all duration-300 active:scale-95"
+            >
+              <Menu
+                className="text-white transition-transform group-hover:rotate-180 duration-300"
+                size={20}
+              />
+            </button>
 
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="relative">
@@ -73,7 +73,7 @@ export default function Header({ toggleSidebar }) {
               { href: "/", label: "Home" },
               { href: "/mobiles", label: "Mobiles" },
               { href: "/brands", label: "Brands" },
-              { href: "/compare", label: "Compare" },
+              // { href: "/compare", label: "Compare" },
             ].map((link) => (
               <Link
                 key={link.href}

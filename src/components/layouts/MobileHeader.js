@@ -1,10 +1,5 @@
 "use client";
-import {
-  Home,
-  Layers,
-  GitCompare,
-  Smartphone,
-} from "lucide-react";
+import { Home, Layers, GitCompare, Smartphone } from "lucide-react";
 import Link from "next/link";
 export default function MobileHeader() {
   return (
@@ -15,7 +10,7 @@ export default function MobileHeader() {
             { href: "/", label: "Home", icon: Home },
             { href: "/mobiles", label: "Mobiles", icon: Smartphone },
             { href: "/brands", label: "Brands", icon: Layers },
-            { href: "/compare", label: "Compare", icon: GitCompare },
+            // { href: "/compare", label: "Compare", icon: GitCompare },
           ].map((item) => (
             <Link
               key={item.href}

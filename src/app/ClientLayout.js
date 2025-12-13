@@ -59,14 +59,8 @@ export default function ClientLayout({ children }) {
 }
 
 function shouldShowSidebar(pathname) {
-  return true;
   if (!pathname) return false;
   if (pathname === "/") return true; // homepage shows sidebar
-  if (
-    pathname.startsWith("/mobiles") ||
-    pathname.startsWith("/brands") ||
-    pathname.startsWith("/apple-iphone-15-pro-max")
-  )
-    return true; // category pages show sidebar
-  return false; // hide sidebar everywhere else (like `/apple-iphone-15-pro-max`)
+  if (pathname.startsWith("/compare")) return false; // category pages show sidebar
+  return true; // hide sidebar everywhere else (like `/apple-iphone-15-pro-max`)
 }

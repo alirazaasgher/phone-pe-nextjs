@@ -310,17 +310,22 @@ export default function Details({ phoneDetails, similarMobiles }) {
               <MobileSpeficaion phoneDetails={phoneDetails} />
             </div>
             {phoneDetails.competitors?.length > 0 && (
-              <>
-                <h3 className="sm:hidden text-base font-bold text-gray-900 pb-1 border-b-2 border-blue-500">
+              <div className="p-1 space-y-1 sm:hidden mt-2">
+                <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                   Competitors for {phoneDetails.name}
-                </h3>
+                </h2>
+
+                {/* Divider line below heading */}
+                <div className="mt-2 mb-3 h-px bg-blue-500"></div>
+
                 <PhonePages
                   phones={phoneDetails?.competitors}
                   phoneDetails={phoneDetails}
                   fromCompetitor={true}
                   iconMap={iconMap}
                 />
-              </>
+              </div>
             )}
             {phoneDetails.competitors?.length > 0 && (
               <div className="hidden lg:block lg:col-span-3 p-2 bg-gradient-to-b from-gray-50 to-white border border-gray-100">
@@ -342,16 +347,40 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 </>
               </div>
             )}
-            <div className="hidden col-span-full sm:grid flex justify-between items-center">
+            {similarMobiles?.length > 0 && (
+              <div className="p-1 space-y-1 sm:hidden mt-2">
+                <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                  Similar Mobiles
+                </h2>
+
+                {/* Divider line below heading */}
+                <div className="mt-2 mb-3 h-px bg-blue-500"></div>
+
+                <PhonePages
+                  phones={similarMobiles}
+                  phoneDetails={phoneDetails}
+                  fromCompetitor={false}
+                  iconMap={iconMap}
+                />
+              </div>
+            )}
+            <div className="px-1 hidden col-span-full sm:flex justify-between items-center border-b border-blue-500 mt-3 pb-2">
               {similarMobiles.length > 0 && (
-                <h2 className="p-2 text-sm font-bold text-gray-800">
+                <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                   Similar Mobiles
                 </h2>
               )}
 
-              {similarMobiles.length > 6 && <a>View All</a>}
+              {similarMobiles.length > 6 && (
+                <a className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
+                  View All
+                </a>
+              )}
             </div>
-            <div className="p-2 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
+
+            <div className="px-1 py-1 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
               {similarMobiles.map((phone, index) => (
                 <PhoneCard
                   key={phone.id}
@@ -360,19 +389,6 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 />
               ))}
             </div>
-            {similarMobiles?.length > 0 && (
-              <>
-                <h3 className="p-2 sm:hidden text-xs font-bold text-gray-900 pb-1 border-b-2 border-blue-500">
-                  Similar Mobiles
-                </h3>
-                <PhonePages
-                  phones={similarMobiles}
-                  phoneDetails={phoneDetails}
-                  fromCompetitor={false}
-                  iconMap={iconMap}
-                />
-              </>
-            )}
           </div>
         </div>
       </div>
