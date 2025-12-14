@@ -13,59 +13,153 @@ const poppins = Poppins({
 });
 export const metadata = {
   metadataBase: new URL("https://www.mobile42.com"),
+
   title: {
-    default: "Mobile42 - Latest & Upcoming Mobile Phones",
+    default: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
     template: "%s | Mobile42",
   },
+
   description:
-    "Discover the latest and upcoming mobile phones with detailed specifications, prices, comparisons, and expert reviews at Mobile42.",
+    "Explore 1000+ latest and upcoming mobile phones with detailed specifications, expert reviews, price comparisons, and buying guides. Find your perfect smartphone at Mobile42. Updated daily.",
+
   keywords: [
     "mobile phones",
-    "smartphones",
-    "latest mobiles",
-    "upcoming phones",
-    "mobile prices",
-    "phone specs",
+    "smartphones 2025",
+    "latest mobile phones",
+    "upcoming phones 2026",
+    "mobile phone prices",
+    "phone specifications",
     "mobile reviews",
-    "compare mobiles"
+    "compare smartphones",
+    "best mobile phones",
+    "phone comparison",
+    "flagship phones",
+    "budget smartphones",
+    "camera phones",
+    "gaming phones",
+    "5G phones",
+    "mobile phone buying guide",
+    "smartphone deals",
+    "phone price in Pakistan",
+    "Android phones",
+    "iPhone models",
   ],
+
+  authors: [{ name: "Mobile42 Team" }],
+
+  creator: "Mobile42",
+  publisher: "Mobile42",
+
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+
   alternates: {
     canonical: "https://www.mobile42.com/",
   },
+
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
   openGraph: {
-    title: "Mobile42 - Latest & Upcoming Mobile Phones",
-    description:
-      "Explore latest and upcoming mobile phones with specs, prices, comparisons and reviews.",
+    type: "website",
+    locale: "en_US",
     url: "https://www.mobile42.com/",
     siteName: "Mobile42",
-    type: "website",
+    title: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
+    description:
+      "Explore 1000+ latest and upcoming mobile phones with detailed specs, expert reviews, and price comparisons. Find your perfect smartphone.",
     images: [
       {
         url: "https://www.mobile42.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Mobile42 - Latest & Upcoming Mobile Phones",
+        alt: "Mobile42 - Latest Mobile Phones, Specs, Prices & Reviews",
+        type: "image/jpeg",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Mobile42 - Latest & Upcoming Mobile Phones",
+    title: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
     description:
-      "Discover the latest and upcoming mobile phones with detailed specs, comparisons, and reviews.",
+      "Explore 1000+ latest and upcoming mobile phones with detailed specs, expert reviews, and price comparisons.",
     images: ["https://www.mobile42.com/og-image.jpg"],
+    creator: "@mobile42",
+    site: "@mobile42",
   },
+
   icons: {
-    icon: "/favicon.ico?v=1",
-    apple: "/apple-touch-icon.png?v=1",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  category: "technology",
+  other: {
+    "msapplication-TileColor": "#da532c",
+    "theme-color": "#ffffff",
   },
 };
 
-
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
+// Add this JSON-LD schema to your root layout
+export const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Mobile42",
+  url: "https://www.mobile42.com",
+  description:
+    "Explore latest and upcoming mobile phones with detailed specifications, prices, comparisons and expert reviews.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://www.mobile42.com/search?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Mobile42",
+    url: "https://www.mobile42.com",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.mobile42.com/logo.png",
+      width: 600,
+      height: 60,
+    },
+    sameAs: [
+      "https://www.facebook.com/mobile42official",
+      "https://www.twitter.com/@Mobile42offical",
+      // "https://www.instagram.com/mobile42",
+      "https://www.youtube.com/@mobile42official",
+    ],
+  },
 };
+
 const GA_MEASUREMENT_ID = "G-KRGHF7G70Y"; // Replace with your GA4 ID
 
 export default function RootLayout({ children }) {
@@ -109,8 +203,8 @@ export default function RootLayout({ children }) {
               sameAs: [
                 "https://facebook.com/mobile42",
                 "https://instagram.com/mobile42",
-                "https://twitter.com/mobile42"
-              ]
+                "https://twitter.com/mobile42",
+              ],
             }),
           }}
         />
@@ -125,7 +219,8 @@ export default function RootLayout({ children }) {
               url: "https://www.mobile42.com/",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://www.mobile42.com/search?q={search_term_string}",
+                target:
+                  "https://www.mobile42.com/search?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),

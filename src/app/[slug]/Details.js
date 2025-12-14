@@ -173,7 +173,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 <h1 className="text-xl font-semibold text-gray-900 leading-tight">
                   {phoneDetails.name}
                 </h1>
-                <span className="text-[11px] text-gray-500 mt-0.5">
+                <span className="text-[11px] text-gray-700 mt-0.5">
                   Released: {phoneDetails.release_date || "TBA"}
                 </span>
               </div>

@@ -65,7 +65,7 @@ export default function VariantImageGallery({ phone }) {
 
   return (
     <>
-      <div className="flex-shrink-0 flex flex-col justify-center items-center h-full">
+      <div className="flex-shrink-0 flex flex-col items-center">
         <div className="relative w-[220px] h-[260px] lg:w-[200px] lg:h-[200px] flex justify-center items-center bg-white overflow-visible group">
           <AnimatePresence mode="wait">
             <motion.div
@@ -74,7 +74,7 @@ export default function VariantImageGallery({ phone }) {
               // Smooth entry/exit animations
               custom={direction}
               initial={isFirstRender.current ? false : true}
-              onClick={() => !isDragging && setZoomed(true)}
+              onClick={() => setZoomed(true)}
               // Prevent context menu on long press
               onContextMenu={(e) => e.preventDefault()}
             >
@@ -85,6 +85,7 @@ export default function VariantImageGallery({ phone }) {
                 sizes="(max-width: 768px) 220px, 200px"
                 className="object-contain pointer-events-none"
                 priority={currentImageIndex === 0 ? true : false}
+                fetchPriority={currentImageIndex === 0 ? "high" : "auto"}
                 quality={85}
                 draggable={false}
               />
@@ -123,7 +124,7 @@ export default function VariantImageGallery({ phone }) {
         )}
 
         {/* Thumbnails below the main image */}
-        <div className="w-full">
+        <div className="w-full lg:max-w-[190px]">
           <Thumbnails
             colors={phone.colors}
             active={selectedColorIndex}
@@ -136,6 +137,7 @@ export default function VariantImageGallery({ phone }) {
       {/* Zoom Modal */}
       {zoomed && (
         <ZoomModal
+          isOpen={zoomed}
           activeSrc={activeSrc}
           current={currentImageIndex}
           total={imagesToShow.length}
