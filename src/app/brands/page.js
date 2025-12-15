@@ -37,42 +37,41 @@ export default function BrandsPage() {
         </p>
       </div>
 
-      <section aria-labelledby="brands-heading">
-  <h2 id="brands-heading" className="sr-only">
-    Brands
-  </h2>
+      <section aria-labelledby="brands-heading" className="mt-8">
+        <h2 id="brands-heading" className="sr-only">
+          Brands
+        </h2>
 
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
-    {BrandsData.map((brand) => (
-      <Link
-        key={brand.name}
-        href={brand.url}
-        aria-label={`Visit ${brand.name} brand page`}
-        className={`group relative flex flex-col items-center justify-center border-2 border-gray-200 rounded-2xl p-4 sm:p-6
-          hover:border-blue-400
-          ${brand.color}`}
-      >
-        {/* Brand Logo Container */}
-        <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-3 sm:mb-4 flex items-center justify-center bg-white rounded-xl shadow-sm">
-          <img
-            src={brand.logo}
-            alt={`${brand.name} Logo`}
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-            loading="lazy"
-          />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          {BrandsData.map((brand) => (
+            <Link
+              key={brand.name}
+              href={brand.url}
+              aria-label={`Visit ${brand.name} brand page`}
+              className={`group relative flex flex-col items-center justify-center rounded-2xl p-5
+        shadow-sm ${brand.color}`}
+            >
+              {/* Logo */}
+              <div
+                className={`relative mb-3 flex h-16 w-16 items-center justify-center rounded-xl
+          bg-gray-50 ring-1 ring-gray-200 group-hover:ring-2 `}
+              >
+                <img
+                  src={brand.logo}
+                  alt={`${brand.name} Logo`}
+                  className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Brand Name */}
+              <span className="text-sm font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                {brand.name}
+              </span>
+            </Link>
+          ))}
         </div>
-
-        {/* Brand Name */}
-        <span className="text-sm sm:text-base font-bold text-gray-900 text-center mb-1">
-          {brand.name}
-        </span>
-      </Link>
-    ))}
-  </div>
-</section>
-
-     
-
+      </section>
     </>
   );
 }

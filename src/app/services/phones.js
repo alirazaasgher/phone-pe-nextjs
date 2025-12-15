@@ -50,20 +50,32 @@ export async function mobilePageData(filters = [], sortValue) {
   return json.data; // return phone object
 }
 export async function getComparePhoneBySlugs(slugs = []) {
-    if (!Array.isArray(slugs) || slugs.length === 0) return [];
-console.log(JSON.stringify({ slugs }));
-return;
-    const res = await fetch(`https://api.mobile42.com/api/phones/compare`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ slugs }), // send array in body
-    });
-    
+  if (!Array.isArray(slugs) || slugs.length === 0) return [];
+  const res = await fetch(`https://api.mobile42.com/api/phones/compare`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ slugs }), // send array in body
+  });
+  if (!res.ok) return [];
 
-    if (!res.ok) return [];
+  const json = await res.json();
+  return json.data; // array of phone objects
+}
 
-    const json = await res.json();
-    return json; // array of phone objects
+export async function searchPhones(query) {
+  if (!query) return [];
+  const res = await fetch(
+    `https://api.mobile42.com/api/search?q=${encodeURIComponent(query)}`
+  );
+
+  if (!res.ok) {
+    console.error("Failed to fetch phones:", res.statusText);
+    return [];
+  }
+  const json = await res.json();
+
+  // Assuming json.data contains an array of phones
+  return json.data;
 }

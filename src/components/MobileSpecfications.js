@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Search, Plus } from "lucide-react";
 import SpecGroup from "./SpecGroup";
 import UseFilteredSpecs from "./UseFilteredSpecs";
+import Link from "next/link";
 export default function MobileSpeficaion({ phoneDetails }) {
   const [searchQuery, setSearchQuery] = useState("");
   // 🔍 Filter across *all* sections and fields
@@ -24,24 +25,28 @@ export default function MobileSpeficaion({ phoneDetails }) {
           </div>
 
           {/* Compare Button */}
-          <button className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-all flex-shrink-0"
-          aria-label="Compare"
+          <Link
+            key={phoneDetails.id}
+            href={`/compare/${phoneDetails.slug}`}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-all flex-shrink-0"
+            aria-label="Compare"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Compare</span>
-          </button>
+          </Link>
         </div>
       </div>
 
       {/* Render filtered groups */}
       <div>
         {filteredSpecs.map((section, index) => {
-          const [title, specs] = Object.entries(section).find(
-            ([key]) =>
-              key !== "is_expandable" &&
-              key !== "max_visible" &&
-              key !== "security"
-          ) || [];
+          const [title, specs] =
+            Object.entries(section).find(
+              ([key]) =>
+                key !== "is_expandable" &&
+                key !== "max_visible" &&
+                key !== "security"
+            ) || [];
           const isExpandable = section.is_expandable;
           const max_visible = section.max_visible;
           if (!specs || Object.keys(specs).length === 0) return null;
@@ -63,6 +68,5 @@ export default function MobileSpeficaion({ phoneDetails }) {
         )}
       </div>
     </div>
-  )
+  );
 }
-
