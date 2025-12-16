@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState, useTransition } from "react";
+import React, { useEffect, useMemo, useState, useTransition, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Search,
@@ -26,58 +26,93 @@ const QuickCompare = ({ phones }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [visibleSpecs, setVisibleSpecs] = useState(new Set());
+  const [firstLoad, setFirstLoad] = useState(true);
+
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
-  const [firstLoad, setFirstLoad] = useState(true);
+
+  // Update selected phones on pathname or phones change
   useEffect(() => {
     if (!pathname || !phones?.length) return;
 
     startTransition(() => {
-      const parts = pathname.split("/");
-      const phoneSlugString = parts[2] || "";
-
+      const phoneSlugString = pathname.split("/")[2] || "";
       if (!phoneSlugString) {
         setSelectedPhones([]);
       } else {
         const slugs = phoneSlugString.split("-vs-");
-        const selected = phones.filter((p) => slugs.includes(p.slug));
-        setSelectedPhones(selected);
+        setSelectedPhones(phones.filter((p) => slugs.includes(p.slug)));
       }
-      setFirstLoad(false); // hide loader after first load
+      setFirstLoad(false);
     });
   }, [pathname, phones]);
 
+  // Memoize specs to render
   const specsToRender = useMemo(() => {
-    const allKeys = Object.keys(selectedPhones[0]?.specs || {});
+    if (!selectedPhones.length) return [];
+    const allKeys = Object.keys(selectedPhones[0].specs || {});
     return visibleSpecs.size
       ? allKeys.filter((k) => visibleSpecs.has(k))
       : allKeys;
   }, [selectedPhones, visibleSpecs]);
 
-  const addPhone = (phone) => {
-    if (selectedPhones.length >= 4) return;
-    if (selectedPhones.find((p) => p.id === phone.id)) return;
+  // Add phone to comparison
+  const addPhone = useCallback((phone) => {
+    if (selectedPhones.length >= 4 || selectedPhones.some((p) => p.id === phone.id)) return;
 
     startTransition(() => {
       const newSelected = [...selectedPhones, phone];
       setSelectedPhones(newSelected);
 
-      const url = newSelected.map((p) => p.slug).join("-vs-");
-      router.replace(`/compare/${url}`, undefined, { shallow: true });
+      router.replace(
+        `/compare/${newSelected.map((p) => p.slug).join("-vs-")}`,
+        undefined,
+        { shallow: true }
+      );
     });
-  };
+  }, [selectedPhones, router]);
 
-  const removePhone = (phoneId) => {
+  // Remove phone from comparison
+  const removePhone = useCallback((phoneId) => {
     startTransition(() => {
       const newSelected = selectedPhones.filter((p) => p.id !== phoneId);
       setSelectedPhones(newSelected);
 
-      // Update URL after removing
-      const url = newSelected.map((p) => p.slug).join("-vs-");
-      router.replace(`/compare/${url}`, undefined, { shallow: true });
+      router.replace(
+        `/compare/${newSelected.map((p) => p.slug).join("-vs-")}`,
+        undefined,
+        { shallow: true }
+      );
     });
-  };
+  }, [selectedPhones, router]);
+
+  // Toggle spec visibility
+  const toggleSpec = useCallback((specKey) => {
+    setVisibleSpecs((prev) => {
+      const newSet = new Set(prev);
+      newSet.has(specKey) ? newSet.delete(specKey) : newSet.add(specKey);
+      return newSet;
+    });
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 1000);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Fetch search results
+  useEffect(() => {
+    if (!debouncedSearch) return setResults([]);
+
+    let isActive = true;
+    searchPhones(debouncedSearch).then((apiPhones) => {
+      if (isActive) setResults(apiPhones);
+    });
+
+    return () => { isActive = false }; // cancel state update if unmounted
+  }, [debouncedSearch]);
 
   const getSpecIcon = (specKey) => {
     const icons = {
@@ -108,35 +143,6 @@ const QuickCompare = ({ phones }) => {
     return icons[specKey] || <Smartphone className="w-4 h-4" />;
   };
   const gridCols = "200px repeat(auto-fit, minmax(100px, 1fr))";
-  const toggleSpec = (specKey) => {
-    setVisibleSpecs((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(specKey)) {
-        newSet.delete(specKey);
-      } else {
-        newSet.add(specKey);
-      }
-      return newSet;
-    });
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (!debouncedSearch) {
-      setResults([]);
-      return;
-    }
-    searchPhones(debouncedSearch).then((apiPhones) => {
-      setResults(apiPhones);
-    });
-  }, [debouncedSearch, phones]);
   return (
     <>
       {isPending || firstLoad ? (
@@ -241,11 +247,10 @@ const QuickCompare = ({ phones }) => {
                       <button
                         key={specKey}
                         onClick={() => toggleSpec(specKey)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                          visibleSpecs.has(specKey)
-                            ? "bg-orange-600 text-white shadow-md hover:bg-orange-700"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        }`}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${visibleSpecs.has(specKey)
+                          ? "bg-orange-600 text-white shadow-md hover:bg-orange-700"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
                       >
                         {specKey
                           .replace(/([A-Z])/g, " $1")
@@ -330,107 +335,73 @@ const QuickCompare = ({ phones }) => {
                           </span>
                         </div> */}
                     {/* SPEC ROWS */}
-                    {specsToRender.map((specKey, index) => {
-                      const allValues = selectedPhones.map(
-                        (p) => p?.specs?.[specKey] ?? "N/A"
-                      );
-                      const numericValues = allValues.map((val) => {
-                        const match = val.toString().match(/[\d.]+/);
-                        return match ? parseFloat(match[0]) : null;
-                      });
-                      const maxValue = Math.max(
-                        ...numericValues.filter((v) => v !== null)
-                      );
 
-                      return (
-                        <div
-                          key={specKey}
-                          className="border-b border-gray-100 last:border-b-0"
-                        >
-                          {/* Desktop: grid layout */}
-                          <div
-                            className="hidden sm:grid transition-colors duration-150 grid-cols-[200px_repeat(auto-fit,_minmax(100px,_1fr))]
-      hover:bg-blue-50/50 bg-white"
-                          >
-                            {/* KEY COLUMN */}
-                            <div className="sticky left-0 z-10 bg-gradient-to-r from-gray-100 to-gray-50 p-3 border-r border-gray-200 shadow-sm">
-                              <div className="flex items-center gap-2.5">
-                                <div className="hidden sm:flex flex-shrink-0 w-7 h-7 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white shadow-sm">
-                                  {getSpecIcon(specKey)}
-                                </div>
-                                <span className="text-xs font-semibold text-gray-700 truncate">
-                                  {specKey
-                                    .replace(/([A-Z])/g, " $1")
-                                    .replace(/^./, (s) => s.toUpperCase())}
+                    {Object.entries(phones.specs.key || {}).map(([category, specs]) => (
+                      <div key={category} className="mb-6">
+                        {/* Category Header */}
+                        <div className="bg-gradient-to-r from-gray-100 to-gray-50 p-3 border-b-2 border-orange-500">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white">
+                              {getCategoryIcon(category)}
+                            </div>
+                            <h3 className="text-sm font-bold text-gray-800 uppercase">
+                              {category}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Specs in this category */}
+                        {Object.entries(specs).map(([specKey, specValue]) => {
+                          // Find max value across all phones for this spec
+                          const allValues = selectedPhones.map(p =>
+                            parseFloat(String(p?.specs?.key?.[category]?.[specKey] ?? '0').match(/[\d.]+/)?.[0])
+                          ).filter(Boolean);
+                          const maxValue = Math.max(...allValues);
+
+                          return (
+                            <div
+                              key={specKey}
+                              className="grid grid-cols-[200px_repeat(auto-fit,_minmax(100px,_1fr))] hover:bg-blue-50/50 bg-white transition-colors"
+                            >
+                              {/* KEY COLUMN */}
+                              <div className="sticky left-0 z-10 bg-gradient-to-r from-gray-50 to-white p-3 border-r border-gray-200">
+                                <span className="text-xs font-medium text-gray-700">
+                                  {specKey.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
                                 </span>
                               </div>
-                            </div>
 
-                            {/* VALUES */}
-                            {selectedPhones.map((phone) => {
-                              const value = String(
-                                phone?.specs?.[specKey] ?? "N/A"
-                              );
-                              const num = parseFloat(
-                                value.match(/[\d.]+/)?.[0]
-                              );
-                              const isHighest =
-                                selectedPhones.length > 1 &&
-                                num &&
-                                num === maxValue;
+                              {/* VALUES FOR EACH PHONE */}
+                              {selectedPhones.map((phone) => {
+                                const value = String(phone?.specs?.key?.[category]?.[specKey] ?? 'N/A');
+                                const num = parseFloat(value.match(/[\d.]+/)?.[0]);
+                                const isHighest = selectedPhones.length > 1 && num && num === maxValue;
 
-                              return (
-                                <div
-                                  key={phone.id}
-                                  className="px-2 py-2 flex transition-all duration-200 hover:bg-gray-50"
-                                >
-                                  <div
-                                    className={`flex items-center gap-2 ${
-                                      isHighest
-                                        ? "px-3 py-1.5 rounded-lg border-2 border-orange-400 bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-sm"
-                                        : "px-3 py-1.5 rounded-lg bg-white"
-                                    }`}
-                                  >
-                                    <span className="text-xs">{value}</span>
-                                    {isHighest && (
-                                      <svg
-                                        className="w-4 h-4 text-white animate-pulse"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                      >
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                      </svg>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Mobile: stacked layout */}
-                          <div className="sm:hidden px-3 py-2">
-                            <div className="text-xs font-semibold text-gray-700 mb-1">
-                              {specKey
-                                .replace(/([A-Z])/g, " $1")
-                                .replace(/^./, (s) => s.toUpperCase())}
-                            </div>
-                            <div className="flex items-center gap-2 flex-wrap text-xs">
-                              {selectedPhones.map((phone, idx) => {
-                                const value = String(
-                                  phone?.specs?.[specKey] ?? "N/A"
-                                );
                                 return (
-                                  <span key={phone.id}>
-                                    {value}
-                                    {idx < selectedPhones.length - 1 && " vs "}
-                                  </span>
+                                  <div
+                                    key={phone.id}
+                                    className="px-2 py-2 flex transition-all hover:bg-gray-50"
+                                  >
+                                    <div
+                                      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${isHighest
+                                          ? 'border-2 border-orange-400 bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-sm'
+                                          : 'bg-white border border-gray-200'
+                                        }`}
+                                    >
+                                      <span className="text-xs font-medium">{value || 'N/A'}</span>
+                                      {isHighest && (
+                                        <svg className="w-4 h-4 text-white animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                      )}
+                                    </div>
+                                  </div>
                                 );
                               })}
                             </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                          );
+                        })}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -442,4 +413,26 @@ const QuickCompare = ({ phones }) => {
   );
 };
 
+
+// {/* Mobile: stacked layout */}
+//                           <div className="sm:hidden px-3 py-2">
+//                             <div className="text-xs font-semibold text-gray-700 mb-1">
+//                               {specKey
+//                                 .replace(/([A-Z])/g, " $1")
+//                                 .replace(/^./, (s) => s.toUpperCase())}
+//                             </div>
+//                             <div className="flex items-center gap-2 flex-wrap text-xs">
+//                               {selectedPhones.map((phone, idx) => {
+//                                 const value = String(
+//                                   phone?.specs?.[specKey] ?? "N/A"
+//                                 );
+//                                 return (
+//                                   <span key={phone.id}>
+//                                     {value}
+//                                     {idx < selectedPhones.length - 1 && " vs "}
+//                                   </span>
+//                                 );
+//                               })}
+//                             </div>
+//                           </div>
 export default QuickCompare;

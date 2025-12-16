@@ -1,5 +1,6 @@
 import { getComparePhoneBySlugs } from "@/app/services/phones";
 import QuickCompare from "../../../components/QuickCompare";
+import PhoneComparison from "@/components/PhoneCompersion";
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
@@ -47,5 +48,5 @@ export default async function Page({ params }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
   const phone = await getComparePhoneBySlugs(phoneSlugs);
-  return <QuickCompare phones={phone} />;
+  return <PhoneComparison phones={phone} />;
 }
