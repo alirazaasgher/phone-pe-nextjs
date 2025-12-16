@@ -45,7 +45,6 @@ export async function mobilePageData(filters = [], sortValue) {
     },
     body: JSON.stringify(body),
   });
-  console.log(body);
   const json = await res.json();
   return json.data; // return phone object
 }
@@ -69,13 +68,6 @@ export async function searchPhones(query) {
   const res = await fetch(
     `https://api.mobile42.com/api/search?q=${encodeURIComponent(query)}`
   );
-
-  if (!res.ok) {
-    console.error("Failed to fetch phones:", res.statusText);
-    return [];
-  }
   const json = await res.json();
-
-  // Assuming json.data contains an array of phones
   return json.data;
 }

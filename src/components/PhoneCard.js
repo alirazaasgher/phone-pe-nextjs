@@ -11,6 +11,7 @@ import {
   Camera,
   Battery,
   Wifi,
+  X,
 } from "lucide-react"; // Icons from Lucide
 import { Inter, Poppins } from "next/font/google";
 const inter = Inter({
@@ -22,7 +23,7 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 import { useState } from "react";
-const PhoneCard = ({ phone,isPriority }) => {
+const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
   const [open, setOpen] = useState(false);
   const isNew = phone.is_new;
   const isPopular = phone.is_popular;
@@ -47,9 +48,12 @@ const PhoneCard = ({ phone,isPriority }) => {
     displayPrice = phone.searchIndex.min_price_usd;
     currencySymbol = "$"; // USD
   }
-  const storage = phone?.searchIndex?.storage?.toString().toUpperCase().includes("TB") 
-    ? phone?.searchIndex?.storage 
-    : `${phone?.searchIndex?.storage}GB`; 
+  const storage = phone?.searchIndex?.storage
+    ?.toString()
+    .toUpperCase()
+    .includes("TB")
+    ? phone?.searchIndex?.storage
+    : `${phone?.searchIndex?.storage}GB`;
 
   const iconMap = {
     display: <Monitor size={14} className="text-purple-500" />,
@@ -66,9 +70,26 @@ const PhoneCard = ({ phone,isPriority }) => {
     currencySymbol === "$" ? "w-[55px] lg:w-[70px]" : "w-[90px] lg:w-[95px]";
 
   return (
-    <div className={`${inter.className} bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 group flex flex-col relative overflow-hidden`}>
-      <Link href={`/${phone.slug}`} className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
-        
+    <div
+      className={`${inter.className} bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 group flex flex-col relative overflow-hidden`}
+    >
+      {fromCompare && (
+        <button
+          onClick={(e) => {
+            e.preventDefault(); // prevent Link navigation
+            e.stopPropagation(); // stop bubbling
+            removePhone(phone.id);
+          }}
+          className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition z-10"
+          title="Remove phone"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
+      <Link
+        href={`/${phone.slug}`}
+        className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+      >
         {/* Image Container */}
         <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center mx-auto">
           <div className="relative w-[150px] h-[150px] lg:w-[200px] lg:h-[200px]">
@@ -94,11 +115,21 @@ const PhoneCard = ({ phone,isPriority }) => {
           <div className="bg-gray-800 text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
             {phone?.searchIndex?.ram}GB | {storage}
           </div>
-          
+
           {/* Price Box */}
-          <div className={`bg-gray-100 border border-gray-300 shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 ${widthClass} flex items-baseline gap-0.5`}>
-            <span className="text-[8px] lg:text-[10px] font-medium opacity-70">{currencySymbol}</span>
-            <span className={`${noPrice ? "text-[11px] lg:text-[12px]" : "text-[12px] lg:text-[13px]"} font-bold text-gray-900`}>
+          <div
+            className={`bg-gray-100 border border-gray-300 shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 ${widthClass} flex items-baseline gap-0.5`}
+          >
+            <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+              {currencySymbol}
+            </span>
+            <span
+              className={`${
+                noPrice
+                  ? "text-[11px] lg:text-[12px]"
+                  : "text-[12px] lg:text-[13px]"
+              } font-bold text-gray-900`}
+            >
               {displayPrice}
             </span>
           </div>
@@ -114,7 +145,9 @@ const PhoneCard = ({ phone,isPriority }) => {
         {phone.rating && (
           <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100 flex-shrink-0">
             <Star className="text-amber-500 fill-amber-500" size={12} />
-            <span className="text-xs font-bold text-amber-700">{phone.rating}</span>
+            <span className="text-xs font-bold text-amber-700">
+              {phone.rating}
+            </span>
           </div>
         )}
       </div>
