@@ -365,20 +365,19 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 />
               </div>
             )}
-            <div className="px-1 hidden col-span-full sm:flex justify-between items-center border-b border-blue-500 mt-3 pb-2">
-              {similarMobiles.length > 0 && (
+            {similarMobiles.length > 0 && (
+              <div className="px-1 hidden sm:flex col-span-full  justify-between items-center border-b border-blue-500 mt-3 pb-2">
                 <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                   <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                   Similar Mobiles
                 </h2>
-              )}
-
-              {similarMobiles.length > 6 && (
-                <a className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
-                  View All
-                </a>
-              )}
-            </div>
+                {similarMobiles.length > 6 && (
+                  <a className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
+                    View All
+                  </a>
+                )}
+              </div>
+            )}
 
             <div className="px-1 py-1 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
               {similarMobiles.map((phone, index) => (

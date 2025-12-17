@@ -28,6 +28,10 @@ export async function GET() {
     <lastmod>${new Date().toISOString()}</lastmod>
   </sitemap>
   ${phoneSitemaps}
+  <sitemap>
+    <loc>${baseUrl}/sitemap/compare.xml</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </sitemap>
 </sitemapindex>`;
 
   return new Response(sitemapIndex, {
