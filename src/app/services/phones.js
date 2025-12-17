@@ -2,7 +2,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 // services/phones.ts
 export async function getPhoneById(id) {
   // call your DB or external API directly
-  const res = await fetch(`${apiUrl}/api/phones/${id}`);
+  const res = await fetch(`https://api.mobile42.com/api/phones/${id}`);
   if (!res.ok) return null;
   const json = await res.json();
   return json.data; // return phone object
@@ -10,7 +10,7 @@ export async function getPhoneById(id) {
 
 export async function getPhoneBySlug(slug) {
   // call your DB or external API directly
-  const res = await fetch(`${apiUrl}/api/phones/${slug}`, {
+  const res = await fetch(`https://api.mobile42.com/api/phones/${slug}`, {
     // next: { revalidate: 86400 }, // Cache for 1 hour
   });
   if (!res.ok) return null;
@@ -20,14 +20,14 @@ export async function getPhoneBySlug(slug) {
 
 export async function homePageData() {
   // call your DB or external API directly
-  const res = await fetch(`${apiUrl}/api/homepage`);
+  const res = await fetch(`https://api.mobile42.com/api/homepage`);
   const json = await res.json();
   return json.data; // return phone object
 }
 
 export async function getAllPhoneSlugs() {
   // call your DB or external API directly
-  const res = await fetch(`${apiUrl}/api/getPhoneBySlug`);
+  const res = await fetch(`https://api.mobile42.com/api/getPhoneBySlug`);
   const json = await res.json();
   return json.data; // return phone object
 }
@@ -37,7 +37,7 @@ export async function mobilePageData(filters = [], sortValue) {
     filters, // your parsed filters
     sort: sortValue,
   };
-  const res = await fetch(`${apiUrl}/api/phones`, {
+  const res = await fetch(`https://api.mobile42.com/api/phones`, {
     method: "POST", // or "GET" if your backend expects query params
     headers: {
       "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export async function mobilePageData(filters = [], sortValue) {
 }
 export async function getComparePhoneBySlugs(slugs = []) {
   if (!Array.isArray(slugs) || slugs.length === 0) return [];
-  const res = await fetch(`${apiUrl}/api/phones/compare`, {
+  const res = await fetch(`https://api.mobile42.com/api/phones/compare`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export async function getComparePhoneBySlugs(slugs = []) {
 export async function searchPhones(query) {
   if (!query) return [];
   const res = await fetch(
-    `${apiUrl}/api/search?q=${encodeURIComponent(query)}`
+    `https://api.mobile42.com/api/search?q=${encodeURIComponent(query)}`
   );
   const json = await res.json();
   return json.data;
