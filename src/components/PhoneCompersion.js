@@ -10,11 +10,8 @@ import {
   Shield,
   ChevronDown,
   ChevronUp,
-  Star,
   Zap,
   Search,
-  X,
-  ListCheck,
   ListChecks,
   Plus,
 } from "lucide-react";
@@ -29,20 +26,20 @@ const PhoneComparison = ({ phones }) => {
   const [results, setResults] = useState([]);
   const router = useRouter();
   const pathname = usePathname();
+  const [expandAll, setExpandAll] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [firstLoad, setFirstLoad] = useState(true);
   const [visibleSpecs, setVisibleSpecs] = useState(new Set());
-  const [maxDevices, setMaxDevices] = useState("4");
+  const [maxDevices, setMaxDevices] = useState(4);
   useEffect(() => {
     const updateLimit = () => {
-      setMaxDevices(window.innerWidth < 640 ? "2" : "4"); // sm breakpoint
+      setMaxDevices(window.innerWidth < 640 ? 2 : 4); // sm breakpoint
     };
 
     updateLimit();
     window.addEventListener("resize", updateLimit);
     return () => window.removeEventListener("resize", updateLimit);
   }, []);
-  console.log(maxDevices);
   const [expandedSections, setExpandedSections] = useState({
     design: false,
     connectivity: false,
@@ -99,8 +96,8 @@ const PhoneComparison = ({ phones }) => {
     const values = phones.map((phone) =>
       String(
         phone.specs.key[category]?.[specKey] ||
-          phone.specs.expandable[category]?.[specKey] ||
-          ""
+        phone.specs.expandable[category]?.[specKey] ||
+        ""
       )
     );
     return new Set(values).size > 1;
@@ -153,10 +150,9 @@ const PhoneComparison = ({ phones }) => {
               <div key={phone.id} className="flex-1">
                 <div
                   className={`relative w-full px-2 py-1 rounded text-xs font-sans font-medium transition-all
-                    ${
-                      isBest
-                        ? "bg-gray-50 text-gray-700"
-                        : "bg-gray-50 text-gray-700"
+                    ${isBest
+                      ? "bg-gray-50 text-gray-700"
+                      : "bg-gray-50 text-gray-700"
                     }`}
                 >
                   {displayValue}
@@ -255,13 +251,13 @@ const PhoneComparison = ({ phones }) => {
     }; // cancel state update if unmounted
   }, [debouncedSearch]);
 
-  const renderCategory = (categoryName, categoryKey, isExpandable = false) => {
+  const renderCategory = (categoryName, categoryKey, isExpandable = false,keyProps,expandAll = false) => {
     const specs =
       phones[0].specs[isExpandable ? "expandable" : "key"][categoryKey];
     if (!specs) return null;
 
     return (
-      <div className="bg-white rounded shadow-sm border border-gray-200 overflow-hidden">
+      <div key = {keyProps} className={`bg-white rounded shadow-sm border border-gray-200 overflow-hidden`}>
         {/* Category Header */}
         <div className="flex items-center justify-between px-3 py-2 bg-gray-100">
           <div className="flex items-center gap-2">
@@ -272,7 +268,7 @@ const PhoneComparison = ({ phones }) => {
               {categoryName}
             </h3>
           </div>
-          {isExpandable && (
+          {isExpandable && !expandAll && (
             <button
               onClick={() => toggleSection(categoryKey)}
               className="text-gray-600 hover:text-gray-800 transition-colors"
@@ -287,14 +283,15 @@ const PhoneComparison = ({ phones }) => {
         </div>
 
         {/* Specs Rows */}
-        {(!isExpandable || expandedSections[categoryKey]) &&
+        {(!isExpandable || expandAll || expandedSections[categoryKey]) &&
           Object.keys(specs).map((specKey) =>
             renderSpecRow(categoryKey, specKey, isExpandable)
           )}
       </div>
     );
   };
-
+  const keyCategories = Object.keys(phones?.[0]?.specs?.key || {});
+  const detailsCategories =  Object.keys(phones?.[0]?.specs?.expandable || {});
   return (
     <div className="p-1">
       {/* Search Bar */}
@@ -398,20 +395,44 @@ const PhoneComparison = ({ phones }) => {
         <ListChecks size={16} className="text-gray-600" />
         <span>Key Specifications</span>
       </h2>
-      {renderCategory("Battery", "battery")}
-      {renderCategory("Display", "display")}
-      {renderCategory("Camera", "camera")}
-      {renderCategory("Performance", "performance")}
-      {renderCategory("Software", "software")}
+      {keyCategories.map((categoryKey) => {
+        const categoryName = categoryKey.replace(/_/g, " ");
+        return (
+          renderCategory(
+            categoryName,
+            categoryKey,
+            false,
+            `key-${categoryKey}`
+          )
+        );
+      })}
 
       {/* Expandable Specs */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4 px-2 mt-8">
-        🔍 Detailed Specifications
-      </h2>
-      {renderCategory("Design & Build", "design", true)}
-      {renderCategory("Connectivity", "connectivity", true)}
-      {renderCategory("Audio", "audio", true)}
-      {renderCategory("Sensors", "sensors", true)}
+      <div className="flex items-center justify-between mt-3 mb-3">
+  <h2 className="flex items-center gap-1 text-sm font-bold text-gray-900">
+    <Search size={18} className="text-gray-700" />
+    Detailed Specifications
+  </h2>
+
+  <button
+    onClick={() => setExpandAll((prev) => !prev)}
+    className="text-sm text-sky-600 hover:text-sky-700 font-medium"
+  >
+    {expandAll ? "Collapse All" : "Expand All"}
+  </button>
+</div>
+      {detailsCategories.map((categoryKey) => {
+        const categoryName = categoryKey.replace(/_/g, " ");
+        return (
+          renderCategory(
+            categoryName,
+            categoryKey,
+            true,
+           `details-${categoryName}`,
+            expandAll
+          )
+        );
+      })}
 
       {/* Verdict */}
       {/* <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mt-8 border-2 border-blue-200">
