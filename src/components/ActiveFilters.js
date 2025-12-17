@@ -33,11 +33,11 @@ function getActiveTags(parsed, availableFilters) {
   // Price Range
   // Ensure priceRange is an array of ranges
   if (Array.isArray(parsed.priceRange)) {
-    parsed.priceRange.forEach((range) => {
-      if (!Array.isArray(range)) return;
+    const ranges = Array.isArray(parsed.priceRange[0])
+      ? parsed.priceRange // [[min, max], ...]
+      : [parsed.priceRange]; // [min, max]
 
-      const [min, max] = range;
-
+    ranges.forEach(([min, max]) => {
       if (min != null && max != null) {
         tags.push(`${formatNumber(min)} - ${formatNumber(max)}`);
       } else if (min != null) {
@@ -47,7 +47,6 @@ function getActiveTags(parsed, availableFilters) {
       }
     });
   }
-
   // Screen Size
   if (Array.isArray(parsed.screenSize)) {
     parsed.screenSize.forEach((range) => {

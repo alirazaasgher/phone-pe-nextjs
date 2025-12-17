@@ -107,14 +107,6 @@ const PhoneComparison = ({ phones }) => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Toggle spec visibility
-  const toggleSpec = useCallback((specKey) => {
-    setVisibleSpecs((prev) => {
-      const newSet = new Set(prev);
-      newSet.has(specKey) ? newSet.delete(specKey) : newSet.add(specKey);
-      return newSet;
-    });
-  }, []);
   const renderSpecRow = (category, specKey, isExpandable = false) => {
     if (showOnlyDiff && !isDifferent(category, specKey)) return null;
 
@@ -123,11 +115,11 @@ const PhoneComparison = ({ phones }) => {
     return (
       <div
         key={specKey}
-        className="flex justify-between items-center px-3 border-b border-gray-200 hover:bg-blue-50/20 transition-colors"
+        className="flex justify-between items-center px-2 border-b border-gray-200 hover:bg-blue-50/20 transition-colors"
       >
         {/* Left: Icon + Label */}
-        <div className="flex items-center gap-2 min-w-[100px]">
-          <span className="text-gray-800 font-medium text-xs">
+        <div className="flex items-center gap-2 min-w-[90px] sm:min-w-[120px]">
+          <span className="text-gray-800 text-[12px] font-inter font-medium">
             {formatLabel(specKey)}
           </span>
         </div>
@@ -149,12 +141,8 @@ const PhoneComparison = ({ phones }) => {
             return (
               <div key={phone.id} className="flex-1">
                 <div
-                  className={`relative w-full px-2 py-1 rounded text-xs font-sans font-medium transition-all
-                    ${
-                      isBest
-                        ? "bg-gray-50 text-gray-700"
-                        : "bg-gray-50 text-gray-700"
-                    }`}
+                  className={`relative w-full px-1 py-1 rounded text-[12px] font-sans font-medium transition-all
+                    `}
                 >
                   {displayValue}
                   {/* {isBest && (
@@ -333,7 +321,7 @@ const PhoneComparison = ({ phones }) => {
         {searchTerm &&
           results.length > 0 &&
           selectedPhones.length < maxDevices && (
-            <div className="absolute z-20 w-full bg-white border border-gray-200 rounded-xl shadow-xl max-h-96 overflow-y-auto">
+            <div className="absolute z-20 w-full bg-white border border-gray-200 rounded shadow max-h-96 overflow-y-auto">
               {results.map((phone) => (
                 <div
                   key={phone.id}

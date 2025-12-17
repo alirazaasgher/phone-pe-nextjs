@@ -63,33 +63,34 @@ const parseFilters = (filters) => {
         parsed.screenSize.push(item.replace("-screen-size", ""));
         return;
       }
-      // Price: 1500-to-20000
-      if (/^\d+-to-\d+$/.test(item)) {
-        parsed.priceRange.push(item.split("-to-").map(Number));
-        return;
-      }
-      // Price: 15000-20000
-      if (/^\d+-\d+$/.test(item)) {
-        parsed.priceRange.push(item.split("-").map(Number));
-        return;
-      }
+    }
+
+    if (/^\d+-to-\d+$/.test(item)) {
+      parsed.priceRange = item.split("-to-").map(Number);
+      return;
+    }
+
+    // Price: 15000-20000
+    if (/^\d+-\d+$/.test(item)) {
+      parsed.priceRange = item.split("-").map(Number);
+      return;
     }
 
     // Price: price-from-10000
     if (item.startsWith("price-from-")) {
-      parsed.priceRange.push([Number(item.replace("price-from-", ""))]);
+      parsed.priceRange = [item.slice(11), null];
       return;
     }
 
     // Price: price-up-to-10000
     if (item.startsWith("price-up-to-")) {
-      parsed.priceRange.push([null, Number(item.replace("price-up-to-", ""))]);
+      parsed.priceRange = [null, +item.slice(12)];
       return;
     }
 
     // Price: single number
     if (/^\d+$/.test(item)) {
-      parsed.priceRange.push([Number(item)]);
+      parsed.priceRange = [+item, null]; // Treat single number as minimum
       return;
     }
   });

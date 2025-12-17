@@ -45,6 +45,7 @@ export async function mobilePageData(filters = [], sortValue) {
     },
     body: JSON.stringify(body),
   });
+  console.log(JSON.stringify(body));
   const json = await res.json();
   return json.data; // return phone object
 }

@@ -34,16 +34,6 @@ export default function MobileSpeficaion({ phoneDetails }) {
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Compare</span>
           </Link>
-
-          {/* <Link
-            key={phoneDetails.id}
-            href={`#`}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-lg bg-blue-600 hover:bg-blue-700 transition-all flex-shrink-0"
-            aria-label="Compare"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">Compare</span>
-          </Link> */}
         </div>
       </div>
 

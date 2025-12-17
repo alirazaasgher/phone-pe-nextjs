@@ -10,7 +10,7 @@ const PriceCategoriesData = [
     textColor: "text-green-700",
     borderColor: "border-green-200",
     count: 10 || 0,
-    link: "/mobiles/flagship-phones/price-up-to-60000",
+    link: "/mobiles/flagship-phones/price-from-60000",
   },
   {
     id: 2,
