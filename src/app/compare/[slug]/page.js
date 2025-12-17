@@ -1,52 +1,111 @@
 import { getComparePhoneBySlugs } from "@/app/services/phones";
-import QuickCompare from "../../../components/QuickCompare";
 import PhoneComparison from "@/components/PhoneCompersion";
-export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const phoneSlugs = slug.split("-vs-");
-  const phones = await getComparePhoneBySlugs(phoneSlugs);
 
-  // Extract phone names
-  const phoneNames = phones.map((phone) => phone.name).join(" vs ");
-
-  // Create description
-  const description = `Compare ${phoneNames}. See detailed specifications, features, pricing, and differences to help you choose the best phone.`;
-
-  // Create title
-  const title = `${phoneNames} - Phone Comparison | Mobile42`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      images: phones[0]?.image
-        ? [
-            {
-              url: phones[0].image,
-              width: 1200,
-              height: 630,
-              alt: `${phoneNames} comparison`,
-            },
-          ]
-        : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: phones[0]?.image ? [phones[0].image] : [],
-    },
-    alternates: {
-      canonical: `/compare/${slug}`,
-    },
-  };
-}
 export default async function Page({ params }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
   const phone = await getComparePhoneBySlugs(phoneSlugs);
   return <PhoneComparison phones={phone} />;
+}
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const phoneSlugs = slug.split("-vs-");
+
+  try {
+    const phones = await getComparePhoneBySlugs(phoneSlugs);
+
+    // Handle case where phones aren't found
+    if (!phones || phones.length === 0) {
+      return {
+        title: "Phone Comparison Not Found | Mobile42",
+        description:
+          "The requested phone comparison could not be found. Browse our phone database to compare your favorite devices.",
+        alternates: {
+          canonical: "https://www.mobile42.com/compare",
+        },
+      };
+    }
+
+    // Extract phone details
+    const phoneNames = phones.map((phone) => phone.name).join(" vs ");
+    // Create rich description with key specs (if available)
+    const description = `Compare ${phoneNames} side by side. Detailed comparison of specifications, features, camera, battery, performance, price, and design. Find the perfect phone for your needs.`;
+    // Create comprehensive title
+    const title = `${phoneNames} Comparison - Specs, Features & Price | Mobile42`;
+
+    // Prepare keywords
+    const keywords = [
+      ...phones.map((p) => p.name),
+      ...phones.map((p) => p.brand?.name).filter(Boolean),
+      "comparison",
+      "specs",
+      "features",
+      "price",
+      "review",
+    ].join(", ");
+
+    return {
+      title,
+      description,
+      keywords,
+      openGraph: {
+        title,
+        description,
+        url: `https://www.mobile42.com/compare/${slug}`,
+        siteName: "Mobile42",
+        type: "website",
+        images:
+          phones[0]?.primary_image || phones[0]?.image
+            ? [
+                {
+                  url: phones[0].primary_image || phones[0].image,
+                  width: 1200,
+                  height: 630,
+                  alt: `${phoneNames} side by side comparison`,
+                },
+              ]
+            : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images:
+          phones[0]?.primary_image || phones[0]?.image
+            ? [phones[0].primary_image || phones[0].image]
+            : [],
+        creator: "@mobile42", // Add your Twitter handle if you have one
+      },
+      alternates: {
+        canonical: `https://www.mobile42.com/compare/${slug}`,
+      },
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+        },
+      },
+      // Additional structured data hints
+      other: {
+        "article:publisher": "Mobile42",
+        "og:locale": "en_US",
+      },
+    };
+  } catch (error) {
+    console.error("Error generating comparison metadata:", error);
+
+    return {
+      title: "Phone Comparison | Mobile42",
+      description:
+        "Compare smartphones side by side to find the perfect device for you.",
+      alternates: {
+        canonical: "https://www.mobile42.com/compare",
+      },
+    };
+  }
 }

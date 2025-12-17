@@ -96,8 +96,8 @@ const PhoneComparison = ({ phones }) => {
     const values = phones.map((phone) =>
       String(
         phone.specs.key[category]?.[specKey] ||
-        phone.specs.expandable[category]?.[specKey] ||
-        ""
+          phone.specs.expandable[category]?.[specKey] ||
+          ""
       )
     );
     return new Set(values).size > 1;
@@ -150,9 +150,10 @@ const PhoneComparison = ({ phones }) => {
               <div key={phone.id} className="flex-1">
                 <div
                   className={`relative w-full px-2 py-1 rounded text-xs font-sans font-medium transition-all
-                    ${isBest
-                      ? "bg-gray-50 text-gray-700"
-                      : "bg-gray-50 text-gray-700"
+                    ${
+                      isBest
+                        ? "bg-gray-50 text-gray-700"
+                        : "bg-gray-50 text-gray-700"
                     }`}
                 >
                   {displayValue}
@@ -251,13 +252,22 @@ const PhoneComparison = ({ phones }) => {
     }; // cancel state update if unmounted
   }, [debouncedSearch]);
 
-  const renderCategory = (categoryName, categoryKey, isExpandable = false,keyProps,expandAll = false) => {
+  const renderCategory = (
+    categoryName,
+    categoryKey,
+    isExpandable = false,
+    keyProps,
+    expandAll = false
+  ) => {
     const specs =
       phones[0].specs[isExpandable ? "expandable" : "key"][categoryKey];
     if (!specs) return null;
 
     return (
-      <div key = {keyProps} className={`bg-white rounded shadow-sm border border-gray-200 overflow-hidden`}>
+      <div
+        key={keyProps}
+        className={`bg-white rounded shadow-sm border border-gray-200 overflow-hidden`}
+      >
         {/* Category Header */}
         <div className="flex items-center justify-between px-3 py-2 bg-gray-100">
           <div className="flex items-center gap-2">
@@ -291,7 +301,13 @@ const PhoneComparison = ({ phones }) => {
     );
   };
   const keyCategories = Object.keys(phones?.[0]?.specs?.key || {});
-  const detailsCategories =  Object.keys(phones?.[0]?.specs?.expandable || {});
+  const detailsCategories = Object.keys(phones?.[0]?.specs?.expandable || {});
+  const gridClasses = {
+    1: "grid-cols-1",
+    2: "grid-cols-2",
+    3: "grid-cols-3",
+    4: "grid-cols-4",
+  };
   return (
     <div className="p-1">
       {/* Search Bar */}
@@ -358,7 +374,7 @@ const PhoneComparison = ({ phones }) => {
         <p className="text-xs text-gray-500 mt-2">Searching...</p>
       )}
       {/* Phone Cards */}
-      <div className={`grid grid-cols-${maxDevices} sm:gap-3`}>
+      <div className={`grid ${gridClasses[maxDevices]} gap-3`}>
         {phones.map((phone, index) => (
           <PhoneCard
             key={phone.id}
@@ -397,40 +413,36 @@ const PhoneComparison = ({ phones }) => {
       </h2>
       {keyCategories.map((categoryKey) => {
         const categoryName = categoryKey.replace(/_/g, " ");
-        return (
-          renderCategory(
-            categoryName,
-            categoryKey,
-            false,
-            `key-${categoryKey}`
-          )
+        return renderCategory(
+          categoryName,
+          categoryKey,
+          false,
+          `key-${categoryKey}`
         );
       })}
 
       {/* Expandable Specs */}
       <div className="flex items-center justify-between mt-3 mb-3">
-  <h2 className="flex items-center gap-1 text-sm font-bold text-gray-900">
-    <Search size={18} className="text-gray-700" />
-    Detailed Specifications
-  </h2>
+        <h2 className="flex items-center gap-1 text-sm font-bold text-gray-900">
+          <Search size={18} className="text-gray-700" />
+          Detailed Specifications
+        </h2>
 
-  <button
-    onClick={() => setExpandAll((prev) => !prev)}
-    className="text-sm text-sky-600 hover:text-sky-700 font-medium"
-  >
-    {expandAll ? "Collapse All" : "Expand All"}
-  </button>
-</div>
+        <button
+          onClick={() => setExpandAll((prev) => !prev)}
+          className="text-sm text-sky-600 hover:text-sky-700 font-medium"
+        >
+          {expandAll ? "Collapse All" : "Expand All"}
+        </button>
+      </div>
       {detailsCategories.map((categoryKey) => {
         const categoryName = categoryKey.replace(/_/g, " ");
-        return (
-          renderCategory(
-            categoryName,
-            categoryKey,
-            true,
-           `details-${categoryName}`,
-            expandAll
-          )
+        return renderCategory(
+          categoryName,
+          categoryKey,
+          true,
+          `details-${categoryName}`,
+          expandAll
         );
       })}
 
