@@ -43,7 +43,7 @@ async function fetchCompareSlugs() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-    const res = await fetch(`http://127.0.0.1:8000/api/getAllCompareSlugs`, {
+    const res = await fetch(`https://api.mobile42.com/api/getAllCompareSlugs`, {
       signal: controller.signal,
     });
 
