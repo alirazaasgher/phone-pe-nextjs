@@ -423,9 +423,8 @@ const SideBarData = [
     order: 11,
     created_at: "2025-08-24T15:55:36.000000Z",
     updated_at: "2025-08-24T15:55:36.000000Z",
-    values: ["new", "upcoming"],
+    values: ["new", "upcoming", "price-low-to-high", "price-high-to-low"],
   },
-
 ];
 
 export default SideBarData;

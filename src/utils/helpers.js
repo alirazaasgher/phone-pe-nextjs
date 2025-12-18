@@ -1,4 +1,9 @@
-const MOBILE_STATUS = ["new", "upcoming"];
+const MOBILE_STATUS = [
+  "new",
+  "upcoming",
+  "price-low-to-high",
+  "price-high-to-low",
+];
 export function getActiveTags(parsed, availableFilters) {
   const tags = [];
   const capitalize = (str) =>
@@ -150,7 +155,7 @@ export function tagToFilter(tag) {
   return cleanTag.replace(/\s+/g, "-");
 }
 
-export function parseFilters (filters) {
+export function parseFilters(filters) {
   const parsed = {
     brands: [],
     ram: [],
@@ -158,7 +163,7 @@ export function parseFilters (filters) {
     batteryCapacity: [],
     screenSize: [],
     priceRange: [],
-    mobileStatus: ""
+    mobileStatus: "",
   };
 
   const ignoredCategories = [
@@ -249,4 +254,4 @@ export function parseFilters (filters) {
   });
 
   return parsed;
-};
+}

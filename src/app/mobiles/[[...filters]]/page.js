@@ -15,7 +15,7 @@ export default async function Page({ params, searchParams }) {
   }, {});
 
   const phones = await mobilePageData(parsed, sortValue);
-  const activeTags = getActiveTags(parsed,availableFilters)
+  const activeTags = getActiveTags(parsed, availableFilters);
   const readableFilters = filters
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
     .join(", ");
@@ -50,7 +50,7 @@ export default async function Page({ params, searchParams }) {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Phones",
+          name: "mobiles",
           item: canonicalUrl,
         },
       ],
@@ -66,8 +66,7 @@ export default async function Page({ params, searchParams }) {
         phones={phones}
         filters={filters}
         parsed={parsed}
-        availableFilters={availableFilters}
-        activeTags = {activeTags}
+        activeTags={activeTags}
       />
     </>
   );
@@ -75,8 +74,10 @@ export default async function Page({ params, searchParams }) {
 
 export async function generateMetadata({ params }) {
   const awaitedParams = await params;
-  const filters = Array.isArray(awaitedParams?.filters) ? awaitedParams.filters : [];
-  
+  const filters = Array.isArray(awaitedParams?.filters)
+    ? awaitedParams.filters
+    : [];
+
   // Convert filters to readable text
   const readableFilters = filters
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
@@ -102,8 +103,8 @@ export async function generateMetadata({ params }) {
   // Generate dynamic OG image URL
   const ogImageUrl = readableFilters
     ? `https://www.mobile42.com/api/og?filters=${encodeURIComponent(
-      readableFilters
-    )}`
+        readableFilters
+      )}`
     : "https://www.mobile42.com/og-image-default.jpg";
 
   // Generate keywords

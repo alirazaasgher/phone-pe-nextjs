@@ -15,7 +15,10 @@ import {
   MessageCircle,
   Calendar,
   Layers,
+  X,
+  Youtube,
 } from "lucide-react";
+import Link from "next/link";
 import VariantImageGallery from "@/components/VariantImageGallery";
 import MobileSpeficaion from "@/components/MobileSpecfications";
 import Variants from "@/components/common/Variants";
@@ -82,21 +85,30 @@ export default function Details({ phoneDetails, similarMobiles }) {
             {
               icon: <Facebook className="w-4 h-4" />,
               color: "blue",
+              href: "https://www.facebook.com/@mobile42official",
               bg: "blue",
             },
-            { icon: <Twitter className="w-4 h-4" />, color: "sky", bg: "sky" },
             {
               icon: <MessageCircle className="w-4 h-4" />,
+              href: "#",
               color: "green",
               bg: "green",
             },
+            {
+              icon: <Youtube className="w-4 h-4" />,
+              href: "https://www.youtube.com/@mobile42official",
+              color: "red",
+              bg: "red",
+            },
           ].map((btn, i) => (
-            <button
+            <Link
               key={i}
-              className={`p-2 rounded-full bg-${btn.bg}-50 text-${btn.color}-600 hover:bg-${btn.bg}-600 hover:text-white transition-all duration-300 hover:scale-110 shadow-sm`}
+              target={"_blank"}
+              href={btn.href}
+              className={`p-2 rounded-full bg-${btn.bg}-50 text-${btn.color}-600 transition-all duration-300 `}
             >
               {btn.icon}
-            </button>
+            </Link>
           ))}
 
           <button
@@ -181,26 +193,31 @@ export default function Details({ phoneDetails, similarMobiles }) {
               {/* RIGHT SECTION */}
               <div className="flex items-center gap-1.5">
                 {/* Social Icons */}
-                <button
-                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                <Link
+                  target="_blank"
                   aria-label="Facebook"
+                  href="https://www.facebook.com/mobile42official"
+                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
                 >
                   <Facebook className="w-4 h-4" />
-                </button>
+                </Link>
 
-                <button
-                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-4 h-4" />
-                </button>
-
-                <button
-                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                <Link
+                  target="_blank"
                   aria-label="Whatsapp"
+                  href="#"
+                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
                 >
                   <MessageCircle className="w-4 h-4" />
-                </button>
+                </Link>
+
+                <Link
+                  aria-label="Youtube"
+                  href="https://www.youtube.com/@mobile42official"
+                  className="p-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition"
+                >
+                  <Youtube className="w-4 h-4" />
+                </Link>
 
                 {/* Share Button */}
                 <button

@@ -6,10 +6,8 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
         {/* Top Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-
           {/* Brand */}
           <div>
             <h2 className="text-xl font-bold text-white mb-3">Mobile42</h2>
@@ -51,10 +49,26 @@ export default function Footer() {
               Support
             </h3>
             <ul className="space-y-2">
-              <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-              <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
-              <li><Link href="/contact" className="hover:text-white">Contact Us</Link></li>
+              <li>
+                <Link href="/help" className="hover:text-white">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-white">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white">
+                  Contact Us
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -64,16 +78,33 @@ export default function Footer() {
               Follow Us
             </h3>
             <div className="flex space-x-4">
-              <Link aria-label="Facebook" href="https://facebook.com" className="hover:text-white">
+              <Link
+                target="_blank"
+                aria-label="Facebook"
+                href="https://www.facebook.com/@mobile42official"
+                className="hover:text-white"
+              >
                 <Facebook size={20} />
               </Link>
-              <Link aria-label="Twitter" href="https://twitter.com" className="hover:text-white">
+              {/* <Link
+                aria-label="X"
+                href="https://x.com/Mobile42offical"
+                className="hover:text-white"
+              >
                 <Twitter size={20} />
-              </Link>
-              <Link aria-label="Instagram" href="https://instagram.com" className="hover:text-white">
+              </Link> */}
+              <Link
+                aria-label="Instagram"
+                href="https://instagram.com"
+                className="hover:text-white"
+              >
                 <Instagram size={20} />
               </Link>
-              <Link aria-label="Youtube" href="https://youtube.com" className="hover:text-white">
+              <Link
+                aria-label="Youtube"
+                href="https://www.youtube.com/@mobile42official"
+                className="hover:text-white"
+              >
                 <Youtube size={20} />
               </Link>
             </div>

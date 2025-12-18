@@ -151,7 +151,7 @@ export const jsonLd = {
       height: 60,
     },
     sameAs: [
-      "https://www.facebook.com/mobile42official",
+      "https://www.facebook.com/@mobile42official",
       "https://www.twitter.com/@Mobile42offical",
       // "https://www.instagram.com/mobile42",
       "https://www.youtube.com/@mobile42official",
@@ -200,9 +200,10 @@ export default function RootLayout({ children }) {
               url: "https://www.mobile42.com/",
               logo: "https://www.mobile42.com/logo.png",
               sameAs: [
-                "https://facebook.com/mobile42",
-                "https://instagram.com/mobile42",
-                "https://twitter.com/mobile42",
+                "https://www.facebook.com/@mobile42official",
+                "https://www.twitter.com/@Mobile42offical",
+                // "https://www.instagram.com/mobile42",
+                "https://www.youtube.com/@mobile42official",
               ],
             }),
           }}
@@ -216,12 +217,6 @@ export default function RootLayout({ children }) {
               "@type": "WebSite",
               name: "Mobile42",
               url: "https://www.mobile42.com/",
-              potentialAction: {
-                "@type": "SearchAction",
-                target:
-                  "https://www.mobile42.com/search?q={search_term_string}",
-                "query-input": "required name=search_term_string",
-              },
             }),
           }}
         />
