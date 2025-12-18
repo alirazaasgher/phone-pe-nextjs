@@ -12,26 +12,9 @@ import SideBarCard from "./sidebar/SideBarCard";
 import PriceRangeFilter from "./PriceRangeFilter";
 import { usePathname } from "next/navigation";
 import SideBarData from "@/data/SideBarData";
-import Link from "next/link";
 
 export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
-  const [expandedSections, setExpandedSections] = useState([]);
   const [selected, setSelected] = useState({});
-  const toggleSection = (key) => {
-    setExpandedSections((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-    );
-  };
-
-  // Whenever filters change, auto-open sections that have active filters
-  useEffect(() => {
-    const activeSections = Object.keys(selected).filter(
-      (key) => selected[key]?.length > 0
-    );
-    setExpandedSections((prev) =>
-      Array.from(new Set([...prev, ...activeSections]))
-    );
-  }, [selected]);
   const pathname = usePathname();
   const filterSections = [
     { key: "ram", title: "RAM", icon: MemoryStick, grid: "grid-cols-2" },
@@ -48,15 +31,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       icon: Smartphone,
       grid: "grid-cols-1",
     },
-    // { key: "refreshRate", title: "Refresh Rate", icon: Gauge, grid: "grid-cols-2" },
-    // { key: "batteryCapacity", title: "Battery Capacity", icon: Battery, grid: "grid-cols-1" },
-    // { key: "chargingSpeed", title: "Charging Speed", icon: BatteryCharging, grid: "grid-cols-1" },
-    // {
-    //   key: "networkConnectivity",
-    //   title: "Network Connectivity",
-    //   icon: Wifi,
-    //   grid: "grid-cols-1",
-    // },
   ];
   const sideBarMap = SideBarData.reduce((acc, item) => {
     acc[item.slug] = item.values || [];
@@ -71,6 +45,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     batteryCapacity: sideBarMap["battery-capacity"] || [],
     chargingSpeed: sideBarMap["charging-speed"] || [],
     networkConnectivity: sideBarMap["network-connectivity"] || [],
+    mobileStatus: sideBarMap["mobileStatus"] || [],
   };
 
   useEffect(() => {
@@ -91,6 +66,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       const chargingPart = parts.find((p) => p.includes("charging"));
       const networkPart = parts.find((p) => p.includes("network"));
       const screenSizePart = parts.find((p) => p.includes("screen-size"));
+      const statusPart = parts.find(p => ["new", "upcoming"].includes(p)) || null;
       setSelected({
         brands: brandsPart
           ? brandsPart.replace("-mobile-phones", "").split("-")
@@ -129,6 +105,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         screenSize: screenSizePart
           ? screenSizePart.replace("-screen-size", "").split("-")
           : [],
+        mobileStatus:statusPart  
       });
     }
   }, [pathname]);
@@ -155,9 +132,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     // handleApply();
   };
 
-  // Apply filters to parent
-  const handleApply = useCallback(() => {
-    const extractNumericValue = (str) => {
+  const extractNumericValue = (str) => {
       const match = String(str).match(/(\d+)/);
       return match ? parseInt(match[1], 10) : 0;
     };
@@ -206,10 +181,11 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
       return String(sorted[0]);
     };
-
+  // Apply filters to parent
+  const handleApply = useCallback(() => {
+    
     let pathSegments = ["mobiles"];
-
-    // ✅ Brands
+    // Brands
     if (selected.brands?.length) {
       let sortedBrands = sortValues(selected.brands, false);
 
@@ -258,21 +234,24 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     }
     // ✅ Other filters
     const filterConfig = {
-      ram: { order: 1, isNumeric: true, suffix: "ram" },
-      storage: { order: 2, isNumeric: true, suffix: "storage" },
-      refreshRate: { order: 3, isNumeric: true, suffix: "refresh-rate" },
-      camera: { order: 4, isNumeric: true, suffix: "camera" },
-      batteryCapacity: { order: 5, isNumeric: true, suffix: "battery" },
-      screenSize: { order: 6, isNumeric: true, suffix: "screen-size" },
-      processor: { order: 7, isNumeric: false, suffix: "processor" },
+      mobileStatus: { order: 1, isNumeric: false, suffix: "" },
+      ram: { order: 2, isNumeric: true, suffix: "ram" },
+      storage: { order: 3, isNumeric: true, suffix: "storage" },
+      refreshRate: { order: 4, isNumeric: true, suffix: "refresh-rate" },
+      camera: { order: 5, isNumeric: true, suffix: "camera" },
+      batteryCapacity: { order: 6, isNumeric: true, suffix: "battery" },
+      screenSize: { order: 7, isNumeric: true, suffix: "screen-size" },
+      processor: { order: 8, isNumeric: false, suffix: "processor" },
     };
     const sortedFilters = Object.entries(filterConfig).sort(
       ([, a], [, b]) => a.order - b.order
     );
-
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
-
+if (key === "mobileStatus" && typeof value === "string" && value) {
+    pathSegments.push(value); // → /mobiles/new OR /mobiles/upcoming
+    return;
+  }
       if (Array.isArray(value) && value.length) {
         // Filter numeric values if applicable
         const filtered = value.filter((v) => {
@@ -420,10 +399,6 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
               key={key}
               className="border-t pt-4 group"
               open={true}
-              onClick={(e) => {
-                if (e.target.tagName.toLowerCase() === "summary")
-                  toggleSection(key);
-              }}
             >
               <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
                 <span className="flex items-center gap-2">

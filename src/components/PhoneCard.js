@@ -94,7 +94,7 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
         <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center mx-auto">
           <div className="relative w-[150px] h-[150px] lg:w-[200px] lg:h-[200px]">
             <Image
-              src={phone.primary_image || "/images/default_placeholder.webp"}
+              src={"/images/default_placeholder.webp"}
               alt={phone.name}
               fill
               sizes="(max-width: 1024px) 150px, 200px"

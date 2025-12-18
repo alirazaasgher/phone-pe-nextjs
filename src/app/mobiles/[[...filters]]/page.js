@@ -1,103 +1,7 @@
 import { mobilePageData } from "../../services/phones";
 import ClientPhoneGrid from "@/components/ClientPhoneGrid";
 import SideBarData from "@/data/SideBarData";
-const parseFilters = (filters) => {
-  const parsed = {
-    brands: [],
-    ram: [],
-    storage: [],
-    batteryCapacity: [],
-    screenSize: [],
-    priceRange: [],
-  };
-
-  const ignoredCategories = [
-    "mid-range-phones",
-    "budget-phones",
-    "flagship-phones",
-  ];
-
-  filters.forEach((item) => {
-    if (!item) return;
-
-    item = item.toLowerCase().trim();
-
-    // Ignore irrelevant categories
-    if (ignoredCategories.includes(item)) return;
-
-    // Brands
-    if (
-      item.endsWith("-mobile-phones") ||
-      item.endsWith("-mobile") ||
-      item.endsWith("-phones")
-    ) {
-      const brands = item
-        .replace(/-(mobile-phones|mobile|phones)$/, "")
-        .split("-")
-        .map((b) => b.charAt(0).toUpperCase() + b.slice(1));
-      parsed.brands.push(...brands);
-      return;
-    }
-
-    // RAM
-    if (item.includes("ram")) {
-      parsed.ram.push(item.replace("gb-ram", ""));
-      return;
-    }
-
-    // Storage
-    if (item.includes("storage")) {
-      parsed.storage.push(item.replace("gb-storage", ""));
-      return;
-    }
-
-    // Battery
-    if (item.includes("battery")) {
-      parsed.batteryCapacity.push(item.replace("-battery", ""));
-      return;
-    }
-
-    // Screen Size: "4.5to5.0" or "1.0to4.5-screen-size"
-    if (item.includes("to")) {
-      if (item.includes("screen-size")) {
-        parsed.screenSize.push(item.replace("-screen-size", ""));
-        return;
-      }
-    }
-
-    if (/^\d+-to-\d+$/.test(item)) {
-      parsed.priceRange = item.split("-to-").map(Number);
-      return;
-    }
-
-    // Price: 15000-20000
-    if (/^\d+-\d+$/.test(item)) {
-      parsed.priceRange = item.split("-").map(Number);
-      return;
-    }
-
-    // Price: price-from-10000
-    if (item.startsWith("price-from-")) {
-      parsed.priceRange = [item.slice(11), null];
-      return;
-    }
-
-    // Price: price-up-to-10000
-    if (item.startsWith("price-up-to-")) {
-      parsed.priceRange = [null, +item.slice(12)];
-      return;
-    }
-
-    // Price: single number
-    if (/^\d+$/.test(item)) {
-      parsed.priceRange = [+item, null]; // Treat single number as minimum
-      return;
-    }
-  });
-
-  return parsed;
-};
-
+import { getActiveTags, parseFilters } from "@/utils/helpers";
 // utils inside the same file
 export default async function Page({ params, searchParams }) {
   const awaitedParams = await params;
@@ -105,12 +9,13 @@ export default async function Page({ params, searchParams }) {
   const sortValue = awaitedsearchParams.sort || "newest"; // fallback if not provided
   const filters = awaitedParams.filters || [];
   const parsed = parseFilters(filters);
-  const phones = await mobilePageData(parsed, sortValue);
   const availableFilters = SideBarData.reduce((acc, item) => {
     acc[item.slug] = item.values || [];
     return acc;
   }, {});
 
+  const phones = await mobilePageData(parsed, sortValue);
+  const activeTags = getActiveTags(parsed,availableFilters)
   const readableFilters = filters
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
     .join(", ");
@@ -162,14 +67,16 @@ export default async function Page({ params, searchParams }) {
         filters={filters}
         parsed={parsed}
         availableFilters={availableFilters}
+        activeTags = {activeTags}
       />
     </>
   );
 }
 
-export function generateMetadata({ params }) {
-  const filters = Array.isArray(params?.filters) ? params.filters : [];
-
+export async function generateMetadata({ params }) {
+  const awaitedParams = await params;
+  const filters = Array.isArray(awaitedParams?.filters) ? awaitedParams.filters : [];
+  
   // Convert filters to readable text
   const readableFilters = filters
     .map((f) => f.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
@@ -195,8 +102,8 @@ export function generateMetadata({ params }) {
   // Generate dynamic OG image URL
   const ogImageUrl = readableFilters
     ? `https://www.mobile42.com/api/og?filters=${encodeURIComponent(
-        readableFilters
-      )}`
+      readableFilters
+    )}`
     : "https://www.mobile42.com/og-image-default.jpg";
 
   // Generate keywords
@@ -231,8 +138,8 @@ export function generateMetadata({ params }) {
           width: 1200,
           height: 630,
           alt: readableFilters
-            ? `${readableFilters} mobile phones comparison`
-            : "Mobile phones comparison",
+            ? `${readableFilters} mobile phonen`
+            : "Mobile phones",
         },
       ],
       siteName: "Mobile42",

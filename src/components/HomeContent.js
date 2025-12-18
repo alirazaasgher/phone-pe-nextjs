@@ -223,7 +223,7 @@ export default function HomeContent({ homePageResponse }) {
             Newly Launched
           </h2>
           {phones.length > 6 && (
-            <a
+            <Link
               href="/mobiles/newly-launched"
               className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
             >
@@ -241,7 +241,7 @@ export default function HomeContent({ homePageResponse }) {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-            </a>
+            </Link>
           )}
         </div>
 

@@ -36,6 +36,7 @@ export default function ClientPhoneGrid({
   filters,
   parsed,
   availableFilters,
+  activeTags
 }) {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
@@ -61,16 +62,13 @@ export default function ClientPhoneGrid({
           </div>
 
           <ResultsHeader
-            filters={filters}
-            filteredResults="0"
-            trending={[]}
-            parsed={parsed}
+            activeTags={activeTags}
             setLoading={setLoading}
           />
           <ActiveFilters
             filters={filters}
-            parsed={parsed}
-            availableFilters={availableFilters}
+            parsed = {parsed}
+            activeTags={activeTags}
             setLoading={setLoading}
           />
 

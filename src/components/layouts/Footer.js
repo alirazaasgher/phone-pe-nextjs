@@ -6,10 +6,10 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
+
         {/* Top Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          
+
           {/* Brand */}
           <div>
             <h2 className="text-xl font-bold text-white mb-3">Mobile42</h2>
@@ -19,17 +19,31 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <nav aria-label="Quick links">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-3">
               Quick Links
             </h3>
             <ul className="space-y-2">
-              <li><Link href="/mobiles?sort=newest" className="hover:text-white">New</Link></li>
-              <li><Link href="/mobiles?sort=upcoming" className="hover:text-white">Upcoming</Link></li>
-              {/* <li><Link href="/popular" className="hover:text-white">Popular</Link></li>
-              <li><Link href="/compare" className="hover:text-white">Compare</Link></li> */}
+              <li>
+                <Link
+                  href="/mobiles/new"
+                  className="hover:text-white transition-colors"
+                  title="Browse latest mobile phones released in 2025"
+                >
+                  New Mobiles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/mobiles/upcoming"
+                  className="hover:text-white transition-colors"
+                  title="Explore upcoming mobile phone launches and releases"
+                >
+                  Upcoming Mobiles
+                </Link>
+              </li>
             </ul>
-          </div>
+          </nav>
 
           {/* Support */}
           <div>
@@ -50,7 +64,7 @@ export default function Footer() {
               Follow Us
             </h3>
             <div className="flex space-x-4">
-              <Link  aria-label="Facebook" href="https://facebook.com" className="hover:text-white">
+              <Link aria-label="Facebook" href="https://facebook.com" className="hover:text-white">
                 <Facebook size={20} />
               </Link>
               <Link aria-label="Twitter" href="https://twitter.com" className="hover:text-white">

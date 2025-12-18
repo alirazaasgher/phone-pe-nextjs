@@ -406,15 +406,26 @@ const SideBarData = [
     values: BrandsData,
   },
   {
-    id: 9,
+    id: 10,
     name: "Price Categories",
     slug: "Price Categories",
     type: "select",
-    order: 9,
+    order: 10,
     created_at: "2025-08-24T15:55:36.000000Z",
     updated_at: "2025-08-24T15:55:36.000000Z",
     values: PriceCategoriesData,
   },
+  {
+    id: 11,
+    name: "Mobile Status",
+    slug: "mobileStatus",
+    type: "select",
+    order: 11,
+    created_at: "2025-08-24T15:55:36.000000Z",
+    updated_at: "2025-08-24T15:55:36.000000Z",
+    values: ["new", "upcoming"],
+  },
+
 ];
 
 export default SideBarData;
