@@ -1,4 +1,6 @@
 const MOBILE_STATUS = ["new", "upcoming"];
+import CryptoJS from "crypto-js";
+
 export function getActiveTags(parsed, availableFilters) {
   const tags = [];
   const capitalize = (str) =>
@@ -250,3 +252,31 @@ export function parseFilters (filters) {
 
   return parsed;
 };
+
+
+export function signRequest(method, path, body = null) {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const nonce = crypto.randomUUID();
+  // Only stringify if body exists and isn't empty
+  const bodyString = body ? JSON.stringify(body) : "";
+  const payload = method + path + timestamp + nonce + bodyString;
+ 
+  const signature = CryptoJS.HmacSHA256(
+    payload,
+    process.env.NEXT_PUBLIC_API_SECRET
+  ).toString(CryptoJS.enc.Hex);
+  //  console.log('JS Method:', method);
+  // console.log('JS Path:', path);
+  // console.log('JS Timestamp:', timestamp);
+  // console.log('JS Nonce:', nonce);
+  // console.log('JS Body:', bodyString);
+  // console.log('JS Payload:', payload);
+  // console.log('JS signature:', signature);
+  return {
+    "X-CLIENT-ID": "web_app",
+    "X-TIMESTAMP": timestamp.toString(),
+    "X-NONCE": nonce,
+    "X-SIGNATURE": signature,
+    "Content-Type" : "application/json"
+  };
+}
