@@ -56,6 +56,7 @@ export async function mobilePageData(filters = []) {
     body: JSON.stringify({ filters }),
   });
   const json = await res.json();
+
   return json.data; // return phone object
 }
 export async function getComparePhoneBySlugs(slugs = []) {

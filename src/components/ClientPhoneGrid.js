@@ -35,8 +35,7 @@ export default function ClientPhoneGrid({
   phones,
   filters,
   parsed,
-  availableFilters,
-  activeTags
+  activeTags,
 }) {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
@@ -61,21 +60,22 @@ export default function ClientPhoneGrid({
             </div>
           </div>
 
-          <ResultsHeader
-            activeTags={activeTags}
-            setLoading={setLoading}
-          />
+          <ResultsHeader activeTags={activeTags} setLoading={setLoading} />
           <ActiveFilters
             filters={filters}
-            parsed = {parsed}
+            parsed={parsed}
             activeTags={activeTags}
             setLoading={setLoading}
           />
 
           {phones?.length ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
-              {phones.map((phone,index) => (
-                <PhoneCard key={phone.id} phone={phone} isPriority={index < 6}/>
+              {phones.map((phone, index) => (
+                <PhoneCard
+                  key={phone.id}
+                  phone={phone}
+                  isPriority={index < 6}
+                />
               ))}
             </div>
           ) : (

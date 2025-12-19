@@ -66,25 +66,33 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       const chargingPart = parts.find((p) => p.includes("charging"));
       const networkPart = parts.find((p) => p.includes("network"));
       const screenSizePart = parts.find((p) => p.includes("screen-size"));
-      const statusPart = parts.find(p => ["new", "upcoming"].includes(p)) || null;
+      const statusPart =
+        parts.find((p) =>
+          [
+            "new",
+            "upcoming",
+            "price-low-to-high",
+            "price-high-to-low",
+          ].includes(p)
+        ) || null;
       setSelected({
         brands: brandsPart
           ? brandsPart.replace("-mobile-phones", "").split("-")
           : [],
         priceRange: pricePart
           ? (() => {
-            if (pricePart.startsWith("price-from-")) {
-              const min = Number(pricePart.replace("price-from-", ""));
-              return { min, max: null }; // only min
-            } else if (pricePart.startsWith("price-up-to-")) {
-              const max = Number(pricePart.replace("price-up-to-", ""));
-              return { min: null, max }; // only max
-            } else if (/\d+-to-\d+/.test(pricePart)) {
-              const [min, max] = pricePart.split("-to-").map(Number);
-              return { min, max }; // both min and max
-            }
-            return { min: null, max: null }; // fallback
-          })()
+              if (pricePart.startsWith("price-from-")) {
+                const min = Number(pricePart.replace("price-from-", ""));
+                return { min, max: null }; // only min
+              } else if (pricePart.startsWith("price-up-to-")) {
+                const max = Number(pricePart.replace("price-up-to-", ""));
+                return { min: null, max }; // only max
+              } else if (/\d+-to-\d+/.test(pricePart)) {
+                const [min, max] = pricePart.split("-to-").map(Number);
+                return { min, max }; // both min and max
+              }
+              return { min: null, max: null }; // fallback
+            })()
           : [],
         ram: ramPart ? ramPart.replace("-ram", "").split("-to-") : [],
         storage: storagePart
@@ -105,7 +113,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
         screenSize: screenSizePart
           ? screenSizePart.replace("-screen-size", "").split("-")
           : [],
-        mobileStatus:statusPart  
+        mobileStatus: statusPart,
       });
     }
   }, [pathname]);
@@ -133,57 +141,56 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
   };
 
   const extractNumericValue = (str) => {
-      const match = String(str).match(/(\d+)/);
-      return match ? parseInt(match[1], 10) : 0;
-    };
+    const match = String(str).match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : 0;
+  };
 
-    const normalizeString = (str) => {
-      return String(str || "")
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "");
-    };
+  const normalizeString = (str) => {
+    return String(str || "")
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  };
 
-    const sortValues = (values, isNumeric = true) => {
-      if (!values || !values.length) return [];
-      if (!isNumeric) {
-        return [...new Set(values.map(normalizeString))].sort();
-      }
-      return [...new Set(values)].sort(
-        (a, b) => extractNumericValue(a) - extractNumericValue(b)
-      );
-    };
+  const sortValues = (values, isNumeric = true) => {
+    if (!values || !values.length) return [];
+    if (!isNumeric) {
+      return [...new Set(values.map(normalizeString))].sort();
+    }
+    return [...new Set(values)].sort(
+      (a, b) => extractNumericValue(a) - extractNumericValue(b)
+    );
+  };
 
-    const formatRange = (values, key) => {
-      if (!values || !values.length) return "";
-      const sorted = sortValues(values, true);
+  const formatRange = (values, key) => {
+    if (!values || !values.length) return "";
+    const sorted = sortValues(values, true);
 
-      if (sorted.length >= 2) {
-        const min = extractNumericValue(sorted[0]);
-        const max = extractNumericValue(sorted[sorted.length - 1]);
+    if (sorted.length >= 2) {
+      const min = extractNumericValue(sorted[0]);
+      const max = extractNumericValue(sorted[sorted.length - 1]);
 
-        if (isNaN(min) || isNaN(max)) return "";
+      if (isNaN(min) || isNaN(max)) return "";
 
-        if (key === "ram" || key === "storage") return `${min}gb-to-${max}gb`;
-        if (key === "refreshRate") return `${min}hz-to-${max}hz`;
-        if (key === "camera") return `${min}mp-to-${max}mp`;
-        if (key === "battery") return `${min}mah-to-${max}mah`;
-        return `${min}-to-${max}`;
-      }
+      if (key === "ram" || key === "storage") return `${min}gb-to-${max}gb`;
+      if (key === "refreshRate") return `${min}hz-to-${max}hz`;
+      if (key === "camera") return `${min}mp-to-${max}mp`;
+      if (key === "battery") return `${min}mah-to-${max}mah`;
+      return `${min}-to-${max}`;
+    }
 
-      const val = extractNumericValue(sorted[0]);
-      if (isNaN(val)) return "";
+    const val = extractNumericValue(sorted[0]);
+    if (isNaN(val)) return "";
 
-      if (key === "ram" || key === "storage") return `${val}gb`;
-      if (key === "refreshRate") return `${val}hz`;
-      if (key === "camera") return `${val}mp`;
-      if (key === "battery") return `${val}mah`;
+    if (key === "ram" || key === "storage") return `${val}gb`;
+    if (key === "refreshRate") return `${val}hz`;
+    if (key === "camera") return `${val}mp`;
+    if (key === "battery") return `${val}mah`;
 
-      return String(sorted[0]);
-    };
+    return String(sorted[0]);
+  };
   // Apply filters to parent
   const handleApply = useCallback(() => {
-    
     let pathSegments = ["mobiles"];
     // Brands
     if (selected.brands?.length) {
@@ -248,10 +255,10 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     );
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
-if (key === "mobileStatus" && typeof value === "string" && value) {
-    pathSegments.push(value); // → /mobiles/new OR /mobiles/upcoming
-    return;
-  }
+      if (key === "mobileStatus" && typeof value === "string" && value) {
+        pathSegments.push(value); // → /mobiles/new OR /mobiles/upcoming
+        return;
+      }
       if (Array.isArray(value) && value.length) {
         // Filter numeric values if applicable
         const filtered = value.filter((v) => {
@@ -395,11 +402,7 @@ if (key === "mobileStatus" && typeof value === "string" && value) {
 
           {/* Dynamic Filter Sections */}
           {filterSections.map(({ key, title, icon, grid }) => (
-            <details
-              key={key}
-              className="border-t pt-4 group"
-              open={true}
-            >
+            <details key={key} className="border-t pt-4 group" open={true}>
               <summary className="flex items-center justify-between cursor-pointer select-none text-sm font-semibold text-gray-800 hover:text-orange-600 transition-colors">
                 <span className="flex items-center gap-2">
                   {icon && React.createElement(icon, { size: 16 })}
@@ -436,21 +439,20 @@ if (key === "mobileStatus" && typeof value === "string" && value) {
             </Link>
           </div> */}
 
-
           {/* Apply Filters Button - Full Width */}
           <button
             onClick={handleApply}
             disabled={!isSelected}
             className={`w-full py-2.5 rounded-lg font-medium transition-all duration-200
-      ${isSelected
-                ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
+      ${
+        isSelected
+          ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+      }`}
           >
             Apply Filters
           </button>
         </div>
-
       </div>
     </>
   );

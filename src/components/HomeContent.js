@@ -35,9 +35,7 @@ export default function HomeContent({ homePageResponse }) {
 
   return (
     <>
-      <h1 className="sr-only">
-        Mobile42 - Latest & Upcoming Mobile Phones
-      </h1>
+      <h1 className="sr-only">Mobile42 - Latest & Upcoming Mobile Phones</h1>
       <div className="p-1">
         {/* 📌 Brands */}
         <div className="">
@@ -57,7 +55,7 @@ export default function HomeContent({ homePageResponse }) {
                   <Image
                     src={brand.logo}
                     alt={brand.value}
-                    fill              // fills the container
+                    fill // fills the container
                     className="object-contain" // preserves aspect ratio
                     loading="lazy"
                     quality={75}
@@ -102,8 +100,6 @@ export default function HomeContent({ homePageResponse }) {
                   {brand.value}
                 </p>
               </Link>
-
-
             ))}
             {/* <span className="font-mono text-xs text-gray-500 lg:mt-1">
                   {brand.count} models
@@ -224,7 +220,7 @@ export default function HomeContent({ homePageResponse }) {
           </h2>
           {phones.length > 6 && (
             <Link
-              href="/mobiles/newly-launched"
+              href="/mobiles/new"
               className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
             >
               View All
@@ -294,7 +290,7 @@ export default function HomeContent({ homePageResponse }) {
           </h2>
           {phones.length > 6 && (
             <a
-              href="/mobiles/newly-launched"
+              href="/mobiles/upcoming"
               className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
             >
               View All
@@ -352,7 +348,11 @@ export default function HomeContent({ homePageResponse }) {
               <PhonePages phones={upComingMobiles} />
               <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
                 {upComingMobiles.map((phone, index) => (
-                  <PhoneCard key={phone.id} phone={phone} isPriority={index < 6} />
+                  <PhoneCard
+                    key={phone.id}
+                    phone={phone}
+                    isPriority={index < 6}
+                  />
                 ))}
               </div>
             </div>
@@ -369,7 +369,7 @@ export default function HomeContent({ homePageResponse }) {
               </h2>
               {popularMobiles.length > 6 && (
                 <a
-                  href="/mobiles/newly-launched"
+                  href="/mobiles/popular"
                   className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
                 >
                   View All

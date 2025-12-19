@@ -10,7 +10,7 @@ export default function ResultsHeader({ activeTags, setLoading }) {
     { value: "upcoming", label: "📅 Upcoming", icon: <Calendar size={16} /> },
     { value: "price-low-to-high", label: "⬇ Price: Low to High", icon: <ArrowDown size={16} /> },
     { value: "price-high-to-low", label: "⬆ Price: High to Low", icon: <ArrowUp size={16} /> },
-    { value: "popular", label: "⭐ Most Popular", icon: <Star size={16} /> }, // optional
+    // { value: "popular", label: "⭐ Most Popular", icon: <Star size={16} /> },
   ];
   const pathname = usePathname();
   const parts = pathname.split("/").filter(Boolean);
