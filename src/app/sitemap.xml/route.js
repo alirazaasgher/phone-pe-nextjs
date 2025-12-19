@@ -1,11 +1,11 @@
+import { getAllPhoneCount } from "../services/phones";
+
 // app/sitemap.xml/route.js
 const PHONES_PER_SITEMAP = 1000; // must match your phones sitemap per-page
 const baseUrl = "https://www.mobile42.com";
 export async function GET() {
   // 1. Fetch total phone count from API
-  const res = await fetch(`https://api.mobile42.com/api/count`);
-  const data = await res.json();
-  const totalPhones = data.count || 0;
+  const totalPhones = await getAllPhoneCount() || 0;;
 
   // 2. Calculate total phone sitemap pages
   const totalPages = Math.ceil(totalPhones / PHONES_PER_SITEMAP);

@@ -24,7 +24,7 @@ export async function GET() {
     {
       url: `${baseUrl}/compare`,
       lastModified: new Date(),
-      priority: 0.7,
+      priority: 0.8,
       changefreq: "weekly",
     },
   ];

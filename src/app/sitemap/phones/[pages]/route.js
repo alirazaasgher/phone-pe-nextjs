@@ -1,7 +1,9 @@
+import { fetchPhones } from "@/app/services/phones";
+
 // app/sitemap/phones-[page].xml/route.js
 const PHONES_PER_SITEMAP = 1000; // Max 50k URLs per sitemap, but 1000 is safer
 
-export async function GET(request, { params }) {
+export async function GET({ params }) {
   const baseUrl = "https://www.mobile42.com";
   const page = parseInt(params.page, 10) || 1;
   // Fetch paginated phones
@@ -26,20 +28,4 @@ ${phones
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   });
-}
-
-async function fetchPhones(offset, limit) {
-  // Your database query with pagination
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}phones?page=${offset}&perPage=${limit}`,
-    {
-      method: "POST", // or "GET" if your backend expects query params
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  const json = await res.json();
-  return json.data; // return phone object
 }

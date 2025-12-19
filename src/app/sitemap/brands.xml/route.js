@@ -1,3 +1,5 @@
+import { fetchBrands } from "@/app/services/phones";
+
 // app/sitemap/brands.xml/route.js
 export async function GET() {
   const baseUrl = "https://www.mobile42.com";
@@ -24,11 +26,4 @@ ${brands
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   });
-}
-
-async function fetchBrands() {
-  // Your database query
-  const res = await fetch(`https://api.mobile42.com/api/brands`);
-  const json = await res.json();
-  return json.data;
 }
