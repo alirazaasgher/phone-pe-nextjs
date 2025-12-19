@@ -20,8 +20,10 @@ export async function getPhoneBySlug(slug) {
     method: "GET",
     headers: headers,
   });
+
   if (!res.ok) return null;
   const json = await res.json();
+  console.log(json);
   return json; // return phone object
 }
 
@@ -49,25 +51,38 @@ export async function getAllPhoneSlugs() {
 
 export async function mobilePageData(filters = []) {
   const path = `/api/phones`;
-  const headers = signRequest("POST", path);
+  const body = { filters };
+  const headers = signRequest("POST", path, body);
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "POST",
-    headers: headers,
-    body: JSON.stringify({ filters }),
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
+  console.log(JSON.stringify({ filters }));
   const json = await res.json();
-
+  console.log(json);
   return json.data; // return phone object
 }
 export async function getComparePhoneBySlugs(slugs = []) {
   if (!Array.isArray(slugs) || slugs.length === 0) return [];
   const path = `/api/phones/compare`;
-  const headers = signRequest("POST", path);
+  const body = { slugs };
+  const headers = signRequest("POST", path, body);
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "POST",
-    headers: headers,
-    body: JSON.stringify({ slugs }),
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
+  // Log response details
+  // console.log("Status:", res.status);
+  // console.log("Status Text:", res.statusText);
+  // console.log("Headers:", Object.fromEntries(res.headers.entries()));
   if (!res.ok) return [];
   const json = await res.json();
   return json.data; // array of phone objects
@@ -75,9 +90,10 @@ export async function getComparePhoneBySlugs(slugs = []) {
 
 export async function searchPhones(query) {
   if (!query) return [];
-  const path = `/api/search?q=${encodeURIComponent(query)}`;
+  const path = "/api/search";
+  const queryString = `?q=${encodeURIComponent(query)}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`https://api.mobile42.com${path}${queryString}`, {
     method: "GET",
     headers: headers,
   });

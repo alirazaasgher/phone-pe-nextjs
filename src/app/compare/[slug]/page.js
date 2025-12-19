@@ -9,12 +9,12 @@ export default async function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
+  console.log(params);
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
 
   try {
     const phones = await getComparePhoneBySlugs(phoneSlugs);
-
     // Handle case where phones aren't found
     if (!phones || phones.length === 0) {
       return {
