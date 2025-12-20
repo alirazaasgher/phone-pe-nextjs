@@ -215,7 +215,7 @@ export default function HomeContent({ homePageResponse }) {
           <HomePageSlider
             phones={phones}
             itemsPerPage={itemsPerPage}
-            title="Newly Launched"
+            title="Newly Launched Phones"
             redriectTo="new"
           />
         )}
@@ -224,27 +224,24 @@ export default function HomeContent({ homePageResponse }) {
           <HomePageSlider
             phones={upComingMobiles}
             itemsPerPage={itemsPerPage}
-            title="Upcoming Mobiles"
+            title="Upcoming Phones"
             redriectTo="upcoming"
           />
         )}
         <PhonePages phones={upComingMobiles} />
         {PriceCategoriesData.map((cat) => {
           const phones = priceRangesData?.[cat.key] || [];
-
           if (!phones.length) return null;
-
           return (
-            <>
+            <div key={cat.key}>
               <HomePageSlider
-                key={cat.key}
                 phones={phones}
-                title={cat.title}
+                title={`${cat.homePageTitle}`}
                 redriectTo={cat.link}
                 itemsPerPage={itemsPerPage}
               />
               <PhonePages phones={phones} />
-            </>
+            </div>
           );
         })}
       </div>

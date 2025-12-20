@@ -31,9 +31,9 @@ export default function HomePageSlider({
   const currentItems = phones.slice(startIndex, endIndex);
   return (
     <>
-      <div className="flex justify-between items-center mt-2 mb-3">
+      <div className="flex justify-between items-center mt-3 mb-3">
         <h2
-          className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
+          className={`${poppins.className} text-base sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4 sm:mb-6`}
         >
           {title}
         </h2>
