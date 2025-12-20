@@ -243,7 +243,7 @@ export default function HomeContent({ homePageResponse }) {
                 redriectTo={cat.link}
                 itemsPerPage={itemsPerPage}
               />
-              <PhonePages phones={phones} />;
+              <PhonePages phones={phones} />
             </>
           );
         })}
