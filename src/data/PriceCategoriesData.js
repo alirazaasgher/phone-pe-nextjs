@@ -1,6 +1,7 @@
 const PriceCategoriesData = [
   {
     id: 1,
+    key: "above_60000",
     title: "Above 60,000",
     subtitle: "Flagships",
     range: "> 50,000 Rs.",
@@ -14,6 +15,7 @@ const PriceCategoriesData = [
   },
   {
     id: 2,
+    key: "50000_60000",
     title: "50,000 - 60,000",
     subtitle: "Flagships",
     range: "> 50,000 Rs.",
@@ -27,6 +29,7 @@ const PriceCategoriesData = [
   },
   {
     id: 3,
+    key: "40000_50000",
     title: "40,000 - 50,000",
     subtitle: "Mid-Range",
     range: "40,000 - 50,000 Rs.",
@@ -40,6 +43,7 @@ const PriceCategoriesData = [
   },
   {
     id: 4,
+    key: "30000_40000",
     title: "30,000 - 40,000",
     subtitle: "Popular Picks",
     range: "30,000 - 40,000 Rs.",
@@ -53,6 +57,7 @@ const PriceCategoriesData = [
   },
   {
     id: 5,
+    key: "20000_30000",
     title: "20,000 - 30,000",
     subtitle: "Best Value",
     range: "20,000 - 30,000 Rs.",
@@ -66,6 +71,7 @@ const PriceCategoriesData = [
   },
   {
     id: 6,
+    key: "10000_20000",
     title: "10,000 - 20,000",
     subtitle: "Budget",
     range: "10,000 - 20,000 Rs.",

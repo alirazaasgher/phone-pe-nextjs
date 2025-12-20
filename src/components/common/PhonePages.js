@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from "react";
 import PhoneCard from "../PhoneCard";
 import MobileCompetitors from "./MobileCompetitors";
-import { X } from "lucide-react";
 export default function PhonePages({
   phones,
   phoneDetails,

@@ -23,7 +23,6 @@ export async function getPhoneBySlug(slug) {
 
   if (!res.ok) return null;
   const json = await res.json();
-  console.log(json);
   return json; // return phone object
 }
 

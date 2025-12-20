@@ -1,16 +1,13 @@
 "use client";
 import {
   Smartphone,
-  ChevronLeft,
-  ChevronRight,
   Diamond,
   Scale,
   Flame,
   Lightbulb,
   Phone,
 } from "lucide-react";
-import PhoneCard from "./PhoneCard";
-import { Inter, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import BrandsData from "@/data/BrandsData";
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,13 +17,16 @@ import PriceCategoriesData from "@/data/PriceCategoriesData";
 import Link from "next/link";
 import PhonePages from "./common/PhonePages";
 import Image from "next/image";
+import HomePageSlider from "./common/HomePageSlider";
 export default function HomeContent({ homePageResponse }) {
   // ✅ Brands with icons
 
   const phones = homePageResponse?.latest_mobiles || [];
   const upComingMobiles = homePageResponse?.upcoming_mobiles || [];
+  const priceRangesData = homePageResponse?.price_ranges || [];
   const popularMobiles = homePageResponse?.popular_mobiles || [];
   const itemsPerPage = 3;
+
   if (phones.length === 0) {
     return (
       <p className="text-center text-gray-500 py-8">No new mobiles available</p>
@@ -211,225 +211,39 @@ export default function HomeContent({ homePageResponse }) {
             })}
           </div>
         </div>
-        {/* Newly Launched */}
-        <div className="flex justify-between items-center mt-2 mb-3">
-          <h2
-            className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
-          >
-            Newly Launched
-          </h2>
-          {phones.length > 6 && (
-            <Link
-              href="/mobiles/new"
-              className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
-            >
-              View All
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </Link>
-          )}
-        </div>
-
-        <div className="">
-          {/* Navigation Arrows */}
-          {phones.length > itemsPerPage && (
-            <>
-              {/* Left Arrow */}
-              {/* <button
-                onClick={prevSlide}
-                disabled={isPrevDisabled}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                aria-label="Previous mobiles"
-              >
-                <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button> */}
-
-              {/* Right Arrow */}
-              {/* <button
-                onClick={nextSlide}
-                disabled={isNextDisabled}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                aria-label="Next mobiles"
-              >
-                <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button> */}
-            </>
-          )}
-          <PhonePages phones={phones} />
-
-          {/* Tablet / Desktop grid */}
-          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {phones.map((phone, index) => (
-              <PhoneCard key={phone.id} phone={phone} isPriority={index < 6} />
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-between items-center mt-3 mb-3">
-          <h2
-            className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
-          >
-            Upcoming Mobiles
-          </h2>
-          {phones.length > 6 && (
-            <a
-              href="/mobiles/upcoming"
-              className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
-            >
-              View All
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          )}
-        </div>
-
+        {phones.length > itemsPerPage && (
+          <HomePageSlider
+            phones={phones}
+            itemsPerPage={itemsPerPage}
+            title="Newly Launched"
+            redriectTo="new"
+          />
+        )}
+        <PhonePages phones={phones} />
         {upComingMobiles.length > 0 && (
-          <>
-            <div className="">
-              {/* Navigation Arrows */}
-              {upComingMobiles.length > itemsPerPage && (
-                <>
-                  {/* Left Arrow */}
-                  {/* <button
-                    onClick={prevSlide}
-                    disabled={isPrevDisabled}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                    aria-label="Previous mobiles"
-                  >
-                    <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-                  </button> */}
-
-                  {/* Right Arrow */}
-                  {/* <button
-                    onClick={nextSlide}
-                    disabled={isNextDisabled}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                    aria-label="Next mobiles"
-                  >
-                    <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-                  </button> */}
-                </>
-              )}
-
-              <PhonePages phones={upComingMobiles} />
-              <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-3">
-                {upComingMobiles.map((phone, index) => (
-                  <PhoneCard
-                    key={phone.id}
-                    phone={phone}
-                    isPriority={index < 6}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
+          <HomePageSlider
+            phones={upComingMobiles}
+            itemsPerPage={itemsPerPage}
+            title="Upcoming Mobiles"
+            redriectTo="upcoming"
+          />
         )}
+        <PhonePages phones={upComingMobiles} />
+        {PriceCategoriesData.map((cat) => {
+          const phones = priceRangesData?.[cat.key] || [];
 
-        {popularMobiles.length > 0 && (
-          <>
-            <div className="flex justify-between items-center mb-6">
-              <h2
-                className={`${poppins.className} text-sm sm:text-2xl font-bold text-gray-800`}
-              >
-                Popular Mobiles
-              </h2>
-              {popularMobiles.length > 6 && (
-                <a
-                  href="/mobiles/popular"
-                  className="text-sm px-4 py-2 rounded-lg bg-orange-600 text-white font-medium hover:bg-orange-700 transition-colors duration-200 flex items-center gap-2"
-                >
-                  View All
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              )}
-            </div>
-            <div className="relative">
-              {/* Navigation Arrows */}
-              {popularMobiles.length > itemsPerPage && (
-                <>
-                  {/* Left Arrow */}
-                  {/* <button
-                onClick={prevSlide}
-                disabled={isPrevDisabled}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                aria-label="Previous mobiles"
-              >
-                <ChevronLeft className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button> */}
+          if (!phones.length) return null;
 
-                  {/* Right Arrow */}
-                  {/* <button
-                onClick={nextSlide}
-                disabled={isNextDisabled}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10
-                     bg-white rounded-full shadow-lg p-2 hover:bg-gray-50
-                     transition-all duration-200 border border-gray-200
-                     disabled:opacity-50"
-                aria-label="Next mobiles"
-              >
-                <ChevronRight className="cursor-pointer w-5 h-5 text-gray-600" />
-              </button> */}
-                </>
-              )}
-
-              {/* Mobile Grid */}
-              {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
-            {getCurrentItems().map((phone) => (
-              <PhoneCard key={phone.id} phone={phone} />
-            ))}
-          </div> */}
-            </div>
-          </>
-        )}
+          return (
+            <HomePageSlider
+              key={cat.key}
+              phones={phones}
+              title={cat.title}
+              redriectTo={cat.link}
+              itemsPerPage={itemsPerPage}
+            />
+          );
+        })}
       </div>
     </>
   );
