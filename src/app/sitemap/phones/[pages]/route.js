@@ -3,7 +3,7 @@ import { fetchPhones } from "@/app/services/phones";
 // app/sitemap/phones-[page].xml/route.js
 const PHONES_PER_SITEMAP = 1000; // Max 50k URLs per sitemap, but 1000 is safer
 
-export async function GET({ params }) {
+export async function GET(request, { params }) {
   const baseUrl = "https://www.mobile42.com";
   const page = parseInt(params.page, 10) || 1;
   // Fetch paginated phones

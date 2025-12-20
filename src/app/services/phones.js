@@ -113,15 +113,14 @@ export async function getAllPhoneCount() {
 
 export async function fetchPhones(offset, limit) {
   const path = `/api/phones`;
-  const queryString = `?page=${offset}&perPage=${limit}${queryString}`;
+  const queryString = `?page=${offset}&perPage=${limit}`;
   const headers = signRequest("POST", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`https://api.mobile42.com${path}${queryString}`, {
     method: "POST",
     headers: {
       ...headers,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
   });
   const json = await res.json();
   return json.data; // return phone object
