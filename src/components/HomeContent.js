@@ -235,13 +235,16 @@ export default function HomeContent({ homePageResponse }) {
           if (!phones.length) return null;
 
           return (
-            <HomePageSlider
-              key={cat.key}
-              phones={phones}
-              title={cat.title}
-              redriectTo={cat.link}
-              itemsPerPage={itemsPerPage}
-            />
+            <>
+              <HomePageSlider
+                key={cat.key}
+                phones={phones}
+                title={cat.title}
+                redriectTo={cat.link}
+                itemsPerPage={itemsPerPage}
+              />
+              <PhonePages phones={phones} />;
+            </>
           );
         })}
       </div>
