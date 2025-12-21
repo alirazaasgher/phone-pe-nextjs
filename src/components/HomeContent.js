@@ -71,7 +71,7 @@ export default function HomeContent({ homePageResponse }) {
               </Link>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">
+          <p className="text-center text-xs text-gray-800 mt-2 sm:hidden">
             Swipe →
           </p>
 
@@ -148,7 +148,7 @@ export default function HomeContent({ homePageResponse }) {
                   </p>
 
                   <p
-                    className={`font-semibold text-[10px] ${priceCategorie.textColor} mb-1 text-center truncate w-full`}
+                    className={`font-semibold text-[11px] ${priceCategorie.textColor} mb-1 text-center truncate w-full`}
                   >
                     {priceCategorie.subtitle}
                   </p>
@@ -160,7 +160,7 @@ export default function HomeContent({ homePageResponse }) {
               );
             })}
           </div>
-          <p className="text-center text-xs text-gray-500 mt-2 sm:hidden">
+          <p className="text-center text-xs text-gray-800 mt-2 sm:hidden">
             Swipe →
           </p>
           {/* DESKTOP GRID */}

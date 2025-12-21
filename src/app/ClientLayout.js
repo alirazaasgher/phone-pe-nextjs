@@ -48,7 +48,7 @@ export default function ClientLayout({ children }) {
                   <Loader />
                 </div>
               )}
-              <div className="p-3 opacity-80">{children}</div>
+              <div className="p-3">{children}</div>
             </div>
           </main>
         </div>

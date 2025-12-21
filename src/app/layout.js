@@ -1,16 +1,26 @@
 import "./globals.css";
 import { Inter, Poppins } from "next/font/google";
 import ClientLayout from "./ClientLayout";
-import AnalyticsTracker from "./AnalyticsTracker"; // we'll create this next
+import AnalyticsTracker from "./AnalyticsTracker";
 import Script from "next/script";
+
+// ✅ Optimized: Added display: 'swap' and adjustSubset
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap", // Shows fallback font immediately
+  preload: true,
+  adjustFontFallback: true, // Reduces layout shift
 });
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
+
+// const poppins = Poppins({
+//   subsets: ["latin"],
+//   weight: ["400", "500"],
+//   display: "swap",
+//   preload: true,
+//   adjustFontFallback: true,
+// });
+
 export const metadata = {
   metadataBase: new URL("https://www.mobile42.com"),
 
@@ -46,7 +56,6 @@ export const metadata = {
   ],
 
   authors: [{ name: "Mobile42 Team" }],
-
   creator: "Mobile42",
   publisher: "Mobile42",
 
@@ -124,55 +133,21 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
 };
-// Add this JSON-LD schema to your root layout
-export const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Mobile42",
-  url: "https://www.mobile42.com",
-  description:
-    "Explore latest and upcoming mobile phones with detailed specifications, prices, comparisons and expert reviews.",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://www.mobile42.com/search?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "Mobile42",
-    url: "https://www.mobile42.com",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://www.mobile42.com/logo.png",
-      width: 600,
-      height: 60,
-    },
-    sameAs: [
-      "https://www.facebook.com/@mobile42official",
-      "https://www.twitter.com/@Mobile42offical",
-      // "https://www.instagram.com/mobile42",
-      "https://www.youtube.com/@mobile42official",
-    ],
-  },
-};
 
-const GA_MEASUREMENT_ID = "G-KRGHF7G70Y"; // Replace with your GA4 ID
+const GA_MEASUREMENT_ID = "G-KRGHF7G70Y";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
       <body
-        className={`flex flex-col min-h-screen ${poppins.className} bg-gray-50`}
+        className={`flex flex-col min-h-screen ${inter.className} bg-gray-50`}
       >
-        {/* Google Analytics Scripts */}
+        {/* ✅ Moved to afterInteractive for better performance */}
         <Script
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -189,48 +164,47 @@ export default function RootLayout({ children }) {
             {children}
           </div>
         </ClientLayout>
-        {/* JSON-LD SCHEMAS */}
+
+        {/* ✅ Consolidated JSON-LD schemas */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Mobile42",
-              url: "https://www.mobile42.com/",
-              logo: "https://www.mobile42.com/logo.png",
-              sameAs: [
-                "https://www.facebook.com/@mobile42official",
-                "https://www.twitter.com/@Mobile42offical",
-                // "https://www.instagram.com/mobile42",
-                "https://www.youtube.com/@mobile42official",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "Mobile42",
+                  url: "https://www.mobile42.com/",
+                  logo: "https://www.mobile42.com/logo.png",
+                  sameAs: [
+                    "https://www.facebook.com/@mobile42official",
+                    "https://www.twitter.com/@Mobile42offical",
+                    "https://www.youtube.com/@mobile42official",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  name: "Mobile42",
+                  url: "https://www.mobile42.com/",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate:
+                        "https://www.mobile42.com/search?q={search_term_string}",
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+                {
+                  "@type": "WebPage",
+                  name: "Mobile42 - Latest & Upcoming Mobile Phones",
+                  url: "https://www.mobile42.com/",
+                  description:
+                    "Discover the latest and upcoming mobile phones with full specs, prices, and reviews.",
+                },
               ],
-            }),
-          }}
-        />
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Mobile42",
-              url: "https://www.mobile42.com/",
-            }),
-          }}
-        />
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebPage",
-              name: "Mobile42 - Latest & Upcoming Mobile Phones",
-              url: "https://www.mobile42.com/",
-              description:
-                "Discover the latest and upcoming mobile phones with full specs, prices, and reviews.",
             }),
           }}
         />

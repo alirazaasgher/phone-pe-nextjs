@@ -45,12 +45,6 @@ export default function PhonePages({
       <div
         ref={scrollContainerRef}
         className="sm:hidden flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth gap-2"
-        // onScroll={(e) => {
-        //   const scrollLeft = e.currentTarget.scrollLeft;
-        //   const containerWidth = e.currentTarget.offsetWidth;
-        //   const newIndex = Math.round(scrollLeft / containerWidth);
-        //   setPageIndex(newIndex);
-        // }}
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {pages.map((pageCards, page) => (
