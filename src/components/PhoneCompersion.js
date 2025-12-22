@@ -141,10 +141,12 @@ const PhoneComparison = ({ phones }) => {
             return (
               <div key={phone.id} className="flex-1">
                 <div
+                  dangerouslySetInnerHTML={{
+                    __html: displayValue,
+                  }}
                   className={`relative w-full px-1 py-1 rounded text-[12px] font-sans font-medium transition-all
                     `}
                 >
-                  {displayValue}
                   {/* {isBest && (
                     <span className="absolute top-0 right-0 mt-1 mr-1 px-1 text-[10px] font-bold text-green-800 bg-green-200 rounded-full">
                       BEST

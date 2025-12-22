@@ -177,6 +177,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-td ul {
+ul {
   list-style-type: disc;
 }
