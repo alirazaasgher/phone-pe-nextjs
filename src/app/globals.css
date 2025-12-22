@@ -177,6 +177,6 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.test-red {
-  color: red;
+td ul {
+  list-style-type: disc;
 }

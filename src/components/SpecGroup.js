@@ -82,8 +82,14 @@ export default function SpecGroup({
                   <td className="w-[10%]  sm:w-[10%] pr-2 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                     {highlightText(formatText(firstLabel))}
                   </td>
-                  <td className="w-[44%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-                    {firstValue.includes("·")
+                  <td
+                    dangerouslySetInnerHTML={{
+                      __html: highlightText(firstValue),
+                    }}
+                    className="w-[44%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                  >
+                    {/* {highlightText(firstValue)} */}
+                    {/* {firstValue.includes("·")
                       ? firstValue
                           .split("·")
                           .map((part, index) => (
@@ -91,7 +97,7 @@ export default function SpecGroup({
                               {part.trim() && `· ${highlightText(part.trim())}`}
                             </div>
                           ))
-                      : highlightText(firstValue)}
+                      : highlightText(firstValue)} */}
                   </td>
                 </>
               )}
@@ -150,8 +156,13 @@ export default function SpecGroup({
                         {highlightText(formatText(label))}
                       </td>
 
-                      <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-                        {value.includes("·")
+                      <td
+                        dangerouslySetInnerHTML={{
+                          __html: highlightText(value),
+                        }}
+                        className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                      >
+                        {/* {value.includes("·")
                           ? value
                               .split("·")
                               .map((part, index) => (
@@ -160,7 +171,7 @@ export default function SpecGroup({
                                     `· ${highlightText(part.trim())}`}
                                 </div>
                               ))
-                          : highlightText(value)}
+                          : highlightText(value)} */}
                       </td>
 
                       {/* Sub-expand icon */}
@@ -191,9 +202,12 @@ export default function SpecGroup({
                     <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
                       {highlightText(formatText(label))}
                     </td>
-                    <td className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words">
-                      {highlightText(value)}
-                    </td>
+                    <td
+                      dangerouslySetInnerHTML={{
+                        __html: highlightText(value),
+                      }}
+                      className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                    ></td>
                   </tr>
                 ))}
             </tbody>
