@@ -4,7 +4,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export async function getPhoneById(id) {
   const path = `/api/phones/${id}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -16,7 +16,7 @@ export async function getPhoneById(id) {
 export async function getPhoneBySlug(slug) {
   const path = `/api/phones/${slug}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -29,7 +29,7 @@ export async function getPhoneBySlug(slug) {
 export async function homePageData() {
   const path = "/api/homepage";
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -40,7 +40,7 @@ export async function homePageData() {
 export async function getAllPhoneSlugs() {
   const path = "/api/getPhoneBySlug";
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -52,7 +52,7 @@ export async function mobilePageData(filters = []) {
   const path = `/api/phones`;
   const body = { filters };
   const headers = signRequest("POST", path, body);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "POST",
     headers: {
       ...headers,
@@ -68,7 +68,7 @@ export async function getComparePhoneBySlugs(slugs = []) {
   const path = `/api/phones/compare`;
   const body = { slugs };
   const headers = signRequest("POST", path, body);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "POST",
     headers: {
       ...headers,
@@ -90,7 +90,7 @@ export async function searchPhones(query) {
   const path = "/api/search";
   const queryString = `?q=${encodeURIComponent(query)}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}${queryString}`, {
+  const res = await fetch(`${apiUrl}${path}${queryString}`, {
     method: "GET",
     headers: headers,
   });
@@ -101,7 +101,7 @@ export async function searchPhones(query) {
 export async function getAllPhoneCount() {
   const path = "/api/count";
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -114,7 +114,7 @@ export async function fetchPhones(offset, limit) {
   const path = `/api/phones`;
   const queryString = `?page=${offset}&perPage=${limit}`;
   const headers = signRequest("POST", path);
-  const res = await fetch(`https://api.mobile42.com${path}${queryString}`, {
+  const res = await fetch(`${apiUrl}${path}${queryString}`, {
     method: "POST",
     headers: {
       ...headers,
@@ -128,7 +128,7 @@ export async function fetchPhones(offset, limit) {
 export async function fetchCompareSlugs() {
   const path = "/api/getAllCompareSlugs";
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });
@@ -139,7 +139,7 @@ export async function fetchCompareSlugs() {
 export async function fetchBrands() {
   const path = "/api/brands";
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`${apiUrl}${path}`, {
     method: "GET",
     headers: headers,
   });

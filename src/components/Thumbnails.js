@@ -23,9 +23,10 @@ export default function Thumbnails({ colors, active, onClick }) {
                 style={{ width: "56px", height: "56px" }}
               >
                 <div className="flex items-center justify-center w-full h-full p-1">
+                  {/* c.images?.[0]?.url ||  */}
                   <Image
                     src={
-                      c.images?.[0]?.url || "images/default_placeholder.webp"
+                      "images/default_placeholder.webp"
                     }
                     alt={c.name}
                     fill

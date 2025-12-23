@@ -177,6 +177,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-ul {
+.prose-content ul {
   list-style-type: disc;
+  padding-left: 1.03rem;
 }

@@ -1,5 +1,5 @@
 import { HardDrive, Package } from "lucide-react";
-export default function Variants({ variants }) {
+export default function Variants({ variants, storageType}) {
   const colClass = variants.length <= 2 ? "grid-cols-1" : "grid-cols-2";
   const isThree = variants.length === 3;
   return (
@@ -21,9 +21,9 @@ export default function Variants({ variants }) {
                   {v.ram}GB RAM
                 </span>
 
-                {v.storage_type && (
+                {storageType && (
                   <span className="font-sans text-[10px] bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 px-1 py-1 rounded font-semibold shadow-sm border border-orange-200">
-                    {v.storage_type}
+                    {storageType}
                   </span>
                 )}
               </div>

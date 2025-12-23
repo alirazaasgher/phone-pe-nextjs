@@ -144,7 +144,7 @@ const PhoneComparison = ({ phones }) => {
                   dangerouslySetInnerHTML={{
                     __html: displayValue,
                   }}
-                  className={`relative w-full px-1 py-1 rounded text-[12px] font-sans font-medium transition-all
+                  className={`prose-content relative w-full px-1 py-1 rounded text-[12px] font-sans font-medium transition-all
                     `}
                 >
                   {/* {isBest && (

@@ -17,7 +17,7 @@ export default function SpecGroup({
   max_visible,
   searchQuery,
 }) {
-  const [parentOpen, setParentOpen] = useState(true);
+  const [parentOpen, setParentOpen] = useState(max_visible ? true:false);
   const [isOpen, setIsOpen] = useState(false);
 
   // Memoize entries to prevent re-renders
@@ -65,10 +65,10 @@ export default function SpecGroup({
     const [firstLabel, firstValue] = entries[0] || ["", ""];
     return (
       <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-sky-200">
-        <table className="w-full border-collapse">
+        <table className="table-fixed w-full border-collapse">
           <tbody>
             <tr className="hover:bg-gray-50 border-b border-gray-100 relative">
-              <th className="font-poppins w-36 text-left px-2 py-2 font-medium text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
+              <th className="font-poppins w-28 sm:w-36 text-left px-2 py-2 font-medium text-gray-900 text-[12px] lg:text-[16px] bg-gray-100/70 border-r border-gray-100">
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-sky-600" />
                   <span className="font-poppins font-medium text-gray-1000 text-[12px]">
@@ -79,26 +79,18 @@ export default function SpecGroup({
 
               {firstLabel && (
                 <>
-                  <td className="w-[10%]  sm:w-[10%] pr-2 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                  <td className="w-[12%]  sm:w-[15%] lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter overflow-hidden whitespace-nowrap text-ellipsis">
                     {highlightText(formatText(firstLabel))}
                   </td>
-                  <td
-                    dangerouslySetInnerHTML={{
-                      __html: highlightText(firstValue),
-                    }}
-                    className="w-[44%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
-                  >
-                    {/* {highlightText(firstValue)} */}
-                    {/* {firstValue.includes("·")
-                      ? firstValue
-                          .split("·")
-                          .map((part, index) => (
-                            <div key={index}>
-                              {part.trim() && `· ${highlightText(part.trim())}`}
-                            </div>
-                          ))
-                      : highlightText(firstValue)} */}
-                  </td>
+              <td className="w-[42%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5">
+  <div
+    dangerouslySetInnerHTML={{
+      __html: highlightText(firstValue),
+    }}
+    className="prose-content font-medium text-gray-800 text-[12px] font-sans
+               overflow-hidden whitespace-nowrap text-ellipsis"
+  />
+</td>
                 </>
               )}
 
@@ -160,18 +152,8 @@ export default function SpecGroup({
                         dangerouslySetInnerHTML={{
                           __html: highlightText(value),
                         }}
-                        className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                        className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
                       >
-                        {/* {value.includes("·")
-                          ? value
-                              .split("·")
-                              .map((part, index) => (
-                                <div key={index}>
-                                  {part.trim() &&
-                                    `· ${highlightText(part.trim())}`}
-                                </div>
-                              ))
-                          : highlightText(value)} */}
                       </td>
 
                       {/* Sub-expand icon */}
@@ -206,7 +188,7 @@ export default function SpecGroup({
                       dangerouslySetInnerHTML={{
                         __html: highlightText(value),
                       }}
-                      className="w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                      className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
                     ></td>
                   </tr>
                 ))}
