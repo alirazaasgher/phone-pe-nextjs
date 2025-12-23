@@ -25,6 +25,7 @@ import Variants from "@/components/common/Variants";
 import MobileCompetitors from "@/components/common/MobileCompetitors";
 import PhonePages from "@/components/common/PhonePages";
 import PhoneCard from "@/components/PhoneCard";
+import { cameraParser } from "@/utils/helpers";
 export default function Details({ phoneDetails, similarMobiles }) {
   const iconMap = {
     display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
@@ -139,48 +140,55 @@ export default function Details({ phoneDetails, similarMobiles }) {
         <div className="lg:flex lg:flex-row items-center sm:items-start py-2 sm:py-3">
           {/* Image Gallery */}
           <VariantImageGallery phone={phoneDetails} />
-
           {/* Right Specs */}
           <div className="flex-1 flex flex-col gap-1">
             {/* Top Specs & Variants Section */}
-            <div className="flex flex-col lg:flex-row gap-1">
+            <div className="flex flex-col lg:flex-row gap-1 relative">
               {/* Left: Top Specs List */}
               <ul
                 // sm:inline
-                className={` hidden sm:inline ${widthClass} leading-tight overflow-hidden bg-gradient-to-br from-white to-gray-50/50`}
+                className={` hidden sm:inline ${widthClass} overflow-visible leading-tight bg-gradient-to-br from-white to-gray-50/50`}
               >
                 {phoneDetails?.searchIndex?.top_specs.map((item, i) => {
                   if (!item.text) return null;
 
-                  const { icon: IconComponent, text: textColor } = iconMap[item.key];
+                  const { icon: IconComponent, text: textColor } =
+                    iconMap[item.key];
                   const isFirstItem = i === 0;
 
                   // Special handling for camera text
                   let displayText = item.text;
 
-                  if (item.key === 'main_camera') {
+                  if (item.key === "main_camera") {
+                    displayText = cameraParser(item.text);
                     // Format: 50 MP (Wide), 48 MP (Periscope) -> make parentheses content smaller
-                    displayText = item.text.split(',').map(cam => {
-                      const match = cam.match(/(.+?)(\([^)]+\))/);
-                      if (match) {
-                        return `${match[1].trim()} <span class="text-[10px]">${match[2]}</span>`;
-                      }
-                      return cam.trim();
-                    }).join(', ');
+                    // displayText = item.text
+                    //   .split(",")
+                    //   .map((cam) => {
+                    //     const match = cam.match(/(.+?)(\([^)]+\))/);
+                    //     if (match) {
+                    //       return `${match[1].trim()} <span class="text-[10px]">${
+                    //         match[2]
+                    //       }</span>`;
+                    //     }
+                    //     return cam.trim();
+                    //   })
+                    //   .join(", ");
                   }
 
                   return (
                     <li
                       key={item.key || i}
-                      className={`flex items-center gap-1 py-1 px-1 ${!isFirstItem ? "border-t border-gray-200/60" : ""
-                        } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
+                      className={`flex items-center gap-1 py-1 px-1 ${
+                        !isFirstItem ? "border-t border-gray-200/60" : ""
+                      } hover:bg-white/70 transition-all duration-200 cursor-pointer group`}
                     >
                       <div className="flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-lg p-1 group-hover:scale-110 group-hover:shadow-sm transition-all duration-200">
                         <IconComponent size={20} className={textColor} />
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span
-                          className="text-[12px] font-inter truncate"
+                          className="text-[12px] font-inter"
                           dangerouslySetInnerHTML={{ __html: displayText }}
                         />
                         {item.subText && (
@@ -194,7 +202,10 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 })}
               </ul>
               <div className="flex-1 w-full">
-                <Variants variants={phoneDetails?.variants} storageType={phoneDetails?.searchIndex?.storage_type} />
+                <Variants
+                  variants={phoneDetails?.variants}
+                  storageType={phoneDetails?.searchIndex?.storage_type}
+                />
               </div>
             </div>
             <div className="md:hidden flex items-center justify-between border-b border-gray-100 bg-white py-2">
@@ -265,77 +276,26 @@ export default function Details({ phoneDetails, similarMobiles }) {
                 const textColor = iconMap[item.key].text;
                 const backgroundColor = iconMap[item.key].color;
                 let displayText = item.value;
-                if (item.key === 'main_camera') {
-                  const cameras = item.value.split(',').map(cam => {
-                    const trimmed = cam.trim();
-
-                    const typeMatch = trimmed.match(/\(([^)]+)\)/);
-                    const type = typeMatch ? typeMatch[1].trim() : '';
-
-                    const mpMatch = trimmed.match(/(\d+)/);
-                    const mp = mpMatch ? parseInt(mpMatch[1], 10) : 0;
-
-                    return { mp, type, full: trimmed };
-                  });
-
-                  const result = [cameras[0]];
-
-                  const premiumCamera = cameras.slice(1).find(cam =>
-                    cam.type === 'Periscope' ||
-                    ((cam.type === 'Telephoto' || cam.type === 'Ultrawide') && cam.mp >= 48)
-                  );
-
-                  if (premiumCamera) {
-                    result.push(premiumCamera);
-                  }
-
-                  const hiddenCount = cameras.length - result.length;
-
-                  // Main text
-                  const cameraText = result
-                    .map(cam =>
-                      cam.type
-                        ? `${cam.full.replace(/\([^)]+\)/, '')}
-           <span class="text-[9px] text-gray-400">(${cam.type})</span>`
-                        : cam.full
-                    )
-                    .join(', ');
-                  if (hiddenCount > 0) {
-                    displayText = `
-    <span class="relative inline-block w-full">
-
-      <span
-        class="absolute -top-5 right-0
-               rounded-full bg-gray-200 px-1.5 py-0.5
-               text-[9px] font-semibold text-gray-600 whitespace-nowrap">
-        +${hiddenCount} more
-      </span>
-
-      <span class="block pr-8 leading-tight">
-        ${cameraText}
-      </span>
-
-    </span>
-  `;
-                  }
-
-
-
-
+                if (item.key === "main_camera") {
+                  displayText = cameraParser(item.value);
                 }
 
                 return (
                   <li
                     key={i}
-                    className={`${backgroundColor} ${item.key === "main_camera" ? "flex lg:hidden" : "flex"
-                      } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
+                    className={`${backgroundColor} ${
+                      item.key === "main_camera" ? "flex lg:hidden" : "flex"
+                    } flex flex-col items-start p-2 border border-gray-200/80 rounded-md bg-gradient-to-br from-white to-gray-50/40 cursor-pointer group`}
                   >
                     <div className="text-center group-hover:scale-110 transition-transform duration-200">
                       <IconComponent size={20} className={`${textColor}`} />
                     </div>
                     {item.key !== "battery" && (
                       <>
-                        <span className="font-inter font-bold text-[10px] whitespace-nowrap" dangerouslySetInnerHTML={{ __html: displayText }} />
+                        <span
+                          className="font-inter font-bold text-[10px] whitespace-nowrap"
+                          dangerouslySetInnerHTML={{ __html: displayText }}
+                        />
                         <span className="text-[11px] text-gray-500 font-sans">
                           {item.subvalue}
                         </span>
@@ -349,7 +309,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
                         </span>
                         <div className="flex items-center gap-2">
                           {typeof item.subvalue === "object" &&
-                            !Array.isArray(item.subvalue) ? (
+                          !Array.isArray(item.subvalue) ? (
                             // 👉 Case: subvalue is an object → loop
                             Object.entries(item.subvalue).map(
                               ([key, value]) => {
@@ -393,10 +353,11 @@ export default function Details({ phoneDetails, similarMobiles }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
             {/* LEFT SECTION — Specifications */}
             <div
-              className={`${phoneDetails.competitors?.length <= 0
-                ? "lg:col-span-12"
-                : "lg:col-span-9"
-                } border-gray-100`}
+              className={`${
+                phoneDetails.competitors?.length <= 0
+                  ? "lg:col-span-12"
+                  : "lg:col-span-9"
+              } border-gray-100`}
             >
               <MobileSpeficaion phoneDetails={phoneDetails} />
             </div>

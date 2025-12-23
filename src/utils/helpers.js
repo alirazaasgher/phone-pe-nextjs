@@ -287,3 +287,74 @@ export function signRequest(method, path, body = null) {
     "X-SIGNATURE": signature,
   };
 }
+
+export function cameraParser(value) {
+  let displayText = "";
+  const cameras = value.split(",").map((cam) => {
+    const trimmed = cam.trim();
+    const typeMatch = trimmed.match(/\(([^)]+)\)/);
+    const type = typeMatch ? typeMatch[1].trim() : "";
+    const mpMatch = trimmed.match(/(\d+)/);
+    const mp = mpMatch ? parseInt(mpMatch[1], 10) : 0;
+
+    return { mp, type, full: trimmed };
+  });
+
+  let result = [];
+
+  if (cameras.length === 2) {
+    // If exactly 2 cameras, return both
+    result = cameras;
+  } else {
+    // Existing logic for 3 or more cameras
+    result = [cameras[0]];
+    const premiumCamera = cameras
+      .slice(1)
+      .find(
+        (cam) =>
+          cam.type === "Periscope" ||
+          ((cam.type === "Telephoto" || cam.type === "Ultrawide") &&
+            cam.mp >= 48)
+      );
+
+    if (premiumCamera) {
+      result.push(premiumCamera);
+    }
+  }
+
+  const hiddenCount = cameras.length - result.length;
+
+  // Main text
+  const cameraText = result
+    .map((cam) =>
+      cam.type
+        ? `${cam.full.replace(/\([^)]+\)/, "")}
+          <span class="text-[9px] text-gray-400">(${cam.type})</span>`
+        : cam.full
+    )
+    .join(", ");
+
+  if (hiddenCount > 0) {
+    displayText = `<span class="relative inline-block max-w-full">
+
+  <!-- Text container -->
+  <span class="block overflow-hidden whitespace-nowrap text-ellipsis pr-6 sm:pr-11">
+    ${cameraText}
+  </span>
+
+  <!-- Badge -->
+  <span
+    class="absolute z-10
+                 -top-4 sm:top-1/2 sm:-translate-y-1/2
+                 right-0 sm:right-0
+                 rounded-full bg-gray-200 px-1 py-0.5
+                 text-[8.5px] font-semibold text-gray-600"
+  >
+    +${hiddenCount} more
+  </span>
+
+</span>`;
+  }
+
+  return displayText || cameraText;
+}

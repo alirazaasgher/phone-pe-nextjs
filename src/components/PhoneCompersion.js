@@ -65,11 +65,8 @@ const PhoneComparison = ({ phones }) => {
   const formatLabel = (key) => {
     return key
       .replace(/_/g, " ")
-      .replace(/([A-Z])/g, " $1")
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ")
-      .trim();
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
   };
 
   const getBestValue = (category, specKey) => {
