@@ -372,6 +372,9 @@ const PhoneComparison = ({ phones }) => {
           />
         ))}
       </div>
+
+      {/* Similar Mobiles Section */}
+
       {/* Show Only Differences Toggle */}
       {selectedPhones.length > 1 && (
         <div className="bg-white rounded p-2 mt-3 mb-3 shadow-sm border border-gray-200">

@@ -53,7 +53,7 @@ export default function MobileCompetitors({
                 href=""
                 className="block text-xs font-bold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mb-1"
               >
-                {competitorPhone.name}
+                {competitorPhone.brand.name} {competitorPhone.name}
               </a>
               {/* <span className="inline-flex items-center gap-1 px-1 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-full border border-blue-200">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>

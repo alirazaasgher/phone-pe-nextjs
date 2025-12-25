@@ -1,16 +1,28 @@
 import { getPhoneBySlug } from "../services/phones";
-import { buildPhoneMetadata } from "../utils/metadata";
+import { buildPhoneMetadata, generateProductSchema } from "../utils/metadata";
 import { notFound } from "next/navigation";
 import Details from "./Details";
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
   const phone = await getPhoneBySlug(slug);
+  // const productSchema = generateProductSchema(phone);
   if (!phone) {
     notFound(); // Better than returning JSX for 404
   }
 
   return (
-    <Details phoneDetails={phone.data} similarMobiles={phone.similarMobiles} />
+    <>
+      {/* <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productSchema),
+        }}
+      /> */}
+      <Details
+        phoneDetails={phone.data}
+        similarMobiles={phone.similarMobiles}
+      />
+    </>
   );
 }
 

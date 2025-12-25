@@ -74,7 +74,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight group transition-all duration-300">
             <span className="group-hover:text-blue-600">
-              {phoneDetails.name}
+              {phoneDetails.brand.name} {phoneDetails.name}
             </span>
           </h1>
           <p className="text-xs text-gray-600 mt-2 flex items-center gap-2"></p>
@@ -212,7 +212,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
               {/* LEFT SECTION */}
               <div className="flex flex-col">
                 <h1 className="text-xl font-semibold text-gray-900 leading-tight">
-                  {phoneDetails.name}
+                  {phoneDetails.brand.name} {phoneDetails.name}
                 </h1>
                 <span className="text-[11px] text-gray-700 mt-0.5">
                   Released: {phoneDetails.release_date || "TBA"}

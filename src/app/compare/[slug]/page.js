@@ -9,7 +9,6 @@ export default async function Page({ params }) {
 }
 
 export async function generateMetadata({ params }) {
-  console.log(params);
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
 
@@ -28,7 +27,9 @@ export async function generateMetadata({ params }) {
     }
 
     // Extract phone details
-    const phoneNames = phones.map((phone) => phone.name).join(" vs ");
+    const phoneNames = phones
+      .map((phone) => `${phone.brand?.name} ${phone.name}`)
+      .join(" vs ");
     // Create rich description with key specs (if available)
     const description = `Compare ${phoneNames} side by side. Detailed comparison of specifications, features, camera, battery, performance, price, and design. Find the perfect phone for your needs.`;
     // Create comprehensive title

@@ -139,7 +139,7 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
       {/* Product Details */}
       <div className="px-2 py-1.5 lg:px-3.5 flex items-start justify-between gap-2 flex-grow">
         <h3 className="font-bold text-[11.5px] lg:text-sm sm:text-base text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 leading-snug mb-1 flex-1">
-          {phone.name}
+          {phone.brand.name} {phone.name}
         </h3>
 
         {phone.rating && (

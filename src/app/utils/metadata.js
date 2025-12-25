@@ -51,3 +51,62 @@ export function buildPhoneMetadata(phone) {
     },
   };
 }
+
+// lib/schema.js or utils/schema.js
+export function generateProductSchema(phone) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${phone.brand.name} ${phone.name}`,
+    image: phone.primary_image,
+    description:
+      phone.description ||
+      `${phone.brand.name} ${phone.name} specifications and features`,
+    brand: {
+      "@type": "Brand",
+      name: phone.brand.name,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://www.mobile42.com/${phone.slug}`,
+      priceCurrency: "USD", // Adjust if you have price
+      price: phone.price || "0",
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+    aggregateRating: phone.rating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: phone.rating,
+          reviewCount: phone.review_count || 1,
+        }
+      : undefined,
+    additionalProperty: [
+      phone.display?.type && {
+        "@type": "PropertyValue",
+        name: "Display Type",
+        value: phone.display.type,
+      },
+      phone.display?.size && {
+        "@type": "PropertyValue",
+        name: "Display Size",
+        value: phone.display.size,
+      },
+      phone.water_resistance && {
+        "@type": "PropertyValue",
+        name: "Water Resistance",
+        value: phone.water_resistance,
+      },
+      phone.battery?.capacity && {
+        "@type": "PropertyValue",
+        name: "Battery Capacity",
+        value: `${phone.battery.capacity}mAh`,
+      },
+      phone.build && {
+        "@type": "PropertyValue",
+        name: "Build",
+        value: phone.build,
+      },
+    ].filter(Boolean), // Remove undefined values
+  };
+}
