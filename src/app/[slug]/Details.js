@@ -161,19 +161,6 @@ export default function Details({ phoneDetails, similarMobiles }) {
 
                   if (item.key === "main_camera") {
                     displayText = cameraParser(item.text);
-                    // Format: 50 MP (Wide), 48 MP (Periscope) -> make parentheses content smaller
-                    // displayText = item.text
-                    //   .split(",")
-                    //   .map((cam) => {
-                    //     const match = cam.match(/(.+?)(\([^)]+\))/);
-                    //     if (match) {
-                    //       return `${match[1].trim()} <span class="text-[10px]">${
-                    //         match[2]
-                    //       }</span>`;
-                    //     }
-                    //     return cam.trim();
-                    //   })
-                    //   .join(", ");
                   }
 
                   return (

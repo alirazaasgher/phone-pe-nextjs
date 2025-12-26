@@ -1,16 +1,23 @@
 import "./globals.css";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Bebas_Neue } from "next/font/google";
 import ClientLayout from "./ClientLayout";
 import AnalyticsTracker from "./AnalyticsTracker";
 import Script from "next/script";
 
 // ✅ Optimized: Added display: 'swap' and adjustSubset
-const inter = Inter({
+export const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap", // Shows fallback font immediately
   preload: true,
   adjustFontFallback: true, // Reduces layout shift
+});
+
+export const bebas = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  weight: "400",
+  display: "swap",
 });
 
 // const poppins = Poppins({
@@ -138,7 +145,7 @@ const GA_MEASUREMENT_ID = "G-KRGHF7G70Y";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${inter.variable} ${bebas.variable}`}>
       <body
         className={`flex flex-col min-h-screen ${inter.className} bg-gray-50`}
       >

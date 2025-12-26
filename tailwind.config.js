@@ -24,7 +24,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"], // default body
-        heading: ["Poppins", "sans-serif"], // headings
+        heading: ["var(--font-heading)"], // headings
         mono: ["Roboto Mono", "monospace"], // specs
       },
       screens: {

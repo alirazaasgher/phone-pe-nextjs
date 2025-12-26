@@ -4,7 +4,10 @@
 @tailwind utilities;
 
 @layer base {
-
+:root {
+  --font-body: var(--font-inter);
+  --font-heading: var(--font-bebas);
+}
   html {
     font-family: 'Inter', system-ui, sans-serif;
     scroll-behavior: smooth;

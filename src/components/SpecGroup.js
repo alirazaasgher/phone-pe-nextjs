@@ -17,7 +17,7 @@ export default function SpecGroup({
   max_visible,
   searchQuery,
 }) {
-  const [parentOpen, setParentOpen] = useState(max_visible ? true:false);
+  const [parentOpen, setParentOpen] = useState(max_visible ? true : false);
   const [isOpen, setIsOpen] = useState(false);
 
   // Memoize entries to prevent re-renders
@@ -82,15 +82,15 @@ export default function SpecGroup({
                   <td className="w-[12%]  sm:w-[15%] lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter overflow-hidden whitespace-nowrap text-ellipsis">
                     {highlightText(formatText(firstLabel))}
                   </td>
-              <td className="w-[42%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5">
-  <div
-    dangerouslySetInnerHTML={{
-      __html: highlightText(firstValue),
-    }}
-    className="prose-content font-medium text-gray-800 text-[12px] font-sans
+                  <td className="w-[42%] sm:w-[55%] px-1 py-1 lg:px-1 lg:py-0.5">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: highlightText(firstValue),
+                      }}
+                      className="prose-content font-medium text-gray-800 text-[12px] font-sans
                overflow-hidden whitespace-nowrap text-ellipsis"
-  />
-</td>
+                    />
+                  </td>
                 </>
               )}
 
@@ -120,8 +120,8 @@ export default function SpecGroup({
         >
           <div className="flex items-center gap-2">
             <Icon className="w-4 h-4 text-sky-600" />
-            <span className="font-poppins font-medium text-gray-900 text-[15px] lg:text-[14px]">
-              {formatText(title)}
+            <span className="font-heading font-medium text-blue-600 text-[15px] lg:text-[15px]">
+              {formatText(title).toUpperCase()}
             </span>
           </div>
           {isExpandable ? (
@@ -144,7 +144,7 @@ export default function SpecGroup({
                       key={i}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
                     >
-                      <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
+                      <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-900 text-[12px] sm:text-[13px] font-inter whitespace-normal break-words">
                         {highlightText(formatText(label))}
                       </td>
 
@@ -152,9 +152,8 @@ export default function SpecGroup({
                         dangerouslySetInnerHTML={{
                           __html: highlightText(value),
                         }}
-                        className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
-                      >
-                      </td>
+                        className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 text-gray-700 text-[12px] sm:text-[13px] font-sans whitespace-normal break-words"
+                      ></td>
 
                       {/* Sub-expand icon */}
                       {showSubExpand && (
@@ -188,7 +187,7 @@ export default function SpecGroup({
                       dangerouslySetInnerHTML={{
                         __html: highlightText(value),
                       }}
-                      className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 font-medium text-gray-800 text-[12px] font-sans whitespace-normal break-words"
+                      className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 text-gray-700 text-[12px] font-sans whitespace-normal break-words"
                     ></td>
                   </tr>
                 ))}
