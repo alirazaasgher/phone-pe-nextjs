@@ -12,7 +12,7 @@ export async function GET() {
     {
       url: `${baseUrl}/mobiles`,
       lastModified: new Date(),
-      priority: 0.9,
+      priority: 0.8,
       changefreq: "daily",
     },
     {

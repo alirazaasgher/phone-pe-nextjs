@@ -401,29 +401,33 @@ export default function Details({ phoneDetails, similarMobiles }) {
                   phoneDetails={phoneDetails}
                   fromCompetitor={false}
                   iconMap={iconMap}
+                  fromDetailsPage={true}
+                  phoneSlug={phoneDetails.slug}
                 />
               </div>
             )}
             {similarMobiles.length > 0 && (
-              <div className="px-1 hidden sm:flex col-span-full  justify-between items-center border-b border-blue-500 mt-3 pb-2">
+              <div className="px-2 hidden sm:flex col-span-full  justify-between items-center border-b border-blue-500 mt-3 pb-2">
                 <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                   <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                   Similar Mobiles
                 </h2>
                 {similarMobiles.length > 6 && (
-                  <a className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
+                  <Link className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
                     View All
-                  </a>
+                  </Link>
                 )}
               </div>
             )}
 
-            <div className="px-1 py-1 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="px-2 py-1 col-span-full hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-2">
               {similarMobiles.map((phone, index) => (
                 <PhoneCard
                   key={phone.id}
                   phone={phone}
                   isPriority={index < 6}
+                  fromDetailsPage={true}
+                  phoneSlug={phoneDetails.slug}
                 />
               ))}
             </div>

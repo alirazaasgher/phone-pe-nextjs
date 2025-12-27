@@ -16,7 +16,7 @@ ${phones
     <loc>${baseUrl}/${phone.slug}</loc>
     <lastmod>${new Date(phone.updated_at).toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>`
   )
   .join("\n")}

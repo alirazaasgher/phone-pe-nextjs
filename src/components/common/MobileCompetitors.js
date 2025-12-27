@@ -35,33 +35,34 @@ export default function MobileCompetitors({
         className="min-h-[302px] group border bg-white rounded-lg p-1 shadow-md border-blue-400 transition-all duration-300 flex flex-col"
       >
         <div className="flex-1">
-          <div className="flex items-start gap-2 mb-2 pb-2 border-b border-gray-200">
-            <div className="relative w-20 h-24 flex items-center justify-center">
-              <Image
-                src={competitorPhone.primary_image}
-                alt={competitorPhone.name}
-                fill
-                className="object-contain object-center p-1"
-                sizes="80px"
-              />
-              <div className="absolute -top-0 right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
-                <span className="text-white text-[9px] font-bold">VS</span>
+          <Link
+            href={`/${competitorPhone.slug}`}
+            className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+          >
+            <div className="flex items-start gap-2 mb-2 pb-2 border-b border-gray-200">
+              <div className="relative w-20 h-24 flex items-center justify-center">
+                <Image
+                  src={competitorPhone.primary_image}
+                  alt={competitorPhone.name}
+                  fill
+                  className="object-contain object-center p-1"
+                  sizes="80px"
+                />
+                <div className="absolute -top-0 right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-white text-[9px] font-bold">VS</span>
+                </div>
               </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <a
-                href=""
-                className="block text-xs font-bold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mb-1"
-              >
-                {competitorPhone.brand.name} {competitorPhone.name}
-              </a>
-              {/* <span className="inline-flex items-center gap-1 px-1 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-full border border-blue-200">
+              <div className="flex-1 min-w-0">
+                <div className="block text-xs font-bold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mb-1">
+                  {competitorPhone.brand.name} {competitorPhone.name}
+                </div>
+                {/* <span className="inline-flex items-center gap-1 px-1 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-full border border-blue-200">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
               Competitor
             </span> */}
+              </div>
             </div>
-          </div>
-
+          </Link>
           <div className="max-w-sm border-gray-700 mx-auto bg-white overflow-hidden">
             {commonKeys.map((key) => {
               const IconComponent = iconMap[key]?.icon;
@@ -119,10 +120,10 @@ export default function MobileCompetitors({
 
         <div className="flex justify-end mt-4">
           <Link
-            href={`/${competitorPhone.slug}`}
+            href={`/compare/${phoneDetails.slug}-vs-${competitorPhone.slug}`}
             className="inline-flex items-center px-4 py-2 text-[12px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors shadow-sm"
           >
-            View Details →
+            Compare →
           </Link>
         </div>
       </div>

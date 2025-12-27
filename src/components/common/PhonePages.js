@@ -7,6 +7,8 @@ export default function PhonePages({
   phoneDetails,
   fromCompetitor = false,
   iconMap = false,
+  fromDetailsPage = false,
+  phoneSlug = "",
 }) {
   const [pageIndex, setPageIndex] = useState(0);
   const pages = [];
@@ -66,7 +68,14 @@ export default function PhonePages({
                     iconMap={iconMap}
                   />
                 ) : (
-                  <PhoneCard phone={phone} />
+                  <PhoneCard
+                    phone={phone}
+                    isPriority={false}
+                    fromCompare={false}
+                    removePhone={""}
+                    fromDetailsPage={fromDetailsPage}
+                    phoneSlug={phoneSlug}
+                  />
                 )}
               </div>
             ))}

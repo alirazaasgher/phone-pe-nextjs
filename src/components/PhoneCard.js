@@ -13,6 +13,7 @@ import {
   Wifi,
   X,
 } from "lucide-react"; // Icons from Lucide
+import { useRouter } from "next/navigation";
 import { Inter, Poppins } from "next/font/google";
 const inter = Inter({
   subsets: ["latin"],
@@ -23,12 +24,17 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 import { useState } from "react";
-const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
+const PhoneCard = ({
+  phone,
+  isPriority = false,
+  fromCompare = false,
+  removePhone,
+  fromDetailsPage = false,
+  phoneSlug = "",
+}) => {
   const [open, setOpen] = useState(false);
   const isNew = phone.is_new;
   const isPopular = phone.is_popular;
-  const [selectedPhone, setSelectedPhone] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const price = phone?.searchIndex?.min_price;
   const status = phone?.status?.toLowerCase();
   const isUpcoming = status === "rumored" || status === "upcoming";
@@ -54,24 +60,12 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
     .includes("TB")
     ? phone?.searchIndex?.storage
     : `${phone?.searchIndex?.storage}GB`;
-
-  const iconMap = {
-    display: <Monitor size={14} className="text-purple-500" />,
-    main_camera: <Camera size={14} className="text-sky-500" />,
-    battery: <Battery size={14} className="text-green-500" />,
-    chipset: <Cpu size={15} className="text-orange-500" />,
-    wired: <Cable size={15} className="w-3 h-3 mr-0.5 text-orange-500" />,
-    wireless: <Wifi className="w-3 h-3 mr-0.5  text-blue-600" />,
-    reverse: (
-      <RotateCcw className="w-3 h-3 mr-0.5 text-orange-600 text-gray-600" />
-    ),
-  };
   const widthClass =
     currencySymbol === "$" ? "w-[55px] lg:w-[70px]" : "w-[90px] lg:w-[95px]";
-
+  const router = useRouter();
   return (
     <div
-      className={`${inter.className} bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 group flex flex-col relative overflow-hidden`}
+      className={`${inter.className} relative bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 group flex flex-col relative overflow-hidden`}
     >
       {fromCompare && (
         <button
@@ -86,9 +80,9 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
           <X className="w-4 h-4" />
         </button>
       )}
-      <Link
-        href={`/${phone.slug}`}
-        className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+      <div
+        onClick={() => router.push(`/${phone.slug}`)}
+        className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden cursor-pointer"
       >
         {/* Image Container */}
         <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center mx-auto">
@@ -108,7 +102,6 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
         {/* Specs and Price Badge */}
         <div className="absolute bottom-0 left-0 lg:p-2">
           {/* Storage Tag */}
@@ -134,7 +127,19 @@ const PhoneCard = ({ phone, isPriority, fromCompare = false, removePhone }) => {
             </span>
           </div>
         </div>
-      </Link>
+        {fromDetailsPage && (
+          <div className="absolute bottom-0 right-0 lg:p-2">
+            <Link
+              href={`/compare/${phoneSlug}-vs-${phone.slug}`}
+              onClick={(e) => e.stopPropagation()}
+              aria-label={`Compare ${phone.name}`}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-[10px] lg:text-[12px] font-semibold px-2 py-1.5 rounded shadow-md transition whitespace-nowrap"
+            >
+              Compare
+            </Link>
+          </div>
+        )}
+      </div>
 
       {/* Product Details */}
       <div className="px-2 py-1.5 lg:px-3.5 flex items-start justify-between gap-2 flex-grow">
