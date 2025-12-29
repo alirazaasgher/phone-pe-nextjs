@@ -1,5 +1,6 @@
 import { signRequest } from "@/utils/helpers";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 // services/phones.ts
 export async function getPhoneById(id) {
   const path = `/api/phones/${id}`;
@@ -7,6 +8,7 @@ export async function getPhoneById(id) {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   if (!res.ok) return null;
   const json = await res.json();
@@ -19,6 +21,7 @@ export async function getPhoneBySlug(slug) {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
 
   if (!res.ok) return null;
@@ -32,6 +35,7 @@ export async function homePageData() {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data; // return phone object
@@ -43,6 +47,7 @@ export async function getAllPhoneSlugs() {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data; // return phone object
@@ -59,10 +64,12 @@ export async function mobilePageData(filters = []) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data; // return phone object
 }
+
 export async function getComparePhoneBySlugs(slugs = []) {
   if (!Array.isArray(slugs) || slugs.length === 0) return [];
   const path = `/api/phones/compare`;
@@ -75,11 +82,8 @@ export async function getComparePhoneBySlugs(slugs = []) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
+    next: { revalidate: 172800 }, // 2 days cache
   });
-  // Log response details
-  // console.log("Status:", res.status);
-  // console.log("Status Text:", res.statusText);
-  // console.log("Headers:", Object.fromEntries(res.headers.entries()));
   if (!res.ok) return [];
   const json = await res.json();
   return json.data; // array of phone objects
@@ -93,6 +97,7 @@ export async function searchPhones(query) {
   const res = await fetch(`https://api.mobile42.com${path}${queryString}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data;
@@ -104,6 +109,7 @@ export async function getAllPhoneCount() {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
 
   const json = await res.json();
@@ -120,6 +126,7 @@ export async function fetchPhones(offset, limit) {
       ...headers,
       "Content-Type": "application/json",
     },
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data; // return phone object
@@ -131,6 +138,7 @@ export async function fetchCompareSlugs() {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data;
@@ -142,6 +150,7 @@ export async function fetchBrands() {
   const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();
   return json.data;
