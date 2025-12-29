@@ -1,7 +1,7 @@
 import { HardDrive, Package } from "lucide-react";
-export default function Variants({ variants, storageType}) {
+export default function Variants({ variants, storageType }) {
   const colClass = variants.length <= 2 ? "grid-cols-1" : "grid-cols-2";
-  const isThree = variants.length === 3;
+  const isOdd = variants.length > 2 && variants.length % 2 !== 0;
   return (
     <>
       <div className="border-gray-200 mt-2 sm:mt-0">
@@ -11,7 +11,7 @@ export default function Variants({ variants, storageType}) {
             <div
               key={i}
               className={`bg-white rounded shadow-sm px-3 py-3 hover:shadow-md transition-shadow cursor-pointer ${
-                isThree && i === 2 ? "col-span-2" : ""
+                isOdd && i === variants.length - 1 ? "col-span-2" : ""
               }`}
             >
               {/* <MemoryStick className="w-4 h-4 text-orange-600" /> */}
