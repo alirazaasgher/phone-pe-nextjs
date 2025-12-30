@@ -86,7 +86,7 @@ export async function getComparePhoneBySlugs(slugs = []) {
   });
   if (!res.ok) return [];
   const json = await res.json();
-  return json.data; // array of phone objects
+  return json; // array of phone objects
 }
 
 export async function searchPhones(query) {

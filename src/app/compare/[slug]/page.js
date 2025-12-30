@@ -7,8 +7,12 @@ export default async function Page({ params }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
   const phone = await getComparePhoneBySlugs(phoneSlugs);
-  console.log(phone)
-  return <PhoneComparison phones={phone.data} similarMobiles = {phone.similarMobiles} />;
+  return (
+    <PhoneComparison
+      phones={phone.data}
+      similarMobiles={phone.similarMobiles}
+    />
+  );
 }
 
 export async function generateMetadata({ params }) {
@@ -62,13 +66,13 @@ export async function generateMetadata({ params }) {
         images:
           phones[0]?.primary_image || phones[0]?.image
             ? [
-              {
-                url: phones[0].primary_image || phones[0].image,
-                width: 1200,
-                height: 630,
-                alt: `${phoneNames} side by side comparison`,
-              },
-            ]
+                {
+                  url: phones[0].primary_image || phones[0].image,
+                  width: 1200,
+                  height: 630,
+                  alt: `${phoneNames} side by side comparison`,
+                },
+              ]
             : [],
       },
       twitter: {

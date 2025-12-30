@@ -93,8 +93,8 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
     const values = phones.map((phone) =>
       String(
         phone.specs.key[category]?.[specKey] ||
-        phone.specs.expandable[category]?.[specKey] ||
-        ""
+          phone.specs.expandable[category]?.[specKey] ||
+          ""
       )
     );
     return new Set(values).size > 1;
@@ -343,7 +343,7 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
                         />
                         <div>
                           <div className="font-semibold text-gray-900">
-                            {phone.name}
+                            {phone.brand.name} {phone.name}
                           </div>
                           <div className="text-sm text-gray-500 mt-0.5">
                             {phone.brand.name}
@@ -377,8 +377,6 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
                 removePhone={removePhone}
               />
             ))}
-
-
           </div>
 
           {/* Similar Mobiles Section */}
@@ -400,7 +398,6 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
               </>
             )}
           </div> */}
-
 
           {/* Show Only Differences Toggle */}
           {selectedPhones.length > 1 && (
