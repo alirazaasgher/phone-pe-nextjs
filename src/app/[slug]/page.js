@@ -1,14 +1,31 @@
-import { getPhoneBySlug } from "../services/phones";
+import { getPhoneBySlug, getAllPhoneSlugs } from "../services/phones";
 import { buildPhoneMetadata, generateProductSchema } from "../utils/metadata";
 import { notFound } from "next/navigation";
 import Details from "./Details";
+
+// Pre-generate pages for all phones at build time
+export async function generateStaticParams() {
+
+  const phones = await getAllPhoneSlugs();
+   return phones.map((phone) => ({
+    slug: typeof phone === 'string' ? phone : phone.slug,
+  }));
+}
+
+// For spec database: longer revalidation since specs don't change often
+export const revalidate = 172800; // 24 hours (specs are mostly static)
+
+// Allow new phone pages to be generated on-demand
+export const dynamicParams = true;
+
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
   const phone = await getPhoneBySlug(slug);
-  // const productSchema = generateProductSchema(phone);
   if (!phone) {
-    notFound(); // Better than returning JSX for 404
+    notFound();
   }
+
+  //const productSchema = generateProductSchema(phone);
 
   return (
     <>
@@ -26,24 +43,35 @@ export default async function DetailsPage({ params }) {
   );
 }
 
-// Add metadata generation for better SEO
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-
   let phone = await getPhoneBySlug(slug);
-  phone = phone.data;
+  
   if (!phone) {
     return {
-      title: "Phone Not Found",
+      title: "Phone Not Found - Mobile42",
       alternates: { canonical: "https://www.mobile42.com" },
     };
   }
 
+  phone = phone.data;
   const metadata = buildPhoneMetadata(phone);
 
   return {
     title: metadata.title,
     description: metadata.description,
+    keywords: [
+      phone.name,
+      phone.brand.name,
+      "specifications",
+      "specs",
+      "price",
+      "review",
+      "features",
+      phone.chipset?.name,
+      `${phone.ram}GB RAM`,
+      `${phone.storage}GB storage`,
+    ].filter(Boolean),
     openGraph: {
       title: metadata.title,
       description: metadata.description,
@@ -54,7 +82,7 @@ export async function generateMetadata({ params }) {
           url: phone.primary_image,
           width: 1200,
           height: 630,
-          alt: `${phone.brand.name} ${phone.name}`,
+          alt: `${phone.brand.name} ${phone.name} specifications`,
         },
       ],
       type: "website",

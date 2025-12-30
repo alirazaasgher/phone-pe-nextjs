@@ -19,7 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { searchPhones } from "@/app/services/phones";
 import PhoneCard from "./PhoneCard";
 import Loader from "@/app/loading";
-const PhoneComparison = ({ phones }) => {
+const PhoneComparison = ({ phones, similarMobiles }) => {
   const [showOnlyDiff, setShowOnlyDiff] = useState(false);
   const [selectedPhones, setSelectedPhones] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -30,7 +30,6 @@ const PhoneComparison = ({ phones }) => {
   const [expandAll, setExpandAll] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [firstLoad, setFirstLoad] = useState(true);
-  const [visibleSpecs, setVisibleSpecs] = useState(new Set());
   const [maxDevices, setMaxDevices] = useState(4);
   useEffect(() => {
     const updateLimit = () => {
@@ -94,8 +93,8 @@ const PhoneComparison = ({ phones }) => {
     const values = phones.map((phone) =>
       String(
         phone.specs.key[category]?.[specKey] ||
-          phone.specs.expandable[category]?.[specKey] ||
-          ""
+        phone.specs.expandable[category]?.[specKey] ||
+        ""
       )
     );
     return new Set(values).size > 1;
@@ -288,7 +287,7 @@ const PhoneComparison = ({ phones }) => {
     );
   };
   const keyCategories = Object.keys(phones?.[0]?.specs?.key || {});
-  const detailsCategories = Object.keys(phones?.[0]?.specs?.expandable || {});
+  // const detailsCategories = Object.keys(phones?.[0]?.specs?.expandable || {});
   const gridClasses = {
     1: "grid-cols-1",
     2: "grid-cols-2",
@@ -378,9 +377,30 @@ const PhoneComparison = ({ phones }) => {
                 removePhone={removePhone}
               />
             ))}
+
+
           </div>
 
           {/* Similar Mobiles Section */}
+          {/* <h2 className="flex items-center gap-2 text-sm font-medium text-gray-900 mt-3 mb-4 px-1">
+            <span>Suggestions</span>
+          </h2>
+          <div className={`grid ${gridClasses[maxDevices]} gap-3`}>
+            {similarMobiles && similarMobiles.length > 0 && (
+              <>
+                {similarMobiles.map((phone, index) => (
+                  <PhoneCard
+                    key={phone.id}
+                    phone={phone}
+                    isPriority={index < 6}
+                    fromCompare={true}
+                    removePhone={removePhone}
+                  />
+                ))}
+              </>
+            )}
+          </div> */}
+
 
           {/* Show Only Differences Toggle */}
           {selectedPhones.length > 1 && (
@@ -403,6 +423,8 @@ const PhoneComparison = ({ phones }) => {
             </div>
           )}
 
+          {/* Similar MobileS */}
+
           {/* Key Specs */}
           <h2 className="flex items-center gap-2 text-sm font-medium text-gray-900 mt-3 mb-4 px-1">
             <ListChecks size={16} className="text-gray-600" />
@@ -419,7 +441,7 @@ const PhoneComparison = ({ phones }) => {
           })}
 
           {/* Expandable Specs */}
-          <div className="flex items-center justify-between mt-3 mb-3">
+          {/* <div className="flex items-center justify-between mt-3 mb-3">
             <h2 className="flex items-center gap-1 text-sm font-bold text-gray-900">
               <Search size={18} className="text-gray-700" />
               Detailed Specifications
@@ -431,8 +453,8 @@ const PhoneComparison = ({ phones }) => {
             >
               {expandAll ? "Collapse All" : "Expand All"}
             </button>
-          </div>
-          {detailsCategories.map((categoryKey) => {
+          </div> */}
+          {/* {detailsCategories.map((categoryKey) => {
             const categoryName = categoryKey.replace(/_/g, " ");
             return renderCategory(
               categoryName,
@@ -441,7 +463,7 @@ const PhoneComparison = ({ phones }) => {
               `details-${categoryName}`,
               expandAll
             );
-          })}
+          })} */}
 
           {/* Verdict */}
           {/* <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 mt-8 border-2 border-blue-200">
