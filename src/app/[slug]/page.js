@@ -5,16 +5,14 @@ import Details from "./Details";
 
 // Pre-generate pages for all phones at build time
 export async function generateStaticParams() {
-
   const phones = await getAllPhoneSlugs();
-   return phones.map((phone) => ({
-    slug: typeof phone === 'string' ? phone : phone.slug,
+  return phones.map((phone) => ({
+    slug: typeof phone === "string" ? phone : phone.slug,
   }));
 }
 
 // For spec database: longer revalidation since specs don't change often
 export const revalidate = 172800; // 24 hours (specs are mostly static)
-
 // Allow new phone pages to be generated on-demand
 export const dynamicParams = true;
 
@@ -46,7 +44,7 @@ export default async function DetailsPage({ params }) {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   let phone = await getPhoneBySlug(slug);
-  
+
   if (!phone) {
     return {
       title: "Phone Not Found - Mobile42",
