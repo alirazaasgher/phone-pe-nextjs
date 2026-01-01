@@ -20,9 +20,9 @@ export async function generateMetadata({ params }) {
   const phoneSlugs = slug.split("-vs-");
 
   try {
-    const phones = await getComparePhoneBySlugs(phoneSlugs).data;
+    const phones = await getComparePhoneBySlugs(phoneSlugs);
     // Handle case where phones aren't found
-    if (!phones || phones.length === 0) {
+    if (!phones?.success || !phones?.data?.length) {
       return {
         title: "Phone Comparison Not Found | Mobile42",
         description:
@@ -34,24 +34,29 @@ export async function generateMetadata({ params }) {
     }
 
     // Extract phone details
-    const phoneNames = phones
-      .map((phone) => `${phone.brand?.name} ${phone.name}`)
-      .join(" vs ");
+    const phoneNames = Array.isArray(phones?.data)
+      ? phones.data
+          .map((phone) =>
+            `${phone.brand?.name ?? ""} ${phone.name ?? ""}`.trim()
+          )
+          .join(" vs ")
+      : "";
     // Create rich description with key specs (if available)
     const description = `Compare ${phoneNames} side by side. Detailed comparison of specifications, features, camera, battery, performance, price, and design. Find the perfect phone for your needs.`;
     // Create comprehensive title
     const title = `${phoneNames} Comparison - Specs, Features & Price | Mobile42`;
 
-    // Prepare keywords
-    const keywords = [
-      ...phones.map((p) => p.name),
-      ...phones.map((p) => p.brand?.name).filter(Boolean),
-      "comparison",
-      "specs",
-      "features",
-      "price",
-      "review",
-    ].join(", ");
+    const keywords = Array.isArray(phones?.data)
+      ? [
+          ...phones.data.map((p) => p.name).filter(Boolean),
+          ...phones.data.map((p) => p.brand?.name).filter(Boolean),
+          "comparison",
+          "specs",
+          "features",
+          "price",
+          "review",
+        ].join(", ")
+      : "";
 
     return {
       title,

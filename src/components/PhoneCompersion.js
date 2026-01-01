@@ -27,7 +27,6 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
   const [results, setResults] = useState([]);
   const router = useRouter();
   const pathname = usePathname();
-  const [expandAll, setExpandAll] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [firstLoad, setFirstLoad] = useState(true);
   const [maxDevices, setMaxDevices] = useState(4);
@@ -40,12 +39,6 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
     window.addEventListener("resize", updateLimit);
     return () => window.removeEventListener("resize", updateLimit);
   }, []);
-  const [expandedSections, setExpandedSections] = useState({
-    design: false,
-    connectivity: false,
-    audio: false,
-    sensors: false,
-  });
 
   const getCategoryIcon = (category) => {
     const icons = {
@@ -91,11 +84,7 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
 
   const isDifferent = (category, specKey) => {
     const values = phones.map((phone) =>
-      String(
-        phone.specs.key[category]?.[specKey] ||
-          phone.specs.expandable[category]?.[specKey] ||
-          ""
-      )
+      String(phone.specs.key[category]?.[specKey] || "")
     );
     return new Set(values).size > 1;
   };

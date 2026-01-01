@@ -24,6 +24,7 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 import { useState } from "react";
+import Loader from "@/app/loading";
 const PhoneCard = ({
   phone,
   isPriority = false,
@@ -62,6 +63,7 @@ const PhoneCard = ({
     : `${phone?.searchIndex?.storage}GB`;
   const widthClass =
     currencySymbol === "$" ? "w-[55px] lg:w-[70px]" : "w-[90px] lg:w-[95px]";
+  const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
   return (
     <div
@@ -80,53 +82,63 @@ const PhoneCard = ({
           <X className="w-4 h-4" />
         </button>
       )}
-      <div
-        onClick={() => router.push(`/${phone.slug}`)}
-        className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden cursor-pointer"
-      >
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden cursor-pointer">
         {/* Image Container */}
-        <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center mx-auto">
-          <div className="relative w-[150px] h-[150px] lg:w-[200px] lg:h-[200px]">
-            <Image
-              src={phone.primary_image || "/images/default_placeholder.webp"}
-              alt={phone.name}
-              fill
-              sizes="(max-width: 1024px) 150px, 200px"
-              className="object-contain p-3 sm:p-6"
-              fetchPriority={isPriority ? "high" : "auto"}
-              priority={isPriority}
-              quality={85}
-            />
+        <Link
+          href={`/${phone.slug}`}
+          prefetch={true}
+          onClick={() => setIsNavigating(true)}
+          className="block cursor-pointer"
+        >
+          {/* Loading overlay */}
+          {isNavigating && (
+            <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
+              {/* <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /> */}
+              <Loader />
+            </div>
+          )}
+          <div className="w-[190px] h-[190px] lg:w-[220px] lg:h-[220px] flex items-center justify-center mx-auto">
+            <div className="relative w-[150px] h-[150px] lg:w-[200px] lg:h-[200px]">
+              <Image
+                src={phone.primary_image || "/images/default_placeholder.webp"}
+                alt={phone.name}
+                fill
+                sizes="(max-width: 1024px) 150px, 200px"
+                className="object-contain p-3 sm:p-6"
+                fetchPriority={isPriority ? "high" : "auto"}
+                priority={isPriority}
+                quality={85}
+              />
+            </div>
           </div>
-        </div>
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Specs and Price Badge */}
+          <div className="absolute bottom-0 left-0 lg:p-2">
+            {/* Storage Tag */}
+            <div className="bg-gray-800 text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
+              {phone?.searchIndex?.ram}GB | {storage}
+            </div>
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        {/* Specs and Price Badge */}
-        <div className="absolute bottom-0 left-0 lg:p-2">
-          {/* Storage Tag */}
-          <div className="bg-gray-800 text-white text-[7.5px] lg:text-[10.5px] font-medium px-1 py-1 rounded-tl-md rounded-tr-md shadow-sm">
-            {phone?.searchIndex?.ram}GB | {storage}
-          </div>
-
-          {/* Price Box */}
-          <div
-            className={`bg-gray-100 border border-gray-300 shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 ${widthClass} flex items-baseline gap-0.5`}
-          >
-            <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
-              {currencySymbol}
-            </span>
-            <span
-              className={`${
-                noPrice
-                  ? "text-[11px] lg:text-[12px]"
-                  : "text-[12px] lg:text-[13px]"
-              } font-bold text-gray-900`}
+            {/* Price Box */}
+            <div
+              className={`bg-gray-100 border border-gray-300 shadow-lg rounded-bl-md rounded-tr-md px-1.5 py-0.5 -mt-1 ${widthClass} flex items-baseline gap-0.5`}
             >
-              {displayPrice}
-            </span>
+              <span className="text-[8px] lg:text-[10px] font-medium opacity-70">
+                {currencySymbol}
+              </span>
+              <span
+                className={`${
+                  noPrice
+                    ? "text-[11px] lg:text-[12px]"
+                    : "text-[12px] lg:text-[13px]"
+                } font-bold text-gray-900`}
+              >
+                {displayPrice}
+              </span>
+            </div>
           </div>
-        </div>
+        </Link>
         {fromDetailsPage && (
           <div className="absolute bottom-0 right-0 lg:p-2">
             <Link
