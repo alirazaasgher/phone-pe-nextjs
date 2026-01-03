@@ -2,7 +2,10 @@ import { getPhoneBySlug, getAllPhoneSlugs } from "../services/phones";
 import { buildPhoneMetadata, generateProductSchema } from "../utils/metadata";
 import { notFound } from "next/navigation";
 import Details from "./Details";
-
+// For spec database: longer revalidation since specs don't change often
+export const revalidate = 172800; // 24 hours (specs are mostly static)
+// Allow new phone pages to be generated on-demand
+export const dynamicParams = true;
 // Pre-generate pages for all phones at build time
 export async function generateStaticParams() {
   const phones = await getAllPhoneSlugs();
@@ -11,10 +14,7 @@ export async function generateStaticParams() {
   }));
 }
 
-// For spec database: longer revalidation since specs don't change often
-export const revalidate = 172800; // 24 hours (specs are mostly static)
-// Allow new phone pages to be generated on-demand
-export const dynamicParams = true;
+
 
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
