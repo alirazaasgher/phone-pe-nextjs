@@ -42,7 +42,12 @@ const nextConfig = {
         port: "8000",
         pathname: "/storage/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.mobile42.com",
+      },
     ],
+    unoptimized: true,
   },
 
   experimental: {
