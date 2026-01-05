@@ -2,6 +2,8 @@ import { mobilePageData } from "../../services/phones";
 import ClientPhoneGrid from "@/components/ClientPhoneGrid";
 import SideBarData from "@/data/SideBarData";
 import { getActiveTags, parseFilters } from "@/utils/helpers";
+export const dynamic = "force-static";
+export const revalidate = 172800; // 1 hour (ISR)
 // utils inside the same file
 export default async function Page({ params, searchParams }) {
   const awaitedParams = await params;
