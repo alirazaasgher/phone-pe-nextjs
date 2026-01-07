@@ -12,9 +12,9 @@ export async function GET(request, { params }) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${phones
   .map(
-    (phone) => `  <url>
+    (phone) => `<url>
     <loc>${baseUrl}/${phone.slug}</loc>
-    <lastmod>${new Date(phone.updated_at).toISOString()}</lastmod>
+    <lastmod>${phone.updated_at}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`
