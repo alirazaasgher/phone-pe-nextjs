@@ -14,8 +14,6 @@ export async function generateStaticParams() {
   }));
 }
 
-
-
 export default async function DetailsPage({ params }) {
   const { slug } = await params;
   const phone = await getPhoneBySlug(slug);

@@ -50,18 +50,8 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/help" className="hover:text-white">
-                  Help Center
-                </Link>
-              </li>
-              <li>
                 <Link href="/privacy" className="hover:text-white">
                   Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-white">
-                  Terms of Service
                 </Link>
               </li>
               <li>
