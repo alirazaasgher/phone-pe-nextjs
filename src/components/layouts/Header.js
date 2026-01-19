@@ -44,7 +44,7 @@ export default function Header({ toggleSidebar }) {
             <button
               onClick={toggleSidebar}
               aria-label="Toggle sidebar"
-              className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 md:hidden transition-all duration-300 active:scale-95"
+              className="group relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 xl:hidden transition-all duration-300 active:scale-95"
             >
               <Menu
                 className="text-white transition-transform group-hover:rotate-180 duration-300"

@@ -91,11 +91,10 @@ export async function generateMetadata({ params }) {
     ? `${baseUrl}/${filters.join("/")}`
     : baseUrl;
 
-  const baseTitle =
-    "Latest Mobile Phones - Compare Specs, Features & Prices | Mobile42";
+  const baseTitle = "Latest Mobile Phones - Compare Specs, Features & Prices";
 
   const title = readableFilters
-    ? `${readableFilters} Mobile Phones - Compare Specs, Features & Prices | Mobile42`
+    ? `${readableFilters} Mobile Phones - Compare Specs, Features & Prices`
     : baseTitle;
 
   const description = readableFilters
@@ -105,7 +104,7 @@ export async function generateMetadata({ params }) {
   // Generate dynamic OG image URL
   const ogImageUrl = readableFilters
     ? `https://www.mobile42.com/api/og?filters=${encodeURIComponent(
-        readableFilters
+        readableFilters,
       )}`
     : "https://www.mobile42.com/og-image-default.jpg";
 

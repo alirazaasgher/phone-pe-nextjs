@@ -29,11 +29,10 @@ module.exports = {
       },
       screens: {
         xs: { min: "320px", max: "479px" },
-        "sm-mobile": { min: "480px", max: "575px" },
+        "sm-mobile": { min: "480px", max: "500px" },
         "md-mobile": { min: "576px", max: "767px" },
         tablet: { min: "768px", max: "1023px" },
 
-        // Now the defaults — in correct order
         sm: "640px",
         md: "768px",
         lg: "1024px",

@@ -147,16 +147,29 @@ const GA_MEASUREMENT_ID = "G-KRGHF7G70Y";
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${bebas.variable}`}>
+      {process.env.NODE_ENV === "production" && (
+        <head>
+          {/* ✅ Google AdSense */}
+          <Script
+            async
+            strategy="afterInteractive"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4845839873540972"
+            crossOrigin="anonymous"
+          />
+        </head>
+      )}
       <body
         className={`flex flex-col min-h-screen ${inter.className} bg-gray-50`}
       >
         {/* ✅ Moved to afterInteractive for better performance */}
-        <Script
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -164,9 +177,10 @@ export default function RootLayout({ children }) {
               page_path: window.location.pathname,
             });
           `}
-        </Script>
-        <AnalyticsTracker />
-
+            </Script>
+            <AnalyticsTracker />
+          </>
+        )}
         <ClientLayout>
           <div className="relative flex-1 sm:min-h-screen w-full">
             {children}

@@ -59,7 +59,7 @@ export default function HomePageSlider({
       </div>
       <div className="hidden sm:grid  relative">
         {/* Grid Container */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3">
           {currentItems.map((phone, index) => (
             <PhoneCard
               key={phone.id}

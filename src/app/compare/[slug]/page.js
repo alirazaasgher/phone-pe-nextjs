@@ -1,8 +1,5 @@
 import { getComparePhoneBySlugs } from "@/app/services/phones";
 import PhoneComparison from "@/components/PhoneCompersion";
-export const dynamicParams = true; // allow ISR/fallback
-export const revalidate = 172800; // 48h cache
-
 export default async function Page({ params }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
@@ -37,14 +34,14 @@ export async function generateMetadata({ params }) {
     const phoneNames = Array.isArray(phones?.data)
       ? phones.data
           .map((phone) =>
-            `${phone.brand?.name ?? ""} ${phone.name ?? ""}`.trim()
+            `${phone.brand?.name ?? ""} ${phone.name ?? ""}`.trim(),
           )
           .join(" vs ")
       : "";
     // Create rich description with key specs (if available)
     const description = `Compare ${phoneNames} side by side. Detailed comparison of specifications, features, camera, battery, performance, price, and design. Find the perfect phone for your needs.`;
     // Create comprehensive title
-    const title = `${phoneNames} Comparison - Specs, Features & Price | Mobile42`;
+    const title = `${phoneNames} Comparison - Specs, Features & Price`;
 
     const keywords = Array.isArray(phones?.data)
       ? [

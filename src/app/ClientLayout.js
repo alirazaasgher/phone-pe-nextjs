@@ -21,7 +21,7 @@ export default function ClientLayout({ children }) {
         router.push(path); // App Router
       });
     },
-    [router]
+    [router],
   );
 
   return (
@@ -30,9 +30,9 @@ export default function ClientLayout({ children }) {
       <MobileHeader />
 
       <div className="pt-13 md:pt-18 pb-16 sm:pb-0 flex-1 w-full">
-        <div className="xl:max-w-6xl 2xl:max-w-7xl sm:max-w-3xl mx-auto flex flex-col lg:flex-row sm:gap-4 sm:px-6 lg:px-8 py-4 relative">
+        <div className="xl:max-w-6xl 2xl:max-w-7xl sm:max-w-5xl mx-auto flex flex-col lg:flex-row sm:gap-4 sm:px-6 lg:px-8 py-4 relative">
           {showSidebar && (
-            <aside className="lg:w-65">
+            <aside className="xl:w-65">
               <FilterSidebar
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}

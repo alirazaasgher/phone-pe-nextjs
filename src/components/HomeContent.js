@@ -76,7 +76,7 @@ export default function HomeContent({ homePageResponse }) {
           </p>
 
           {/* DESKTOP VIEW - ORIGINAL GRID */}
-          <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2">
+          <div className="hidden sm:grid grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2">
             {BrandsData.slice(0, 6).map((brand) => (
               <Link
                 key={brand.value}
@@ -164,7 +164,7 @@ export default function HomeContent({ homePageResponse }) {
             Swipe →
           </p>
           {/* DESKTOP GRID */}
-          <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          <div className="hidden sm:grid grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-2">
             {PriceCategoriesData.map((priceCategorie) => {
               const icons = {
                 1: (

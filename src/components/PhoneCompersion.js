@@ -153,10 +153,16 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
         scorePercent,
         ratings,
         displayValue:
-          value === true ? "✓" : value === false ? "✗" : value ?? "N/A",
+          value === true ? "✓" : value === false ? "✗" : (value ?? "N/A"),
         hasScore: scorePercent != null && scorePercent !== "",
       };
     });
+
+    const maxScore = Math.max(
+      ...phoneSpecData
+        .filter((phone) => phone.hasScore)
+        .map((phone) => parseFloat(phone.scorePercent) || 0),
+    );
 
     return (
       <div
@@ -246,7 +252,7 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
                   )}
                 </div>
               );
-            }
+            },
           )}
         </div>
       </div>
@@ -282,11 +288,11 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
         router.replace(
           `/compare/${newSelected.map((p) => p.slug).join("-vs-")}`,
           undefined,
-          { shallow: true }
+          { shallow: true },
         );
       });
     },
-    [selectedPhones, router]
+    [selectedPhones, router],
   );
 
   // Remove phone from comparison
@@ -307,11 +313,11 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
         router.replace(
           `/compare/${newSelected.map((p) => p.slug).join("-vs-")}`,
           undefined,
-          { shallow: true }
+          { shallow: true },
         );
       });
     },
-    [selectedPhones, router]
+    [selectedPhones, router],
   );
 
   // Debounced search
@@ -364,12 +370,6 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
             <h3 className="text-xs font-semibold uppercase tracking-wide">
               {categoryName}
             </h3>
-
-            {isImportant && (
-              <span className="text-[9px] font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded-full">
-                IMPORTANT
-              </span>
-            )}
           </div>
 
           {/* CATEGORY SCORES (PRIMARY VISUAL) */}
@@ -400,7 +400,7 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
         {/* SUB-SPECS (SECONDARY – EXPANDABLE) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 px-2 py-2">
           {Object.keys(specs).map((specKey) =>
-            renderSpecRow(categoryKey, specKey)
+            renderSpecRow(categoryKey, specKey),
           )}
         </div>
       </div>

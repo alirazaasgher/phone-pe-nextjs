@@ -54,12 +54,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       const parts = pathname.split("/").filter(Boolean); // remove empty strings
       const brandsPart = parts.find((p) => p.includes("mobile-phones"));
       const pricePart = parts.find(
-        (p) => p.startsWith("price-") || /\d+-to-\d+/.test(p)
+        (p) => p.startsWith("price-") || /\d+-to-\d+/.test(p),
       );
 
       const ramPart = parts.find((p) => p.includes("gb") && p.includes("ram"));
       const storagePart = parts.find(
-        (p) => p.includes("gb") && p.includes("storage")
+        (p) => p.includes("gb") && p.includes("storage"),
       );
       const refreshRatePart = parts.find((p) => p.includes("display"));
       const batteryPart = parts.find((p) => p.includes("battery"));
@@ -73,7 +73,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
             "upcoming",
             "price-low-to-high",
             "price-high-to-low",
-          ].includes(p)
+          ].includes(p),
         ) || null;
       setSelected({
         brands: brandsPart
@@ -158,7 +158,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       return [...new Set(values.map(normalizeString))].sort();
     }
     return [...new Set(values)].sort(
-      (a, b) => extractNumericValue(a) - extractNumericValue(b)
+      (a, b) => extractNumericValue(a) - extractNumericValue(b),
     );
   };
 
@@ -198,7 +198,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
 
       // Remove "mobile" or "mobiles"
       sortedBrands = sortedBrands.filter(
-        (b) => b !== "mobile" && b !== "mobiles"
+        (b) => b !== "mobile" && b !== "mobiles",
       );
 
       if (sortedBrands.length) {
@@ -251,7 +251,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       processor: { order: 8, isNumeric: false, suffix: "processor" },
     };
     const sortedFilters = Object.entries(filterConfig).sort(
-      ([, a], [, b]) => a.order - b.order
+      ([, a], [, b]) => a.order - b.order,
     );
     sortedFilters.forEach(([key, config]) => {
       const value = selected[key];
@@ -282,7 +282,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     const path = `/${pathSegments.join("/")}/`;
     if (path.length > 200) {
       console.warn(
-        "URL is too long, consider using query params for extra filters"
+        "URL is too long, consider using query params for extra filters",
       );
     }
     onApply?.(path);
@@ -297,7 +297,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
     if (v && typeof v === "object") {
       // check if object has any value (number/string) set
       return Object.values(v).some(
-        (val) => val !== null && val !== undefined && val !== ""
+        (val) => val !== null && val !== undefined && val !== "",
       );
     }
     return false;
@@ -338,6 +338,7 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       document.body.style.width = "";
     };
   }, [isOpen]);
+
   return (
     <>
       {isOpen && (
@@ -350,12 +351,12 @@ export default function FilterSidebar({ isOpen, setIsOpen, onApply }) {
       {/* Sidebar */}
       <div
         className={`
-          fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
-          transform transition-transform duration-300 overflow-y-auto
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:shadow-none md:pt-0
-          lg:static lg:flex lg:flex-col lg:h-[calc(95vh-3.5rem)]
-        `}
+    fixed top-14 bottom-0 left-0 z-40 w-65 bg-white shadow-xl
+    transform transition-transform duration-300 overflow-y-auto
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
+    xl:translate-x-0 xl:static xl:flex xl:flex-col xl:h-[calc(95vh-3.5rem)] xl:shadow-none
+  `}
       >
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
