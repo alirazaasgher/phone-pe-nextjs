@@ -75,7 +75,7 @@ export async function getComparePhoneBySlugs(slugs = [], profile = "balanced") {
   const path = `/api/phones/compare`;
   const body = { slugs, profile };
   const headers = signRequest("POST", path, body);
-  const res = await fetch(`http://127.0.0.1:8000${path}`, {
+  const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "POST",
     headers: {
       ...headers,
