@@ -17,12 +17,19 @@ import {
   ZoomIn,
   Film,
   BatteryCharging,
+  Gamepad2,
+  Gauge,
+  SlidersHorizontal,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { searchPhones } from "@/app/services/phones";
 import PhoneCard from "./PhoneCard";
 import Loader from "@/app/loading";
-const PhoneComparison = ({ phones, similarMobiles }) => {
+import RadarComparison from "@/components/RadarComparison";
+import BarComparison from "@/components/BarComparison";
+import OverallScores from "@/components/OverallScores";
+import VerdictDisplay from "./VerdictDisplay";
+const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const [showOnlyDiff, setShowOnlyDiff] = useState(false);
   const [selectedPhones, setSelectedPhones] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -33,7 +40,39 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
   const [isPending, startTransition] = useTransition();
   const [firstLoad, setFirstLoad] = useState(true);
   const [maxDevices, setMaxDevices] = useState(4);
-  const keyCategories = Object.keys(phones?.[0]?.specs?.key || {});
+  const usageOptions = [
+    {
+      value: "balanced",
+      label: "Balanced",
+      icon: <SlidersHorizontal size={16} />,
+    },
+    {
+      value: "gaming",
+      label: "Gaming",
+      icon: <Gamepad2 size={16} />,
+    },
+    {
+      value: "battery",
+      label: "Battery",
+      icon: <Gauge size={16} />,
+    },
+    {
+      value: "camera",
+      label: "Camera",
+      icon: <Camera size={16} />,
+    },
+    {
+      value: "media_consumer",
+      label: "Media Consumer",
+      icon: <Film size={16} />,
+    },
+  ];
+  const parts = pathname.split("/").filter(Boolean);
+  const currentUsage =
+    parts.find((p) => usageOptions.some((opt) => opt.value === p)) || "";
+  const keyCategories = Object.keys(
+    comparisonData?.scores[0]?.category_scores || {},
+  );
 
   const CATEGORY_COLORS = {
     display: "blue",
@@ -133,131 +172,156 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
       .replace(/\b\w/g, (c) => c.toUpperCase());
   };
 
-  const renderSpecRow = useCallback((category, specKey) => {
-    const lowerCategory = category?.toLowerCase();
-    const colorTheme =
-      CATEGORY_COLORS[lowerCategory] || CATEGORY_COLORS.default;
-    const icon = getSpecIcon(specKey);
+  const renderSpecRow = useCallback(
+    (category, specKey) => {
+      const lowerCategory = category?.toLowerCase();
+      const colorTheme =
+        CATEGORY_COLORS[lowerCategory] || CATEGORY_COLORS.default;
+      const icon = getSpecIcon(specKey);
 
-    // Precompute phone spec data
-    const phoneSpecData = phones.map((phone) => {
-      const specsByCategory = phone.specs?.key?.[category] || {};
-      const categorySpecs = specsByCategory.specs?.[specKey] || {};
-      const value = categorySpecs.value;
-      const scorePercent = categorySpecs.score;
-      const ratings = specsByCategory[`${specKey}_ratings`] ?? null;
+      // Precompute phone spec data with early returns
+      const phoneSpecData = comparisonData.scores.reduce((acc, phone) => {
+        const categorySpecs = phone.category_scores[category]?.specs?.[specKey];
+        if (!categorySpecs) return acc;
 
-      return {
-        id: phone.id,
-        primary_color: phone.primary_color,
-        scorePercent,
-        ratings,
-        displayValue:
-          value === true ? "✓" : value === false ? "✗" : (value ?? "N/A"),
-        hasScore: scorePercent != null && scorePercent !== "",
-      };
-    });
+        const { value, score: scorePercent } = categorySpecs;
+        if (value === "" || value == null) return acc;
 
-    const maxScore = Math.max(
-      ...phoneSpecData
-        .filter((phone) => phone.hasScore)
-        .map((phone) => parseFloat(phone.scorePercent) || 0),
-    );
+        const ratings =
+          phone.category_scores[category]?.[`${specKey}_ratings`] ?? null;
 
-    return (
-      <div
-        key={specKey}
-        className="bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 p-3"
-      >
-        <div className={`pb-2 border-b-2 border-${colorTheme}-100`}>
-          <div className="flex items-center gap-1">
-            {icon}
-            <p className="font-medium text-gray-900 text-[12px] sm:text-[13px] font-sans">
-              {formatLabel(specKey)}
-            </p>
+        acc.push({
+          id: phone.phone_id,
+          primary_color: phone.primary_color,
+          scorePercent,
+          ratings,
+          displayValue: value === true ? "✓" : value === false ? "✗" : value,
+          hasScore: scorePercent != null && scorePercent !== "",
+        });
+        return acc;
+      }, []);
+
+      if (phoneSpecData.length === 0) return null;
+
+      const maxScore = phoneSpecData.reduce(
+        (max, phone) =>
+          phone.hasScore
+            ? Math.max(max, parseFloat(phone.scorePercent) || 0)
+            : max,
+        0,
+      );
+
+      return (
+        <div
+          key={specKey}
+          className="bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 p-3 hover:shadow-xl hover:border-gray-300 transition-all duration-300 cursor-pointer group"
+        >
+          {/* Header */}
+          <div
+            className={`pb-2 border-b-2 border-${colorTheme}-100 group-hover:border-${colorTheme}-300 transition-colors duration-300`}
+          >
+            <div className="flex items-center gap-1">
+              <span className="group-hover:scale-110 transition-transform duration-300 inline-block">
+                {icon}
+              </span>
+              <p className="font-medium text-gray-900 text-[12px] sm:text-[13px] font-sans group-hover:text-gray-700 transition-colors">
+                {formatLabel(specKey)}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col divide-y divide-gray-200">
-          {phoneSpecData.map(
-            ({
-              id,
-              primary_color,
-              scorePercent,
-              ratings,
-              displayValue,
-              hasScore,
-            }) => {
-              const scoreClasses = hasScore
-                ? getScoreClasses(scorePercent)
-                : null;
+          {/* Phone specs */}
+          <div className="flex flex-col divide-y divide-gray-200">
+            {phoneSpecData.map(
+              ({
+                id,
+                primary_color,
+                scorePercent,
+                ratings,
+                displayValue,
+                hasScore,
+              }) => {
+                const isMaxScore =
+                  hasScore && parseFloat(scorePercent) === maxScore;
+                const scoreClasses = hasScore
+                  ? getScoreClasses(scorePercent)
+                  : null;
 
-              return (
-                <div
-                  key={id}
-                  className="flex flex-col rounded-lg transition-all duration-300"
-                >
-                  <div className="flex items-center justify-between py-1">
-                    {/* Left side: small round if no score + value */}
-                    <div className="flex items-center gap-2">
-                      {!hasScore && (
+                return (
+                  <div
+                    key={`${id}-${category}`}
+                    className={`flex flex-col rounded-lg transition-all duration-300 hover:bg-gray-50 ${
+                      isMaxScore ? "hover:bg-green-50" : ""
+                    }`}
+                  >
+                    {/* Value and Score Badge */}
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        {!hasScore && (
+                          <div
+                            className="w-3 h-3 rounded-full flex-shrink-0 hover:scale-125 transition-transform duration-300"
+                            style={{ backgroundColor: primary_color }}
+                          />
+                        )}
                         <div
-                          className="w-3 h-3 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: primary_color }}
+                          dangerouslySetInnerHTML={{ __html: displayValue }}
+                          className="text-gray-600 text-xs font-medium hover:text-gray-900 transition-colors"
                         />
+                      </div>
+
+                      {hasScore && (
+                        <div
+                          className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${scoreClasses.badge} hover:scale-105 transition-transform duration-300 ${
+                            isMaxScore
+                              ? "ring-2 ring-green-400 ring-offset-1"
+                              : ""
+                          }`}
+                        >
+                          <span>{scorePercent}</span>
+                          <span className="text-[10px] opacity-60">/10</span>
+                        </div>
                       )}
-                      <div
-                        dangerouslySetInnerHTML={{ __html: displayValue }}
-                        className="text-gray-600 text-xs font-medium"
-                      />
                     </div>
 
-                    {/* Right side: score badge if score exists */}
+                    {/* Score Bar */}
                     {hasScore && (
-                      <div
-                        className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${scoreClasses.badge}`}
-                      >
-                        <span>{scorePercent}</span>
-                        <span className="text-[10px] opacity-60">/10</span>
+                      <div className="mt-1 flex flex-col gap-0.5">
+                        <div className="flex items-center gap-1">
+                          <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden shadow-inner hover:h-2 transition-all duration-300">
+                            <div
+                              className="h-full transition-all duration-700 ease-out hover:brightness-110"
+                              style={{
+                                width: `${Math.min(scorePercent * 10, 100)}%`,
+                                backgroundColor: primary_color,
+                              }}
+                            />
+                          </div>
+
+                          {ratings && (
+                            <div className="flex items-center gap-0.5 text-[10px] text-gray-500 w-12 text-right hover:text-amber-500 transition-colors">
+                              <span className="text-amber-400 hover:scale-125 transition-transform inline-block">
+                                ⭐
+                              </span>
+                              <span>{ratings}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="text-[10px] text-gray-500 hover:text-gray-700 transition-colors">
+                          {scoreClasses.label}
+                        </div>
                       </div>
                     )}
                   </div>
-
-                  {/* Score bar and label */}
-                  {hasScore && (
-                    <div className="mt-1 flex flex-col gap-0.5">
-                      <div className="flex items-center gap-1">
-                        <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                          <div
-                            className="h-full transition-all duration-700 ease-out"
-                            style={{
-                              width: `${Math.min(scorePercent * 10, 100)}%`,
-                              backgroundColor: primary_color,
-                            }}
-                          />
-                        </div>
-
-                        {ratings && (
-                          <div className="flex items-center gap-0.5 text-[10px] text-gray-500 w-12 text-right">
-                            <span className="text-amber-400">⭐</span>
-                            <span>{ratings}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="text-[10px] text-gray-500">
-                        {scoreClasses.label}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            },
-          )}
+                );
+              },
+            )}
+          </div>
         </div>
-      </div>
-    );
-  }, []);
+      );
+    },
+    [comparisonData.scores],
+  ); // Add dependency
 
   useEffect(() => {
     if (!pathname || !phones?.length) return;
@@ -341,7 +405,7 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
   }, [debouncedSearch]);
 
   const renderCategory = (categoryName, categoryKey) => {
-    const specs = phones[0].specs.key[categoryKey].specs;
+    const specs = comparisonData?.scores[0]?.category_scores[categoryKey].specs;
     if (!specs || Object.keys(specs).length === 0) return null;
 
     const isImportant = categoryWeights[categoryKey] > 1.2;
@@ -374,11 +438,11 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
 
           {/* CATEGORY SCORES (PRIMARY VISUAL) */}
           <div className="flex items-center gap-3">
-            {phones.map((phone) => {
-              const value = phone.specs.key[categoryKey].score || 0;
-
+            {comparisonData.scores.map((phone) => {
+              const value = phone?.category_scores[categoryKey].score || 0;
+              const uniqueKey = `${phone?.phone_id}-${categoryKey}`;
               return (
-                <div key={phone.id} className="flex items-center gap-1">
+                <div key={uniqueKey} className="flex items-center gap-1">
                   <div className="w-14 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div
                       className="h-full transition-all duration-700"
@@ -411,6 +475,28 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
     2: "grid-cols-2",
     3: "grid-cols-3",
     4: "grid-cols-4",
+  };
+  const handleUsageChange = (e) => {
+    const value = e.target.value;
+
+    // remove existing sort/status
+    const REMOVE = [
+      "balanced",
+      "gaming",
+      "battery",
+      "camera",
+      "media_consumer",
+    ];
+
+    const cleaned = parts.filter((p) => !REMOVE.includes(p));
+    const path = "/" + cleaned.join("/");
+    // insert sort/status after brand (or after /mobiles)
+    const baseIndex = cleaned[1] && cleaned[0] === "compare" ? 2 : 1;
+    const params = new URLSearchParams({
+      usage: value,
+    }).toString();
+    cleaned.splice(baseIndex, 0, value);
+    router.push(`${path}?${params}`, { scroll: false });
   };
   return (
     <>
@@ -496,7 +582,35 @@ const PhoneComparison = ({ phones, similarMobiles }) => {
               />
             ))}
           </div>
+          {/* <select
+            value={currentUsage}
+            onChange={handleUsageChange}
+            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm text-gray-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer appearance-none"
+          >
+            <option value="" disabled>
+              Select Primary usage
+            </option>
+            {usageOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select> */}
+          {/* {phones.length > 1 && (
+            <VerdictDisplay verdict={comparisonData.verdict} />
+          )} */}
+          {/* <OverallScores scores={comparisonData.charts.overall_scores} /> */}
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-2">
+            {/* <RadarComparison
+              data={comparisonData.charts.radar}
+              colors={comparisonData.charts.phone_colors}
+            /> */}
 
+            <BarComparison
+              data={comparisonData.charts.bar}
+              colors={comparisonData.charts.phone_colors}
+            />
+          </div>
           {/* Similar MobileS */}
           {keyCategories.map((categoryKey) => {
             const categoryName = formatLabel(categoryKey);

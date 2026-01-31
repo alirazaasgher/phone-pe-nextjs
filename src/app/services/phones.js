@@ -70,12 +70,12 @@ export async function mobilePageData(filters = []) {
   return json.data; // return phone object
 }
 
-export async function getComparePhoneBySlugs(slugs = []) {
+export async function getComparePhoneBySlugs(slugs = [], profile = "balanced") {
   if (!Array.isArray(slugs) || slugs.length === 0) return [];
   const path = `/api/phones/compare`;
-  const body = { slugs };
+  const body = { slugs, profile };
   const headers = signRequest("POST", path, body);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`http://127.0.0.1:8000${path}`, {
     method: "POST",
     headers: {
       ...headers,

@@ -1,14 +1,14 @@
 import { getComparePhoneBySlugs } from "@/app/services/phones";
 import PhoneComparison from "@/components/PhoneCompersion";
-export default async function Page({ params }) {
+export default async function Page({ params, searchParams }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
-  const phone = await getComparePhoneBySlugs(phoneSlugs);
+  // get query param
+  const usage = searchParams?.usage || "balanced";
+  const phone = await getComparePhoneBySlugs(phoneSlugs, usage);
+  console.log(phone);
   return (
-    <PhoneComparison
-      phones={phone.data}
-      similarMobiles={phone.similarMobiles}
-    />
+    <PhoneComparison phones={phone.data} comparisonData={phone.comparison} />
   );
 }
 

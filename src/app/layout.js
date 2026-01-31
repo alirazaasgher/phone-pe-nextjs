@@ -147,17 +147,6 @@ const GA_MEASUREMENT_ID = "G-KRGHF7G70Y";
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${bebas.variable}`}>
-      {/* {process.env.NODE_ENV === "production" && ( */}
-      <head>
-        {/* ✅ Google AdSense */}
-        <Script
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4845839873540972"
-          crossOrigin="anonymous"
-        />
-      </head>
-
       <body
         className={`flex flex-col min-h-screen ${inter.className} bg-gray-50`}
       >
