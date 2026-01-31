@@ -1,10 +1,52 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Search, Plus } from "lucide-react";
 import SpecGroup from "./SpecGroup";
 import UseFilteredSpecs from "./UseFilteredSpecs";
 import Link from "next/link";
 export default function MobileSpeficaion({ phoneDetails }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const searchTimerRef = useRef(null);
+  const hasTrackedFocusRef = useRef(false);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    // Clear existing timer
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+
+    // Track after user stops typing (debounce)
+    if (value.trim()) {
+      searchTimerRef.current = setTimeout(() => {
+        window.gtag("event", "search", {
+          search_term: value,
+          event_category: "engagement",
+          event_label: "specifications_search",
+        });
+      }, 1000);
+    }
+  };
+
+  const handleSearchFocus = () => {
+    if (!hasTrackedFocusRef.current) {
+      window.gtag("event", "search_started", {
+        event_category: "engagement",
+        event_label: "specifications_search",
+      });
+      hasTrackedFocusRef.current = true;
+    }
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+    };
+  }, []);
   // 🔍 Filter across *all* sections and fields
   const filteredSpecs = UseFilteredSpecs(phoneDetails, searchQuery);
   return (
@@ -18,7 +60,8 @@ export default function MobileSpeficaion({ phoneDetails }) {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
+              onFocus={handleSearchFocus}
               placeholder="Search specifications..."
               className="ml-2 w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"
             />
@@ -45,7 +88,7 @@ export default function MobileSpeficaion({ phoneDetails }) {
               ([key]) =>
                 key !== "is_expandable" &&
                 key !== "max_visible" &&
-                key !== "security"
+                key !== "security",
             ) || [];
           const isExpandable = section.is_expandable;
           const max_visible = section.max_visible;
