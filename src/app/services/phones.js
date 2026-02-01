@@ -155,3 +155,22 @@ export async function fetchBrands() {
   const json = await res.json();
   return json.data;
 }
+
+export async function fetchDisplayScor(category, score) {
+  const path = `/api/display-score`;
+  const body = { category, score };
+  const headers = signRequest("POST", path);
+  const res = await fetch(`https://api.mobile42.com${path}`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    next: { revalidate: 172800 }, // 2 days cache
+  });
+  console.log(JSON.stringify(body));
+  const json = await res.json();
+  console.log(json);
+  return json.data;
+}

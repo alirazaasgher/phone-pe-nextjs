@@ -26,7 +26,7 @@ export default function Footer() {
                 <Link
                   href="/mobiles/new"
                   className="hover:text-white transition-colors"
-                  title="Browse latest mobile phones released in 2025"
+                  title={`Browse latest mobile phones released in ${new Date().getFullYear()}`}
                 >
                   New Mobiles
                 </Link>

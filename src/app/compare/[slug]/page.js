@@ -6,6 +6,7 @@ export default async function Page({ params, searchParams }) {
   // get query param
   const usage = searchParams?.usage || "balanced";
   const phone = await getComparePhoneBySlugs(phoneSlugs, usage);
+
   return (
     <PhoneComparison phones={phone.data} comparisonData={phone.comparison} />
   );

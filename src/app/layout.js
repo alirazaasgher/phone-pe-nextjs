@@ -32,7 +32,7 @@ export const metadata = {
   metadataBase: new URL("https://www.mobile42.com"),
 
   title: {
-    default: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
+    default: `Mobile42 - Latest Mobile Phones ${new Date().getFullYear()} | Specs, Prices & Reviews`,
     template: "%s | Mobile42",
   },
 
@@ -41,9 +41,9 @@ export const metadata = {
 
   keywords: [
     "mobile phones",
-    "smartphones 2025",
+    `smartphones ${new Date().getFullYear()}`,
     "latest mobile phones",
-    "upcoming phones 2026",
+    `upcoming phones ${new Date().getFullYear()}`,
     "mobile phone prices",
     "phone specifications",
     "mobile reviews",
@@ -94,7 +94,7 @@ export const metadata = {
     locale: "en_US",
     url: "https://www.mobile42.com/",
     siteName: "Mobile42",
-    title: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
+    title: `Mobile42 - Latest Mobile Phones ${new Date().getFullYear()} | Specs, Prices & Reviews`,
     description:
       "Explore 1000+ latest and upcoming mobile phones with detailed specs, expert reviews, and price comparisons. Find your perfect smartphone.",
     images: [
@@ -110,7 +110,7 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Mobile42 - Latest Mobile Phones 2025 | Specs, Prices & Reviews",
+    title: `Mobile42 - Latest Mobile Phones ${new Date().getFullYear()} | Specs, Prices & Reviews`,
     description:
       "Explore 1000+ latest and upcoming mobile phones with detailed specs, expert reviews, and price comparisons.",
     images: ["https://www.mobile42.com/og-image.jpg"],
@@ -183,7 +183,15 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@graph": [
                 {
+                  "@type": "WebSite",
+                  "@id": "https://www.mobile42.com/#website",
+                  name: "Mobile42",
+                  alternateName: "Mobile42",
+                  url: "https://www.mobile42.com/",
+                },
+                {
                   "@type": "Organization",
+                  "@id": "https://www.mobile42.com/#organization",
                   name: "Mobile42",
                   url: "https://www.mobile42.com/",
                   logo: "https://www.mobile42.com/logo.png",
@@ -195,10 +203,17 @@ export default function RootLayout({ children }) {
                 },
                 {
                   "@type": "WebPage",
+                  "@id": "https://www.mobile42.com/#webpage",
                   name: "Mobile42 - Latest & Upcoming Mobile Phones",
                   url: "https://www.mobile42.com/",
                   description:
                     "Discover the latest and upcoming mobile phones with full specs, prices, and reviews.",
+                  isPartOf: {
+                    "@id": "https://www.mobile42.com/#website",
+                  },
+                  about: {
+                    "@id": "https://www.mobile42.com/#organization",
+                  },
                 },
               ],
             }),

@@ -269,7 +269,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                         />
                       </div>
 
-                      {hasScore && (
+                      {/* {hasScore && (
                         <div
                           className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${scoreClasses.badge} hover:scale-105 transition-transform duration-300 ${
                             isMaxScore
@@ -280,7 +280,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                           <span>{scorePercent}</span>
                           <span className="text-[10px] opacity-60">/10</span>
                         </div>
-                      )}
+                      )} */}
                     </div>
 
                     {/* Score Bar */}
