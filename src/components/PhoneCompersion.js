@@ -184,7 +184,12 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
         const categorySpecs = phone.category_scores[category]?.specs?.[specKey];
         if (!categorySpecs) return acc;
 
-        const { value, score: scorePercent } = categorySpecs;
+        const { value, score: scorePercent, hidden } = categorySpecs;
+
+        // ❌ Skip if hidden
+        if (hidden === true) return acc;
+
+        // ❌ Skip empty values
         if (value === "" || value == null) return acc;
 
         const ratings =
@@ -198,6 +203,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
           displayValue: value === true ? "✓" : value === false ? "✗" : value,
           hasScore: scorePercent != null && scorePercent !== "",
         });
+
         return acc;
       }, []);
 

@@ -5,7 +5,7 @@ const PriceCategoriesData = [
     title: "Above 60,000",
     homePageTitle: "Phones Above Rs 60,000",
     subtitle: "Flagships",
-    range: "> Rs 50,000",
+    range: "> Rs 60,000",
     icon: "💎",
     gradient: "from-green-400 to-green-600",
     bgColor: "bg-green-50",
