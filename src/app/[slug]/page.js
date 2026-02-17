@@ -20,17 +20,16 @@ export default async function DetailsPage({ params }) {
   if (!phone) {
     notFound();
   }
-
-  //const productSchema = generateProductSchema(phone);
+  const productSchema = generateProductSchema(phone.data);
 
   return (
     <>
-      {/* <script
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productSchema),
         }}
-      /> */}
+      />
       <Details
         phoneDetails={phone.data}
         similarMobiles={phone.similarMobiles}
@@ -56,18 +55,6 @@ export async function generateMetadata({ params }) {
   return {
     title: metadata.title,
     description: metadata.description,
-    keywords: [
-      phone.name,
-      phone.brand.name,
-      "specifications",
-      "specs",
-      "price",
-      "review",
-      "features",
-      phone.chipset?.name,
-      `${phone.ram}GB RAM`,
-      `${phone.storage}GB storage`,
-    ].filter(Boolean),
     openGraph: {
       title: metadata.title,
       description: metadata.description,

@@ -32,7 +32,7 @@ export function getActiveTags(parsed, availableFilters) {
       cleaned.forEach((name) => {
         if (
           availableFilters.brands.some(
-            (brand) => brand.name.toLowerCase() === name.toLowerCase()
+            (brand) => brand.name.toLowerCase() === name.toLowerCase(),
           )
         ) {
           tags.push(capitalize(name));
@@ -90,7 +90,7 @@ export function getActiveTags(parsed, availableFilters) {
       parsed[key].filter(Boolean).forEach((v) => {
         // Match with availableFilters[key] objects by 'name' or 'value'
         const match = availableFilters[key]?.find(
-          (f) => f.name === `${v}gb` || f.value === `${v} GB`
+          (f) => f.name === `${v}gb` || f.value === `${v} GB`,
         );
 
         if (match) {
@@ -136,7 +136,7 @@ export function tagToFilter(tag) {
     const value = cleanTag
       .replace(/\s*mAh\s*$/i, "")
       .replace(/\s*(?:to|-)\s*/g, (match) =>
-        match.includes("to") ? "to" : "-"
+        match.includes("to") ? "to" : "-",
       )
       .trim();
     return `${value}mAh-battery`;
@@ -271,7 +271,7 @@ export function signRequest(method, path, body = null) {
 
   const signature = CryptoJS.HmacSHA256(
     payload,
-    process.env.NEXT_PUBLIC_API_SECRET
+    process.env.NEXT_PUBLIC_API_SECRET,
   ).toString(CryptoJS.enc.Hex);
   // console.log("JS Method:", method);
   // console.log("JS Path:", path);
@@ -314,7 +314,7 @@ export function cameraParser(value) {
         (cam) =>
           cam.type === "Periscope" ||
           ((cam.type === "Telephoto" || cam.type === "Ultrawide") &&
-            cam.mp >= 48)
+            cam.mp >= 48),
       );
 
     if (premiumCamera) {
@@ -330,7 +330,7 @@ export function cameraParser(value) {
       cam.type
         ? `${cam.full.replace(/\([^)]+\)/, "")}
           <span class="text-[9px] text-gray-400">(${cam.type})</span>`
-        : cam.full
+        : cam.full,
     )
     .join(", ");
 
