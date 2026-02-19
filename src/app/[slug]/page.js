@@ -1,5 +1,9 @@
 import { getPhoneBySlug, getAllPhoneSlugs } from "../services/phones";
-import { buildPhoneMetadata, generateProductSchema } from "../utils/metadata";
+import {
+  buildPhoneMetadata,
+  generateProductSchema,
+  generateFAQSchema,
+} from "../utils/metadata";
 import { notFound } from "next/navigation";
 import Details from "./Details";
 // For spec database: longer revalidation since specs don't change often
@@ -21,7 +25,7 @@ export default async function DetailsPage({ params }) {
     notFound();
   }
   const productSchema = generateProductSchema(phone.data);
-
+  const faqSchema = generateFAQSchema(phone.data);
   return (
     <>
       <script
@@ -29,6 +33,10 @@ export default async function DetailsPage({ params }) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productSchema),
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Details
         phoneDetails={phone.data}
