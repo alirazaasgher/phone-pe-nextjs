@@ -500,7 +500,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               const uniqueKey = `${phone?.phone_id}-${categoryKey}`;
               return (
                 <div key={uniqueKey} className="flex items-center gap-1">
-                  <div className="w-14 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  {/* <div className="w-14 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div
                       className="h-full transition-all duration-700"
                       style={{
@@ -508,7 +508,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                         backgroundColor: `${phone.primary_color}`,
                       }}
                     />
-                  </div>
+                  </div> */}
                   {/* <span className="text-[10px] font-semibold text-gray-700">
                     {value}
                   </span> */}
