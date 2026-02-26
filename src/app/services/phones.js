@@ -31,7 +31,7 @@ export async function getPhoneBySlug(slug) {
 export async function getChipsetBySlug(slug) {
   const path = `/api/soc/${slug}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`http://127.0.0.1:8000${path}`, {
+  const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
@@ -86,7 +86,7 @@ export async function mobilePageData(filters = []) {
 export async function socPageData(filters = []) {
   const path = `/api/soc`;
   const headers = signRequest("POST", path);
-  const res = await fetch(`http://127.0.0.1:8000${path}`, {
+  const res = await fetch(`https://api.mobile42.com${path}`, {
     method: "GET",
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
