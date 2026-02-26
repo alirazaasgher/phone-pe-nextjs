@@ -41,6 +41,7 @@ export default async function DetailsPage({ params }) {
       <Details
         phoneDetails={phone.data}
         similarMobiles={phone.similarMobiles}
+        compatibility={phone.compatibility}
       />
     </>
   );
