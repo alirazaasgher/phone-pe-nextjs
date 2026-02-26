@@ -16,6 +16,7 @@ export default function SpecGroup({
   isExpandable = false,
   max_visible,
   searchQuery,
+  compatibility,
 }) {
   const [parentOpen, setParentOpen] = useState(max_visible ? true : false);
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +57,7 @@ export default function SpecGroup({
         </span>
       ) : (
         part
-      )
+      ),
     );
   };
 
@@ -113,7 +114,7 @@ export default function SpecGroup({
   return (
     <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md hover:border-sky-200 transition-all overflow-hidden">
       <div className="px-2 py-2">
-        {/* Category Header with collapse/expand icon */}
+        {/* Category Header */}
         <div
           className="flex items-center justify-between cursor-pointer"
           onClick={isExpandable ? () => setParentOpen(false) : undefined}
@@ -129,68 +130,110 @@ export default function SpecGroup({
           ) : null}
         </div>
 
-        {/* Only render table if parent is open */}
         <div className="w-full">
           <table className="min-w-full border-collapse text-sm">
             <tbody>
               {(max_visible ? entries.slice(0, max_visible) : entries).map(
                 ([label, value], i) => {
+                  // FIND COMPATIBILITY DATA FOR THIS ROW
+                  const check = compatibility?.checks?.find(
+                    (c) =>
+                      c.label.toLowerCase() === label.toLowerCase() ||
+                      c.type === label.toLowerCase().replace(/\s+/g, "_"),
+                  );
+
                   let showSubExpand =
                     max_visible > 0 &&
                     i === max_visible - 1 &&
                     hasMore === true;
+
                   return (
                     <tr
                       key={i}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-all relative"
                     >
-                      <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-900 text-[12px] sm:text-[13px] font-inter whitespace-normal break-words">
+                      <td className="w-[22%] pr-4 lg:px-5 lg:py-2.5 font-medium text-gray-900 text-[12px] sm:text-[13px] font-inter whitespace-normal break-words">
                         {highlightText(formatText(label))}
                       </td>
 
-                      <td
-                        dangerouslySetInnerHTML={{
-                          __html: highlightText(value),
-                        }}
-                        className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 text-gray-700 text-[12px] sm:text-[13px] font-sans whitespace-normal break-words"
-                      ></td>
+                      <td className="w-[70%] pl-4 px-1 py-2.5 text-gray-700 text-[12px] sm:text-[13px] font-sans whitespace-normal break-words">
+                        {/* Primary Specification Value - Bolded if there is a warning */}
+                        <div
+                          className={`${check && check.status !== "ok" ? "font-bold text-gray-900" : ""}`}
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText(value),
+                          }}
+                        />
 
-                      {/* Sub-expand icon */}
+                        {/* COMPATIBILITY UI INJECTION - Only shows if status is not 'ok' */}
+                        {check && check.status !== "ok" && (
+                          <div className="mt-2 p-2 bg-amber-50 border-l-2 border-amber-400 rounded-r-md flex flex-col gap-1.5">
+
+                            {/* The Dynamic Note */}
+                            {check.note && (
+                              <p className="text-[11px] text-gray-700 leading-snug">
+                                {check.note}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </td>
+
                       {showSubExpand && (
                         <td
-                          className="absolute right-3 top-2 cursor-pointer"
+                          className="absolute right-3 top-2.5 cursor-pointer"
                           onClick={() => setIsOpen(!isOpen)}
                         >
                           {isOpen ? (
-                            <ChevronUp className="w-4 h-4 text-gray-500 hover:text-sky-600" />
+                            <ChevronUp className="w-4 h-4 text-gray-500 hover:text-sky-600 transition-colors" />
                           ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-500 hover:text-sky-600" />
+                            <ChevronDown className="w-4 h-4 text-gray-500 hover:text-sky-600 transition-colors" />
                           )}
                         </td>
                       )}
                     </tr>
                   );
-                }
+                },
               )}
 
-              {/* Hidden / expandable rows */}
+              {/* Hidden / Expandable Rows */}
               {isOpen &&
-                entries.slice(max_visible).map(([label, value], i) => (
-                  <tr
-                    key={i}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-all"
-                  >
-                    <td className="w-[22%] pr-4 lg:px-5 lg:py-0.5 font-medium text-gray-800 text-[12px] font-inter whitespace-normal break-words">
-                      {highlightText(formatText(label))}
-                    </td>
-                    <td
-                      dangerouslySetInnerHTML={{
-                        __html: highlightText(value),
-                      }}
-                      className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-0.5 text-gray-700 text-[12px] font-sans whitespace-normal break-words"
-                    ></td>
-                  </tr>
-                ))}
+                entries.slice(max_visible).map(([label, value], i) => {
+                  // RE-FIND COMPATIBILITY DATA FOR EXPANDED ROWS
+                  const check = compatibility?.checks?.find(
+                    (c) =>
+                      c.label.toLowerCase() === label.toLowerCase() ||
+                      c.type === label.toLowerCase().replace(/\s+/g, "_"),
+                  );
+
+                  return (
+                    <tr
+                      key={i}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-all"
+                    >
+                      <td className="w-[22%] pr-4 lg:px-5 lg:py-1 font-medium text-gray-800 text-[12px] font-inter">
+                        {highlightText(formatText(label))}
+                      </td>
+                      <td className="prose-content w-[70%] pl-4 px-1 py-1 lg:px-1 lg:py-1 text-gray-700 text-[12px] font-sans">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText(value),
+                          }}
+                        />
+                        {check && check.status !== "ok" && (
+                          <div className="mt-2 p-2 bg-amber-50 border-l-2 border-amber-400 rounded-r-md flex flex-col gap-1.5">
+                            {/* The Dynamic Note */}
+                            {check.note && (
+                              <p className="text-[11px] text-gray-700 leading-snug">
+                                {check.note}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>

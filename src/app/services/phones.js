@@ -28,6 +28,19 @@ export async function getPhoneBySlug(slug) {
   const json = await res.json();
   return json; // return phone object
 }
+export async function getChipsetBySlug(slug) {
+  const path = `/api/soc/${slug}`;
+  const headers = signRequest("GET", path);
+  const res = await fetch(`http://127.0.0.1:8000${path}`, {
+    method: "GET",
+    headers: headers,
+    next: { revalidate: 172800 }, // 2 days cache
+  });
+  console.log(res);
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json; // return phone object
+}
 
 export async function homePageData() {
   const path = "/api/homepage";
@@ -64,6 +77,18 @@ export async function mobilePageData(filters = []) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
+    next: { revalidate: 172800 }, // 2 days cache
+  });
+  const json = await res.json();
+  return json.data; // return phone object
+}
+
+export async function socPageData(filters = []) {
+  const path = `/api/soc`;
+  const headers = signRequest("POST", path);
+  const res = await fetch(`http://127.0.0.1:8000${path}`, {
+    method: "GET",
+    headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
   });
   const json = await res.json();

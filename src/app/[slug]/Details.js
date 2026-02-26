@@ -26,7 +26,11 @@ import MobileCompetitors from "@/components/common/MobileCompetitors";
 import PhonePages from "@/components/common/PhonePages";
 import PhoneCard from "@/components/PhoneCard";
 import { cameraParser } from "@/utils/helpers";
-export default function Details({ phoneDetails, similarMobiles }) {
+export default function Details({
+  phoneDetails,
+  similarMobiles,
+  compatibility,
+}) {
   const iconMap = {
     display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
     main_camera: { icon: Camera, color: "bg-rose-100", text: "text-rose-600" },
@@ -320,7 +324,7 @@ export default function Details({ phoneDetails, similarMobiles }) {
                                     </span>
                                   </span>
                                 );
-                              }
+                              },
                             )
                           ) : (
                             <span className="text-[10px] font-bold text-gray-800">
@@ -346,7 +350,10 @@ export default function Details({ phoneDetails, similarMobiles }) {
                   : "lg:col-span-9"
               } border-gray-100`}
             >
-              <MobileSpeficaion phoneDetails={phoneDetails} />
+              <MobileSpeficaion
+                phoneDetails={phoneDetails}
+                compatibility={compatibility}
+              />
             </div>
             {phoneDetails.competitors?.length > 0 && (
               <div className="p-1 space-y-1 sm:hidden mt-2">

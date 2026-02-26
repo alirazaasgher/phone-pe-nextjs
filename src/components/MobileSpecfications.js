@@ -3,7 +3,7 @@ import { Search, Plus } from "lucide-react";
 import SpecGroup from "./SpecGroup";
 import UseFilteredSpecs from "./UseFilteredSpecs";
 import Link from "next/link";
-export default function MobileSpeficaion({ phoneDetails }) {
+export default function MobileSpeficaion({ phoneDetails, compatibility }) {
   const [searchQuery, setSearchQuery] = useState("");
   const searchTimerRef = useRef(null);
   const hasTrackedFocusRef = useRef(false);
@@ -101,6 +101,7 @@ export default function MobileSpeficaion({ phoneDetails }) {
               isExpandable={isExpandable}
               max_visible={max_visible}
               searchQuery={searchQuery}
+              compatibility={compatibility}
             />
           );
         })}

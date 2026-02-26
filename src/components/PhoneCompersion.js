@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useTransition,
+  useRef,
+} from "react";
 import {
   Battery,
   Smartphone,
@@ -25,10 +31,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { searchPhones } from "@/app/services/phones";
 import PhoneCard from "./PhoneCard";
 import Loader from "@/app/loading";
-import RadarComparison from "@/components/RadarComparison";
 import BarComparison from "@/components/BarComparison";
 import OverallScores from "@/components/OverallScores";
 import VerdictDisplay from "./VerdictDisplay";
+import dynamic from "next/dynamic";
+import MarketGraphPopup from "./MarketGraphPopup";
+const TurnstileWidget = dynamic(() => import("./TurnstileWidget"), {
+  ssr: false,
+});
 const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const [showOnlyDiff, setShowOnlyDiff] = useState(false);
   const [selectedPhones, setSelectedPhones] = useState([]);
@@ -40,6 +50,45 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const [isPending, startTransition] = useTransition();
   const [firstLoad, setFirstLoad] = useState(true);
   const [maxDevices, setMaxDevices] = useState(4);
+  const [showTurnstile, setShowTurnstile] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [token, setToken] = useState("");
+  // 1. Import useState at the top
+  const [marketModal, setMarketModal] = useState({ isOpen: false, data: null });
+
+  // 2. Define the handler
+  const handleOpenMarketGraph = useCallback((data) => {
+    if (data && data.peers && data.peers.length > 0) {
+      setMarketModal({ isOpen: true, data });
+    }
+  }, []);
+  const handleInputClick = () => {
+    if (!verified && selectedPhones.length < maxDevices) {
+      setShowTurnstile(true);
+    }
+  };
+  const handleVerified = (token) => {
+    setTurnstileToken(token);
+    setVerified(true);
+    setShowTurnstile(false);
+  };
+  const turnstileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (turnstileRef.current && !turnstileRef.current.contains(e.target)) {
+        setShowTurnstile(false);
+      }
+    };
+
+    if (showTurnstile) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showTurnstile]);
   const usageOptions = [
     {
       value: "balanced",
@@ -179,18 +228,15 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
         CATEGORY_COLORS[lowerCategory] || CATEGORY_COLORS.default;
       const icon = getSpecIcon(specKey);
 
-      // Precompute phone spec data with early returns
+      // 1. Identify if this is the interactive Chipset row
+      const isChipset = specKey.toLowerCase() === "chipsets";
+
       const phoneSpecData = comparisonData.scores.reduce((acc, phone) => {
         const categorySpecs = phone.category_scores[category]?.specs?.[specKey];
         if (!categorySpecs) return acc;
 
         const { value, score: scorePercent, hidden } = categorySpecs;
-
-        // ❌ Skip if hidden
-        if (hidden === true) return acc;
-
-        // ❌ Skip empty values
-        if (value === "" || value == null) return acc;
+        if (hidden === true || value === "" || value == null) return acc;
 
         const ratings =
           phone.category_scores[category]?.[`${specKey}_ratings`] ?? null;
@@ -202,6 +248,8 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
           ratings,
           displayValue: value === true ? "✓" : value === false ? "✗" : value,
           hasScore: scorePercent != null && scorePercent !== "",
+          // Store raw chipset info for the first phone
+          chipsetMarketData: isChipset ? comparisonData.market_context : null,
         });
 
         return acc;
@@ -220,19 +268,36 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       return (
         <div
           key={specKey}
-          className="bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 p-3 hover:shadow-xl hover:border-gray-300 transition-all duration-300 cursor-pointer group"
+          // 2. Add dynamic click handler if it's the chipset row
+          onClick={() =>
+            isChipset && handleOpenMarketGraph(comparisonData.market_context)
+          }
+          className={`bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 p-3 transition-all duration-300 group ${
+            isChipset
+              ? "cursor-pointer ring-2 ring-blue-50 hover:ring-blue-200"
+              : "cursor-default"
+          }`}
         >
           {/* Header */}
           <div
             className={`pb-2 border-b-2 border-${colorTheme}-100 group-hover:border-${colorTheme}-300 transition-colors duration-300`}
           >
-            <div className="flex items-center gap-1">
-              <span className="group-hover:scale-110 transition-transform duration-300 inline-block">
-                {icon}
-              </span>
-              <p className="font-medium text-gray-900 text-[12px] sm:text-[13px] font-sans group-hover:text-gray-700 transition-colors">
-                {formatLabel(specKey)}
-              </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <span className="group-hover:scale-110 transition-transform duration-300 inline-block">
+                  {icon}
+                </span>
+                <p className="font-medium text-gray-900 text-[12px] sm:text-[13px] font-sans">
+                  {formatLabel(specKey)}
+                </p>
+              </div>
+
+              {/* 3. Add a "Market Insights" badge for chipset */}
+              {isChipset && (
+                <span className="text-[9px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-bold flex items-center gap-1 animate-pulse">
+                  📊 MARKET VIEW
+                </span>
+              )}
             </div>
           </div>
 
@@ -260,42 +325,32 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                       isMaxScore ? "hover:bg-green-50" : ""
                     }`}
                   >
-                    {/* Value and Score Badge */}
                     <div className="flex items-center justify-between py-1">
                       <div className="flex items-center gap-2">
                         {!hasScore && (
                           <div
-                            className="w-3 h-3 rounded-full flex-shrink-0 hover:scale-125 transition-transform duration-300"
+                            className="w-3 h-3 rounded-full flex-shrink-0"
                             style={{ backgroundColor: primary_color }}
                           />
                         )}
                         <div
                           dangerouslySetInnerHTML={{ __html: displayValue }}
-                          className="text-gray-600 text-xs font-medium hover:text-gray-900 transition-colors"
+                          className={`text-xs font-medium transition-colors ${
+                            isChipset
+                              ? "text-blue-700 font-bold"
+                              : "text-gray-600"
+                          }`}
                         />
                       </div>
-
-                      {/* {hasScore && (
-                        <div
-                          className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${scoreClasses.badge} hover:scale-105 transition-transform duration-300 ${
-                            isMaxScore
-                              ? "ring-2 ring-green-400 ring-offset-1"
-                              : ""
-                          }`}
-                        >
-                          <span>{scorePercent}</span>
-                          <span className="text-[10px] opacity-60">/10</span>
-                        </div>
-                      )} */}
                     </div>
 
                     {/* Score Bar */}
                     {hasScore && (
                       <div className="mt-1 flex flex-col gap-0.5">
                         <div className="flex items-center gap-1">
-                          <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden shadow-inner hover:h-2 transition-all duration-300">
+                          <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                             <div
-                              className="h-full transition-all duration-700 ease-out hover:brightness-110"
+                              className="h-full transition-all duration-700 ease-out"
                               style={{
                                 width: `${Math.min(scorePercent * 10, 100)}%`,
                                 backgroundColor: primary_color,
@@ -304,16 +359,13 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                           </div>
 
                           {ratings && (
-                            <div className="flex items-center gap-0.5 text-[10px] text-gray-500 w-12 text-right hover:text-amber-500 transition-colors">
-                              <span className="text-amber-400 hover:scale-125 transition-transform inline-block">
-                                ⭐
-                              </span>
+                            <div className="flex items-center gap-0.5 text-[10px] text-gray-500 w-12 text-right">
+                              <span className="text-amber-400">⭐</span>
                               <span>{ratings}</span>
                             </div>
                           )}
                         </div>
-
-                        <div className="text-[10px] text-gray-500 hover:text-gray-700 transition-colors">
+                        <div className="text-[10px] text-gray-500">
                           {scoreClasses.label}
                         </div>
                       </div>
@@ -326,9 +378,8 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
         </div>
       );
     },
-    [comparisonData.scores],
-  ); // Add dependency
-
+    [comparisonData.scores, handleOpenMarketGraph], // Add handler to deps
+  );
   useEffect(() => {
     if (!pathname || !phones?.length) return;
 
@@ -458,9 +509,9 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                       }}
                     />
                   </div>
-                  <span className="text-[10px] font-semibold text-gray-700">
+                  {/* <span className="text-[10px] font-semibold text-gray-700">
                     {value}
-                  </span>
+                  </span> */}
                 </div>
               );
             })}
@@ -511,7 +562,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       ) : (
         <div className="p-1">
           {/* Search Bar */}
-          <div className="relative mb-2">
+          <div className="relative mb-2 overflow-visible">
             <Search
               className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
               size={18}
@@ -521,13 +572,38 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               placeholder={
                 selectedPhones.length >= maxDevices
                   ? "Maximum devices reached"
-                  : "Search for phones to compare..."
+                  : verified
+                    ? "Search for phones to compare..."
+                    : "Search for phones to compare..."
+                // Click to verify you're human
               }
               value={searchTerm}
-              disabled={selectedPhones.length >= maxDevices}
+              // disabled={selectedPhones.length >= maxDevices}
+              // readOnly={!verified}
+              // onClick={handleInputClick}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-2 bg-white border-2 border-gray-200 rounded focus:outline-none focus:border-orange-500 transition-colors disabled:bg-gray-50 disabled:cursor-not-allowed text-base"
             />
+
+            {/* Turnstile — appears ABOVE input */}
+            {showTurnstile && !verified && (
+              <div
+                ref={turnstileRef}
+                className="absolute z-[999] top-full mt-2 left-0 bg-white border border-gray-200 rounded shadow-lg p-3"
+              >
+                <p className="text-sm text-gray-500 mb-2">
+                  Please verify you're human
+                </p>
+                <TurnstileWidget onSuccess={handleVerified} />
+              </div>
+            )}
+
+            {/* Green checkmark when verified */}
+            {verified && (
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 text-lg">
+                ✓
+              </span>
+            )}
 
             {/* Suggestions dropdown */}
             {searchTerm &&
@@ -544,10 +620,9 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                       }}
                       className="px-5 py-3.5 hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 cursor-pointer flex justify-between items-center border-b border-gray-100 last:border-0 transition-colors"
                     >
-                      {/* Left: Image + Name + Brand */}
                       <div className="flex items-center gap-3">
                         <img
-                          src={phone.primary_image} // make sure your API provides the image URL
+                          src={phone.primary_image}
                           alt={phone.name}
                           className="w-12 h-12 object-contain rounded-md flex-shrink-0"
                         />
@@ -560,8 +635,6 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
                           </div>
                         </div>
                       </div>
-
-                      {/* Right: Plus Icon */}
                       <Plus
                         size={20}
                         className="text-orange-500 flex-shrink-0"
@@ -612,10 +685,17 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               colors={comparisonData.charts.phone_colors}
             /> */}
 
-            <BarComparison
+            {/* <BarComparison
               data={comparisonData.charts.bar}
               colors={comparisonData.charts.phone_colors}
             />
+
+            <MarketGraphPopup
+              isOpen={marketModal.isOpen}
+              onClose={() => setMarketModal({ isOpen: false, data: null })}
+              marketData={marketModal.data}
+              primaryPhoneName={comparisonData.scores[0]?.phone_name}
+            /> */}
           </div>
           {/* Similar MobileS */}
           {keyCategories.map((categoryKey) => {

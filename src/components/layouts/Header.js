@@ -72,6 +72,7 @@ export default function Header({ toggleSidebar }) {
             {[
               { href: "/", label: "Home" },
               { href: "/mobiles", label: "Mobiles" },
+              // { href: "/soc", label: "SoC" },
               { href: "/brands", label: "Brands" },
               // { href: "/compare", label: "Compare" },
             ].map((link) => (

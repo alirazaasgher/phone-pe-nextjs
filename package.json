@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "^1.4.2",
     "chart.js": "^4.5.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",

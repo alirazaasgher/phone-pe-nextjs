@@ -1,12 +1,15 @@
 import { getComparePhoneBySlugs } from "@/app/services/phones";
 import PhoneComparison from "@/components/PhoneCompersion";
+import { notFound } from "next/navigation";
 export default async function Page({ params, searchParams }) {
   const { slug } = await params;
   const phoneSlugs = slug.split("-vs-");
   // get query param
   const usage = searchParams?.usage || "balanced";
   const phone = await getComparePhoneBySlugs(phoneSlugs, usage);
-
+  if (!phone || phone.length === 0) {
+    notFound();
+  }
   return (
     <PhoneComparison phones={phone.data} comparisonData={phone.comparison} />
   );
