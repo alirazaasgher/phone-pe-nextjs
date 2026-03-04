@@ -232,7 +232,9 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       const isChipset = specKey.toLowerCase() === "chipsets";
 
       const phoneSpecData = comparisonData.scores.reduce((acc, phone) => {
-        const categorySpecs = phone.category_scores[category]?.specs?.[specKey];
+        const categorySpecs =
+          phone.category_scores[category]?.breakdown?.[specKey];
+        console.log(categorySpecs);
         if (!categorySpecs) return acc;
 
         const { value, score: scorePercent, hidden } = categorySpecs;
@@ -462,7 +464,8 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   }, [debouncedSearch]);
 
   const renderCategory = (categoryName, categoryKey) => {
-    const specs = comparisonData?.scores[0]?.category_scores[categoryKey].specs;
+    const specs =
+      comparisonData?.scores[0]?.category_scores[categoryKey].breakdown;
     if (!specs || Object.keys(specs).length === 0) return null;
 
     const isImportant = categoryWeights[categoryKey] > 1.2;

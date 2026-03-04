@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Shield,
   Monitor,
@@ -17,6 +17,9 @@ import {
   Layers,
   X,
   Youtube,
+  Vote,
+  CheckCircle2,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import VariantImageGallery from "@/components/VariantImageGallery";
@@ -31,6 +34,24 @@ export default function Details({
   similarMobiles,
   compatibility,
 }) {
+  const [specs, setSpecs] = useState(phoneDetails.score);
+  const [hasVoted, setHasVoted] = useState(null);
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimated(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+  const handleVote = (id) => {
+    if (hasVoted) return;
+
+    setSpecs((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, votes: (item.votes || 0) + 1 } : item,
+      ),
+    );
+    setHasVoted(id);
+  };
   const iconMap = {
     display: { icon: Monitor, color: "bg-indigo-100", text: "text-indigo-600" },
     main_camera: { icon: Camera, color: "bg-rose-100", text: "text-rose-600" },
@@ -71,6 +92,19 @@ export default function Details({
   let widthClass = "w-[250px] 2xl:w-[350px]"; // default
   if (phoneDetails.variants.length >= 1 && phoneDetails.variants.length <= 3)
     widthClass = "w-[280px] sm:w-[250px] 2xl:w-[350px]";
+  const getScoreColor = (score) => {
+    if (score >= 90)
+      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+    if (score >= 75)
+      return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+    return "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400";
+  };
+
+  const getBarColor = (score) => {
+    if (score >= 90) return "bg-emerald-500";
+    if (score >= 75) return "bg-amber-500";
+    return "bg-rose-500";
+  };
   return (
     <>
       <div className="hidden md:flex relative px-5 py-2 bg-white/60 backdrop-blur-xl border-b border-gray-200/60 items-center justify-between shadow-sm">
@@ -340,9 +374,58 @@ export default function Details({
             </ul>
           </div>
         </div>
+        <div>
+          {/* Header */}
+          <div className="mb-4 pb-3">
+            <div className="flex items-center gap-2">
+              <Star className="text-amber-500 fill-amber-400" />
+              <h2 className="text-base font-semibold">Review</h2>
+            </div>
+
+            <div className="mt-3 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
+          </div>
+
+          {/* Score Bars */}
+          {/* <div className="grid grid-cols-2 gap-x-3 gap-y-4 mb-3">
+            {specs.map((item) => (
+              <div key={item.id} className="group">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="capitalize text-sm font-medium ">
+                    {item.category}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded`}>
+                      {item.score}
+                    </span>
+                    <button
+                      onClick={() => handleVote(item.id)}
+                      disabled={hasVoted !== null}
+                      className={`transition-all ${
+                        hasVoted === item.id
+                          ? "text-green-500"
+                          : "text-gray-400 hover:text-blue-500"
+                      } ${hasVoted !== null && hasVoted !== item.id ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}`}
+                    >
+                      {hasVoted === item.id ? (
+                        <CheckCircle2 size={15} />
+                      ) : (
+                        <Vote size={15} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-1000 ease-out ${getBarColor(item.score)}`}
+                    style={{ width: animated ? `${item.score}%` : "0%" }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div> */}
+        </div>
         <div className="w-full border-gray-200">
           <div className="grid grid-cols-1 lg:grid-cols-12 bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-            {/* LEFT SECTION — Specifications */}
             <div
               className={`${
                 phoneDetails.competitors?.length <= 0
