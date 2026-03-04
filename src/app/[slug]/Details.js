@@ -376,14 +376,14 @@ export default function Details({
         </div>
         <div>
           {/* Header */}
-          <div className="mb-4 pb-3">
+          {/* <div className="mb-4 pb-3">
             <div className="flex items-center gap-2">
               <Star className="text-amber-500 fill-amber-400" />
               <h2 className="text-base font-semibold">Review</h2>
             </div>
 
             <div className="mt-3 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
-          </div>
+          </div> */}
 
           {/* Score Bars */}
           {/* <div className="grid grid-cols-2 gap-x-3 gap-y-4 mb-3">

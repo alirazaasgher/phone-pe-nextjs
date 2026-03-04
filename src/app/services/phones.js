@@ -23,7 +23,7 @@ export async function getPhoneBySlug(slug) {
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
   });
-
+  console.log(res);
   if (!res.ok) return null;
   const json = await res.json();
   return json; // return phone object

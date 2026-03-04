@@ -234,7 +234,6 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       const phoneSpecData = comparisonData.scores.reduce((acc, phone) => {
         const categorySpecs =
           phone.category_scores[category]?.breakdown?.[specKey];
-        console.log(categorySpecs);
         if (!categorySpecs) return acc;
 
         const { value, score: scorePercent, hidden } = categorySpecs;
