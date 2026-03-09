@@ -223,163 +223,75 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
 
   const renderSpecRow = useCallback(
     (category, specKey) => {
-      const lowerCategory = category?.toLowerCase();
-      const colorTheme =
-        CATEGORY_COLORS[lowerCategory] || CATEGORY_COLORS.default;
-      const icon = getSpecIcon(specKey);
-
-      // 1. Identify if this is the interactive Chipset row
-      const isChipset = specKey.toLowerCase() === "chipsets";
-
-      const phoneSpecData = comparisonData.scores.reduce((acc, phone) => {
-        const categorySpecs =
-          phone.category_scores[category]?.breakdown?.[specKey];
-        if (!categorySpecs) return acc;
-
-        const { value, score: scorePercent, hidden } = categorySpecs;
-        if (hidden === true || value === "" || value == null) return acc;
-
-        const ratings =
-          phone.category_scores[category]?.[`${specKey}_ratings`] ?? null;
+      const specsPerPhone = comparisonData.scores.reduce((acc, phone) => {
+        const spec = phone.category_scores[category]?.breakdown?.[specKey];
+        if (!spec || spec.hidden) return acc;
 
         acc.push({
           id: phone.phone_id,
-          primary_color: phone.primary_color,
-          scorePercent,
-          ratings,
-          displayValue: value === true ? "✓" : value === false ? "✗" : value,
-          hasScore: scorePercent != null && scorePercent !== "",
-          // Store raw chipset info for the first phone
-          chipsetMarketData: isChipset ? comparisonData.market_context : null,
+          name: phone.name,
+          color: phone.primary_color,
+          value: spec.value,
+          score: spec.score,
         });
 
         return acc;
       }, []);
 
-      if (phoneSpecData.length === 0) return null;
-
-      const maxScore = phoneSpecData.reduce(
-        (max, phone) =>
-          phone.hasScore
-            ? Math.max(max, parseFloat(phone.scorePercent) || 0)
-            : max,
-        0,
-      );
+      if (specsPerPhone.length === 0) return null;
 
       return (
-        <div
-          key={specKey}
-          // 2. Add dynamic click handler if it's the chipset row
-          onClick={() =>
-            isChipset && handleOpenMarketGraph(comparisonData.market_context)
-          }
-          className={`bg-white rounded-md lg:rounded-xl shadow-md border border-gray-200 p-3 transition-all duration-300 group ${
-            isChipset
-              ? "cursor-pointer ring-2 ring-blue-50 hover:ring-blue-200"
-              : "cursor-default"
-          }`}
-        >
-          {/* Header */}
-          <div
-            className={`pb-2 border-b-2 border-${colorTheme}-100 group-hover:border-${colorTheme}-300 transition-colors duration-300`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                <span className="group-hover:scale-110 transition-transform duration-300 inline-block">
-                  {icon}
-                </span>
-                <p className="font-medium text-gray-900 text-[12px] sm:text-[13px] font-sans">
-                  {formatLabel(specKey)}
-                </p>
-              </div>
-
-              {/* 3. Add a "Market Insights" badge for chipset */}
-              {isChipset && (
-                <span className="text-[9px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-bold flex items-center gap-1 animate-pulse">
-                  📊 MARKET VIEW
-                </span>
-              )}
-            </div>
+        <div key={specKey} className="border-b py-2 last:border-none">
+          {/* Spec Title */}
+          <div className="flex items-center gap-2 mb-2">
+            <span>{getSpecIcon(specKey)}</span>
+            <span className="text-xs font-semibold text-gray-700">
+              {formatLabel(specKey)}
+            </span>
           </div>
 
-          {/* Phone specs */}
-          <div className="flex flex-col divide-y divide-gray-200">
-            {phoneSpecData.map(
-              ({
-                id,
-                primary_color,
-                scorePercent,
-                ratings,
-                displayValue,
-                hasScore,
-              }) => {
-                const isMaxScore =
-                  hasScore && parseFloat(scorePercent) === maxScore;
-                const scoreClasses = hasScore
-                  ? getScoreClasses(scorePercent)
-                  : null;
+          {/* Phones */}
+          <div className="mt-1 flex flex-col divide-y divide-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+            {specsPerPhone.map((phone) => {
+              return (
+                <div
+                  key={phone.id}
+                  className={`flex items-center gap-2 px-2 py-1.5 min-h-[34px] transition-all duration-200 bg-white hover:bg-gray-50`}
+                >
+                  {/* Color dot */}
+                  {phone.score == null && (
+                    <div
+                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: phone.color }}
+                    />
+                  )}
+                  {/* Value */}
+                  <p
+                    className="text-[11px] text-gray-700 flex-1 truncate"
+                    dangerouslySetInnerHTML={{ __html: phone.value || "—" }}
+                    title={phone.value}
+                  />
 
-                return (
-                  <div
-                    key={`${id}-${category}`}
-                    className={`flex flex-col rounded-lg transition-all duration-300 hover:bg-gray-50 ${
-                      isMaxScore ? "hover:bg-green-50" : ""
-                    }`}
-                  >
-                    <div className="flex items-center justify-between py-1">
-                      <div className="flex items-center gap-2">
-                        {!hasScore && (
-                          <div
-                            className="w-3 h-3 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: primary_color }}
-                          />
-                        )}
-                        <div
-                          dangerouslySetInnerHTML={{ __html: displayValue }}
-                          className={`text-xs font-medium transition-colors ${
-                            isChipset
-                              ? "text-blue-700 font-bold"
-                              : "text-gray-600"
-                          }`}
-                        />
-                      </div>
+                  {/* Optional tiny bar */}
+                  {phone.score != null && (
+                    <div className="w-12 h-1 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.min(phone.score * 10, 100)}%`,
+                          backgroundColor: phone.color,
+                        }}
+                      />
                     </div>
-
-                    {/* Score Bar */}
-                    {hasScore && (
-                      <div className="mt-1 flex flex-col gap-0.5">
-                        <div className="flex items-center gap-1">
-                          <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                            <div
-                              className="h-full transition-all duration-700 ease-out"
-                              style={{
-                                width: `${Math.min(scorePercent * 10, 100)}%`,
-                                backgroundColor: primary_color,
-                              }}
-                            />
-                          </div>
-
-                          {ratings && (
-                            <div className="flex items-center gap-0.5 text-[10px] text-gray-500 w-12 text-right">
-                              <span className="text-amber-400">⭐</span>
-                              <span>{ratings}</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-[10px] text-gray-500">
-                          {scoreClasses.label}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              },
-            )}
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       );
     },
-    [comparisonData.scores, handleOpenMarketGraph], // Add handler to deps
+    [comparisonData],
   );
   useEffect(() => {
     if (!pathname || !phones?.length) return;
@@ -464,67 +376,41 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
 
   const renderCategory = (categoryName, categoryKey) => {
     const specs =
-      comparisonData?.scores[0]?.category_scores[categoryKey].breakdown;
-    if (!specs || Object.keys(specs).length === 0) return null;
+      comparisonData?.scores[0]?.category_scores[categoryKey]?.breakdown;
+    if (!specs) return null;
 
-    const isImportant = categoryWeights[categoryKey] > 1.2;
+    const icon = getCategoryIcon(categoryKey);
+    const validSpecKeys = Object.keys(specs).filter(
+      (specKey) => renderSpecRow(categoryKey, specKey) !== null,
+    );
+
+    if (validSpecKeys.length === 0) return null;
 
     return (
       <div
         key={categoryKey}
-        className={`bg-white rounded-lg border mb-3 overflow-hidden ${
-          isImportant ? "border-sky-300 shadow-md" : "border-gray-200"
-        }`}
+        className="mb-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_2px_8px_rgba(0,0,0,0,04)]"
       >
-        {/* CATEGORY HEADER */}
-        <button
-          className={`w-full flex items-center justify-between px-3 py-2.5 border-b transition ${
-            isImportant
-              ? "bg-gradient-to-r from-sky-50 to-blue-50"
-              : "bg-gray-100"
-          }`}
-        >
-          {/* Left */}
-          <div className="flex items-center gap-2">
-            <span className={isImportant ? "text-sky-600" : "text-gray-600"}>
-              {getCategoryIcon(categoryKey)}
-            </span>
-
-            <h3 className="text-xs font-semibold uppercase tracking-wide">
-              {categoryName}
-            </h3>
+        {/* Header: Clean & Sophisticated */}
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-gray-50/50 to-white">
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-gray-100 shadow-sm text-sm">
+            {icon || "📱"}
           </div>
+          <h3 className="text-[12px] font-black uppercase tracking-[0.05em] text-gray-800">
+            {categoryName}
+          </h3>
+          <span className="ml-auto text-[10px] font-bold text-gray-400 bg-gray-100/50 px-2 py-0.5 rounded-full">
+            {validSpecKeys.length}
+          </span>
+        </div>
 
-          {/* CATEGORY SCORES (PRIMARY VISUAL) */}
-          <div className="flex items-center gap-3">
-            {comparisonData.scores.map((phone) => {
-              const value = phone?.category_scores[categoryKey].score || 0;
-              const uniqueKey = `${phone?.phone_id}-${categoryKey}`;
-              return (
-                <div key={uniqueKey} className="flex items-center gap-1">
-                  {/* <div className="w-14 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full transition-all duration-700"
-                      style={{
-                        width: `${value}%`,
-                        backgroundColor: `${phone.primary_color}`,
-                      }}
-                    />
-                  </div> */}
-                  {/* <span className="text-[10px] font-semibold text-gray-700">
-                    {value}
-                  </span> */}
-                </div>
-              );
-            })}
-          </div>
-        </button>
-
-        {/* SUB-SPECS (SECONDARY – EXPANDABLE) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 px-2 py-2">
-          {Object.keys(specs).map((specKey) =>
-            renderSpecRow(categoryKey, specKey),
-          )}
+        {/* Specs grid: Optimized for spacing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3 border-t border-gray-50">
+          {validSpecKeys.map((specKey) => (
+            <div key={specKey} className="h-full">
+              {renderSpecRow(categoryKey, specKey)}
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -704,6 +590,8 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
             const categoryName = formatLabel(categoryKey);
             return renderCategory(categoryName, categoryKey);
           })}
+
+         
         </div>
       )}
     </>

@@ -23,7 +23,7 @@ export async function getPhoneBySlug(slug) {
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
   });
-  console.log(res);
+
   if (!res.ok) return null;
   const json = await res.json();
   return json; // return phone object
@@ -36,7 +36,6 @@ export async function getChipsetBySlug(slug) {
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache
   });
-  console.log(res);
   if (!res.ok) return null;
   const json = await res.json();
   return json; // return phone object
@@ -194,8 +193,6 @@ export async function fetchDisplayScor(category, score) {
     body: JSON.stringify(body),
     next: { revalidate: 172800 }, // 2 days cache
   });
-  console.log(JSON.stringify(body));
   const json = await res.json();
-  console.log(json);
   return json.data;
 }

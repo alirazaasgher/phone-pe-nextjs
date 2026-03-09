@@ -46,9 +46,12 @@ export default function SpecGroup({
 
   const highlightText = (text) => {
     if (!searchQuery) return text;
-    const regex = new RegExp(`(${searchQuery})`, "gi");
+
+    const words = searchQuery.trim().split(/\s+/).filter(Boolean);
+    const regex = new RegExp(`(${words.join("|")})`, "gi");
+
     return text.split(regex).map((part, i) =>
-      part.toLowerCase() === searchQuery.toLowerCase() ? (
+      words.some((word) => part.toLowerCase() === word.toLowerCase()) ? (
         <span
           key={i}
           className="bg-sky-100 text-sky-800 font-semibold px-0.5 rounded-sm"
@@ -168,7 +171,6 @@ export default function SpecGroup({
                         {/* COMPATIBILITY UI INJECTION - Only shows if status is not 'ok' */}
                         {check && check.status !== "ok" && (
                           <div className="mt-2 p-2 bg-amber-50 border-l-2 border-amber-400 rounded-r-md flex flex-col gap-1.5">
-
                             {/* The Dynamic Note */}
                             {check.note && (
                               <p className="text-[11px] text-gray-700 leading-snug">

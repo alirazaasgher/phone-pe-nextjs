@@ -62,7 +62,7 @@ export default function MobileSpeficaion({ phoneDetails, compatibility }) {
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={handleSearchFocus}
-              placeholder="Search specifications..."
+              placeholder="Search specs e.g. battery, RAM..."
               className="ml-2 w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"
             />
           </div>
