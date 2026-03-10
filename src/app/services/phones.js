@@ -18,7 +18,7 @@ export async function getPhoneById(id) {
 export async function getPhoneBySlug(slug) {
   const path = `/api/phones/${slug}`;
   const headers = signRequest("GET", path);
-  const res = await fetch(`https://api.mobile42.com${path}`, {
+  const res = await fetch(`http://127.0.0.1:8000${path}`, {
     method: "GET",
     headers: headers,
     next: { revalidate: 172800 }, // 2 days cache

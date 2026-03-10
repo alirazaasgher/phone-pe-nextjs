@@ -443,11 +443,12 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       </div>
     );
   };
+  // In your parent grid, change from fixed cols to dynamic:
   const gridClasses = {
-    1: "grid-cols-1",
-    2: "grid-cols-2",
-    3: "grid-cols-3",
-    4: "grid-cols-4",
+    1: "grid-cols-1 max-w-xs mx-auto",
+    2: "grid-cols-2 max-w-xl mx-auto",
+    3: "grid-cols-3 max-w-3xl mx-auto",
+    4: "grid-cols-2 md:grid-cols-4",
   };
   return (
     <>
@@ -545,7 +546,10 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
             <p className="text-xs text-gray-500 mt-2">Searching...</p>
           )}
           {/* Phone Cards */}
-          <div className={`grid ${gridClasses[maxDevices]} gap-3 mb-4`}>
+
+          <div
+            className={`grid ${gridClasses[phones.length] || gridClasses[4]} gap-3 mb-4 pt-2`}
+          >
             {phones.map((phone, index) => (
               <PhoneCard
                 key={phone.id}
@@ -556,27 +560,29 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               />
             ))}
           </div>
-          <div className="flex items-center justify-end mb-4">
-            <button
-              onClick={() => setShowOnlyDiff(!showOnlyDiff)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200 ${
-                showOnlyDiff
-                  ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200"
-                  : "bg-white border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-500"
-              }`}
-            >
-              <div
-                className={`w-3.5 h-3.5 rounded-sm border-2 flex items-center justify-center transition-colors duration-200 ${
-                  showOnlyDiff ? "border-white bg-white/20" : "border-gray-300"
+          {phones.length > 1 && (
+            <div className="flex items-center justify-end mb-4">
+              <button
+                onClick={() => setShowOnlyDiff(!showOnlyDiff)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200 ${
+                  showOnlyDiff
+                    ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200"
+                    : "bg-white border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-500"
                 }`}
               >
-                {showOnlyDiff && (
-                <Check />
-                )}
-              </div>
-              Show Only Differences
-            </button>
-          </div>
+                <div
+                  className={`w-3.5 h-3.5 rounded-sm border-2 flex items-center justify-center transition-colors duration-200 ${
+                    showOnlyDiff
+                      ? "border-white bg-white/20"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {showOnlyDiff && <Check />}
+                </div>
+                Show Only Differences
+              </button>
+            </div>
+          )}
           {/* Similar MobileS */}
           {keyCategories.map((categoryKey) => {
             const categoryName = formatLabel(categoryKey);

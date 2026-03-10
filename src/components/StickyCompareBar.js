@@ -17,7 +17,7 @@ export default function StickyCompareBar({ phones, removePhone }) {
   }, []);
   return (
     <div
-      className={`fixed top-16 left-0 w-full bg-white/70 backdrop-blur-xl border-b border-gray-200/50 z-40 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`fixed top-16 left-0 w-full bg-white/70 backdrop-blur-xl border-b border-gray-200/50 z-40 ${
         showBar
           ? "translate-y-0 opacity-100 shadow-xl"
           : "-translate-y-full opacity-0 shadow-none"
@@ -29,22 +29,21 @@ export default function StickyCompareBar({ phones, removePhone }) {
         <div className="flex items-center gap-2 md:gap-4 flex-1 justify-center overflow-x-auto no-scrollbar py-1">
           {phones.slice(0, window?.innerWidth < 768 ? 2 : 4).map((phone) => {
             const status = phone?.searchIndex?.status;
-            const noPrice =
-              !phone?.searchIndex?.min_price &&
-              !phone?.searchIndex?.min_price_usd;
-            const price = phone?.searchIndex?.min_price;
+
+            const pkrPrice = phone?.searchIndex?.min_price;
+            const usdPrice = phone?.searchIndex?.min_price_usd;
+
+            const noPrice = !pkrPrice && !usdPrice;
             const isUpcoming = status === "rumored" || status === "upcoming";
-            let displayPrice = "";
-            let currencySymbol = "";
+
+            let displayPKR = "";
+            let displayUSD = "";
 
             if (isUpcoming && noPrice) {
-              displayPrice = "Coming Soon";
-            } else if (price) {
-              displayPrice = price;
-              currencySymbol = "Rs.";
-            } else if (phone?.searchIndex?.min_price_usd) {
-              displayPrice = phone.searchIndex.min_price_usd;
-              currencySymbol = "$";
+              displayPKR = "Coming Soon";
+            } else {
+              if (pkrPrice) displayPKR = `Rs. ${pkrPrice}`;
+              if (usdPrice) displayUSD = `$${usdPrice}`;
             }
 
             return (
@@ -56,7 +55,7 @@ export default function StickyCompareBar({ phones, removePhone }) {
                   <img
                     src={phone.primary_image}
                     alt={phone.name}
-                    className="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                    className="w-full h-full object-contain"
                   />
                 </div>
 
@@ -64,8 +63,11 @@ export default function StickyCompareBar({ phones, removePhone }) {
                   <span className="text-[11px] md:text-[13px] font-bold text-gray-900 leading-none mb-1">
                     {phone.name}
                   </span>
+
                   <span className="text-[10px] md:text-[11px] font-semibold text-indigo-600 leading-none">
-                    {currencySymbol} {displayPrice}
+                    {displayPKR}
+                    {displayPKR && displayUSD && " • "}
+                    {displayUSD}
                   </span>
                 </div>
 
