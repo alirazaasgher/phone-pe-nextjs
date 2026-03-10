@@ -36,6 +36,7 @@ import OverallScores from "@/components/OverallScores";
 import VerdictDisplay from "./VerdictDisplay";
 import dynamic from "next/dynamic";
 import MarketGraphPopup from "./MarketGraphPopup";
+import StickyCompareBar from "./StickyCompareBar";
 const TurnstileWidget = dynamic(() => import("./TurnstileWidget"), {
   ssr: false,
 });
@@ -55,7 +56,6 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const [token, setToken] = useState("");
   // 1. Import useState at the top
   const [marketModal, setMarketModal] = useState({ isOpen: false, data: null });
-
   // 2. Define the handler
   const handleOpenMarketGraph = useCallback((data) => {
     if (data && data.peers && data.peers.length > 0) {
@@ -274,7 +274,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
 
                   {/* Optional tiny bar */}
                   {phone.score != null && (
-                    <div className="w-12 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-12 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{
@@ -449,6 +449,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
         <Loader />
       ) : (
         <div className="p-1">
+          <StickyCompareBar phones={phones} />
           {/* Search Bar */}
           <div className="relative mb-2 overflow-visible">
             <Search
@@ -549,49 +550,12 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               />
             ))}
           </div>
-          {/* <select
-            value={currentUsage}
-            onChange={handleUsageChange}
-            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm text-gray-700 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer appearance-none"
-          >
-            <option value="" disabled>
-              Select Primary usage
-            </option>
-            {usageOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select> */}
-          {/* {phones.length > 1 && (
-            <VerdictDisplay verdict={comparisonData.verdict} />
-          )} */}
-          {/* <OverallScores scores={comparisonData.charts.overall_scores} /> */}
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-2">
-            {/* <RadarComparison
-              data={comparisonData.charts.radar}
-              colors={comparisonData.charts.phone_colors}
-            /> */}
-
-            {/* <BarComparison
-              data={comparisonData.charts.bar}
-              colors={comparisonData.charts.phone_colors}
-            />
-
-            <MarketGraphPopup
-              isOpen={marketModal.isOpen}
-              onClose={() => setMarketModal({ isOpen: false, data: null })}
-              marketData={marketModal.data}
-              primaryPhoneName={comparisonData.scores[0]?.phone_name}
-            /> */}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-2"></div>
           {/* Similar MobileS */}
           {keyCategories.map((categoryKey) => {
             const categoryName = formatLabel(categoryKey);
             return renderCategory(categoryName, categoryKey);
           })}
-
-         
         </div>
       )}
     </>
