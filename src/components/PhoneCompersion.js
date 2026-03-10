@@ -26,6 +26,8 @@ import {
   Gamepad2,
   Gauge,
   SlidersHorizontal,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { searchPhones } from "@/app/services/phones";
@@ -42,6 +44,7 @@ const TurnstileWidget = dynamic(() => import("./TurnstileWidget"), {
 });
 const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const [showOnlyDiff, setShowOnlyDiff] = useState(false);
+
   const [selectedPhones, setSelectedPhones] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,11 +60,12 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   // 1. Import useState at the top
   const [marketModal, setMarketModal] = useState({ isOpen: false, data: null });
   // 2. Define the handler
-  const handleOpenMarketGraph = useCallback((data) => {
-    if (data && data.peers && data.peers.length > 0) {
-      setMarketModal({ isOpen: true, data });
-    }
-  }, []);
+  const toggleCategory = (categoryKey) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [categoryKey]: !prev[categoryKey],
+    }));
+  };
   const handleInputClick = () => {
     if (!verified && selectedPhones.length < maxDevices) {
       setShowTurnstile(true);
@@ -122,7 +126,13 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
   const keyCategories = Object.keys(
     comparisonData?.scores[0]?.category_scores || {},
   );
-
+  const [expandedCategories, setExpandedCategories] = useState(() => {
+    const initialState = {};
+    keyCategories.forEach((key) => {
+      initialState[key] = true; // default expanded
+    });
+    return initialState;
+  });
   const CATEGORY_COLORS = {
     display: "blue",
     camera: "purple",
@@ -239,6 +249,11 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
       }, []);
 
       if (specsPerPhone.length === 0) return null;
+      if (showOnlyDiff) {
+        const allValues = specsPerPhone.map((p) => p.value || "");
+        const uniqueValues = Array.from(new Set(allValues));
+        if (uniqueValues.length === 1) return null; // All values same → hide row
+      }
 
       return (
         <div key={specKey} className="border-b py-2 last:border-none">
@@ -291,7 +306,7 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
         </div>
       );
     },
-    [comparisonData],
+    [comparisonData, showOnlyDiff],
   );
   useEffect(() => {
     if (!pathname || !phones?.length) return;
@@ -385,33 +400,46 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
     );
 
     if (validSpecKeys.length === 0) return null;
-
+    const isExpanded = expandedCategories[categoryKey] ?? true; // default expanded
     return (
       <div
         key={categoryKey}
         className="mb-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_2px_8px_rgba(0,0,0,0,04)]"
       >
-        {/* Header: Clean & Sophisticated */}
-        <div className="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-gray-50/50 to-white">
-          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-gray-100 shadow-sm text-sm">
+        <div
+          className="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-gray-50/50 to-white cursor-pointer hover:from-indigo-50/50 hover:to-purple-50/30 transition-all duration-200 group"
+          onClick={() => toggleCategory(categoryKey)}
+        >
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-gray-100 shadow-sm text-sm group-hover:border-indigo-200 group-hover:shadow-indigo-100 transition-all duration-200">
             {icon || "📱"}
           </div>
-          <h3 className="text-[12px] font-black uppercase tracking-[0.05em] text-gray-800">
+          <h3 className="text-[12px] font-black uppercase tracking-[0.05em] text-gray-700 group-hover:text-indigo-700 transition-colors duration-200">
             {categoryName}
           </h3>
-          <span className="ml-auto text-[10px] font-bold text-gray-400 bg-gray-100/50 px-2 py-0.5 rounded-full">
+          <span className="ml-auto text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
             {validSpecKeys.length}
+          </span>
+          <span
+            className={`ml-2 transition-transform duration-300 text-gray-400 group-hover:text-indigo-400 ${isExpanded ? "rotate-180" : "rotate-0"}`}
+          >
+            <ChevronDown
+              className={`ml-2 w-4 h-4 transition-transform duration-300 text-gray-400 group-hover:text-indigo-400 ${
+                isExpanded ? "rotate-180" : "rotate-0"
+              }`}
+            />
           </span>
         </div>
 
         {/* Specs grid: Optimized for spacing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3 border-t border-gray-50">
-          {validSpecKeys.map((specKey) => (
-            <div key={specKey} className="h-full">
-              {renderSpecRow(categoryKey, specKey)}
-            </div>
-          ))}
-        </div>
+        {isExpanded && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 p-3 border-t border-gray-50">
+            {validSpecKeys.map((specKey) => (
+              <div key={specKey} className="h-full">
+                {renderSpecRow(categoryKey, specKey)}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   };
@@ -421,35 +449,13 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
     3: "grid-cols-3",
     4: "grid-cols-4",
   };
-  const handleUsageChange = (e) => {
-    const value = e.target.value;
-
-    // remove existing sort/status
-    const REMOVE = [
-      "balanced",
-      "gaming",
-      "battery",
-      "camera",
-      "media_consumer",
-    ];
-
-    const cleaned = parts.filter((p) => !REMOVE.includes(p));
-    const path = "/" + cleaned.join("/");
-    // insert sort/status after brand (or after /mobiles)
-    const baseIndex = cleaned[1] && cleaned[0] === "compare" ? 2 : 1;
-    const params = new URLSearchParams({
-      usage: value,
-    }).toString();
-    cleaned.splice(baseIndex, 0, value);
-    router.push(`${path}?${params}`, { scroll: false });
-  };
   return (
     <>
       {isPending || firstLoad ? (
         <Loader />
       ) : (
         <div className="p-1">
-          <StickyCompareBar phones={phones} />
+          <StickyCompareBar phones={phones} removePhone={removePhone} />
           {/* Search Bar */}
           <div className="relative mb-2 overflow-visible">
             <Search
@@ -550,7 +556,27 @@ const PhoneComparison = ({ phones, comparisonData, similarMobiles }) => {
               />
             ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-2"></div>
+          <div className="flex items-center justify-end mb-4">
+            <button
+              onClick={() => setShowOnlyDiff(!showOnlyDiff)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200 ${
+                showOnlyDiff
+                  ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200"
+                  : "bg-white border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-500"
+              }`}
+            >
+              <div
+                className={`w-3.5 h-3.5 rounded-sm border-2 flex items-center justify-center transition-colors duration-200 ${
+                  showOnlyDiff ? "border-white bg-white/20" : "border-gray-300"
+                }`}
+              >
+                {showOnlyDiff && (
+                <Check />
+                )}
+              </div>
+              Show Only Differences
+            </button>
+          </div>
           {/* Similar MobileS */}
           {keyCategories.map((categoryKey) => {
             const categoryName = formatLabel(categoryKey);

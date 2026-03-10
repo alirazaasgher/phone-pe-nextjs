@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-export default function StickyCompareBar({ phones }) {
+export default function StickyCompareBar({ phones, removePhone }) {
   const [showBar, setShowBar] = useState(false);
 
   useEffect(() => {
@@ -70,7 +70,11 @@ export default function StickyCompareBar({ phones }) {
                 </div>
 
                 <button
-                  onClick={() => removePhone(phone.id)}
+                  onClick={(e) => {
+                    e.preventDefault(); // prevent Link navigation
+                    e.stopPropagation(); // stop bubbling
+                    removePhone(phone.id);
+                  }}
                   className="ml-auto p-1 rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 transition-all text-gray-400 flex-shrink-0"
                 >
                   <svg
